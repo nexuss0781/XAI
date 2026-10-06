@@ -10,7 +10,7 @@ This directory defines the candidate architecture and its mathematical interface
 
 ## Component specifications
 
-1. [Factual ingestion](components/01-factual-ingestion.md)
+1. [Factual ingestion](components/01-factual-ingestion.md) — Phase 2 exact finite belief state, evidence/dependence policy, provenance and resource limits.
 2. [Learning](components/02-learning.md)
 3. [Evolution and adaptation](components/03-evolution-adaptation.md)
 4. [Reasoning](components/04-reasoning.md)

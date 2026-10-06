@@ -10,7 +10,7 @@ cmake --build build --parallel
 ctest --test-dir build --output-on-failure
 ```
 
-CMake applies `-Wall -Wextra -Werror` (or `/W4 /WX` on MSVC); WMC targets additionally use `-O3` on GCC/Clang and `/O2` on MSVC. The tests build from a fresh directory with no generated files required from an earlier run. The recorded Phase 0 run is in [`validation.log`](validation.log); Phase 1's clean-build evidence is in [`RESULT/Phase-1.md`](../RESULT/Phase-1.md). Solver input, statuses, compiler options, and resource limits are described in [`WMC_SOLVER.md`](WMC_SOLVER.md).
+CMake applies `-Wall -Wextra -Werror` (or `/W4 /WX` on MSVC); WMC targets additionally use `-O3` on GCC/Clang and `/O2` on MSVC. The tests build from a fresh directory with no generated files required from an earlier run. The recorded Phase 0 run is in [`validation.log`](validation.log); clean-build evidence for Phases 1 and 2 is in [`RESULT/Phase-1.md`](../RESULT/Phase-1.md) and [`RESULT/Phase-2.md`](../RESULT/Phase-2.md). Solver input, statuses, compiler options, and resource limits are described in [`WMC_SOLVER.md`](WMC_SOLVER.md).
 
 ## Version manifest
 
@@ -45,6 +45,8 @@ The original six pillar groups check selected finite arithmetic and contract fix
 
 The separate WMC suite has eight groups: exact rational parsing; exact WMC and SAT/UNSAT/zero-WMC status; free variables, tautologies, and disconnected components; equivalence across all three solver ablations; strict input and typed-instance validation; node/depth/time limits; fixed exhaustive-oracle formulas; and a 67-case weighted formula grid checked against independent brute-force enumeration. The oracle fixtures are small software checks, not benchmark results.
 
+The Phase 2 factual-ingestion suite has eight groups: exact prior/update normalizers; soft likelihood and zero-normalizer behavior; contradiction, open-world unknowns, and unresolved identity; explicit independent/model-factor/duplicate/correlated/unknown dependence; schema, partition, state, operation, factor-storage, and rational-bit limits; canonical snapshot replay and provenance lineage; parsed weighted-CNF to belief-state integration including repeated clauses; and an independent exhaustive oracle over 64 models and 256 marginals. Phase 2 was also built from a fresh Debug directory with AddressSanitizer and UndefinedBehaviorSanitizer; the result is recorded in [`validation.log`](validation.log).
+
 ## Limits
 
-A passing test establishes only that tested code matched the expected answer on those fixtures. The contract implementation is a lightweight in-process type/serialization layer; it is not persistent storage, an authentication mechanism, or a cross-process service. No test establishes correctness on arbitrary formulas, benchmark-scale accuracy, empirical speed, superiority over Ganak, dataset representativeness, or the behavior of the broader architecture. No full Track 2 solving experiment, corpus training, calibration study, deployment, or real causal identification is claimed.
+A passing test establishes only that tested code matched the expected answer on those fixtures. The contract and factual-ingestion implementations are in-process libraries with canonical replay snapshots; they are not persistent storage, an authentication mechanism, or a cross-process service. No test establishes correctness on arbitrary formulas, benchmark-scale accuracy, empirical speed, superiority over Ganak, dataset representativeness, or the behavior of the broader architecture. No full Track 2 solving experiment, corpus training, calibration study, deployment, or real causal identification is claimed.

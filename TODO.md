@@ -43,16 +43,16 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 
 ## Phase 2 — Factual ingestion and provenance
 
-- [ ] Define typed fact/entity schema and unresolved-identity representation.
-- [ ] Define open-world default and any task-specific closed-world rules.
-- [ ] Implement immutable evidence records with source/time/original input reference, extractor version, likelihood or constraint, dependency links, and data partition.
-- [ ] Implement finite prior initialization, evidence update, query marginal, and normalization checks.
-- [ ] Implement provenance lookup from each query/result to evidence and model/schema versions.
-- [ ] Define and test duplicate/correlated-source behavior; do not default to independent evidence.
-- [ ] Set finite state and computation limits; implement explicit approximation/unsupported behavior.
-- [ ] Test contradiction/zero normalizer, absent facts as unknown, unresolved identity, malformed likelihoods, replay, and resource limits.
+- [x] Define typed fact/entity schema and unresolved-identity representation.
+- [x] Define open-world default and any task-specific closed-world rules.
+- [x] Implement immutable evidence records with source/time/original input reference, extractor version, likelihood or constraint, dependency links, and data partition.
+- [x] Implement finite prior initialization, evidence update, query marginal, and normalization checks with exact GMP rationals.
+- [x] Implement provenance lookup from each query/result to evidence and model/schema/build versions.
+- [x] Define and test duplicate/correlated-source behavior; do not default to independent evidence.
+- [x] Set finite state and computation limits; return explicit resource/unsupported statuses without approximation fallback.
+- [x] Test contradiction/zero normalizer, absent facts as unknown, unresolved identity, malformed likelihoods, replay, and resource limits.
 
-**Phase 2 gate:** Every returned belief is traceable and all defined failure paths are explicit.
+**Phase 2 gate: PASS (2026-10-07).** See [RESULT/Phase-2.md](RESULT/Phase-2.md) and the reproducible transcript in [TESTS/validation.log](TESTS/validation.log). The implementation's identity candidates are annotations, and exact inference remains finite and bounded; archive scoring, split selection, identity resolution, persistence/authentication, and corpus/benchmark evaluation are outside this gate.
 
 ## Phase 3 — Predictive learning
 
@@ -155,3 +155,4 @@ Record blockers here with owner/context, date, and the phase gate they affect. D
 
 - No open Phase 0 blockers. Two out-of-format public candidates are excluded under the exact-rational eligibility rule; Phase 9 corpus/baseline evaluation remains pending and does not block the Phase 0 scope-and-protocol gate.
 - No open Phase 1 blockers. Shared contracts are an in-process foundation only; storage, authentication, runtime integration, and Phase 3 partition enforcement remain later-phase work.
+- No open Phase 2 gate blockers. Phase 2 provides canonical in-process snapshots and checks model/evidence partition consistency, but not persistent storage, authentication, identity resolution, archive eligibility, or split selection.
