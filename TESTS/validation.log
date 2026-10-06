@@ -187,3 +187,29 @@ Fresh Debug AddressSanitizer/UndefinedBehaviorSanitizer build:
 Result: CTest 7/7 passed with leak detection enabled and no ASan/UBSan findings.
 
 The mutable setting is `xai_wmc.SolverOptions::node_limit`, limited to {1,2,4,8,16,32,64,128}; baseline is 128. Search maximizes exact development completions, breaking ties toward a smaller cap. The detector uses a development-centered log-node residual and configured one-sided Gaussian CUSUM; tested shifted residuals trigger rollback, while reset is blocked until hold-off expires. `git diff --check` passed after implementation review. All Phase 5 inputs were synthetic fixtures: no Phase 0 public benchmark record was used for adaptation, and no odd-indexed final-test body was opened. Partition enforcement trusts caller-supplied labels; no benchmark-utility or detector false-alarm/delay claim is made.
+
+=== Phase 6 calibration and diagnostics acceptance (2026-10-07) ===
+Baseline: 773c304 (Phase 5 complete)
+Toolchain: GCC 13.3.0; CMake 3.28.3; C++20
+Strict-warning policy: -Wall -Wextra -Werror; clean out-of-tree builds.
+
+Fresh Release build:
+  cmake -S . -B /tmp/xai-phase6-release -DCMAKE_BUILD_TYPE=Release
+  cmake --build /tmp/xai-phase6-release --parallel 4
+  ctest --test-dir /tmp/xai-phase6-release --output-on-failure
+  /tmp/xai-phase6-release/xai_calibration_tests
+Result: strict-warning build passed; CTest 8/8 targets passed; focused calibration executable passed 9/9 groups. It checks Brier/log-score definitions and unclipped infinite endpoint loss; reliability bin edge conventions and Wilson intervals; risk/coverage ties and missing outcomes; finite and k>n conformal order statistics; unsupported exchangeability and final-test rejection; exact partition manifest membership/disjointness; subgroup/shift/empty-outcome diagnostics; probability and sample limits; and the synthetic report metadata/output separation.
+
+Fresh Debug AddressSanitizer/UndefinedBehaviorSanitizer build:
+  cmake -S . -B /tmp/xai-phase6-sanitize -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer' \
+    -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'
+  cmake --build /tmp/xai-phase6-sanitize --parallel 4
+  ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1 \
+    ctest --test-dir /tmp/xai-phase6-sanitize --output-on-failure
+  /tmp/xai-phase6-sanitize/xai_calibration_tests
+Result: CTest 8/8 and the focused calibration executable 9/9 passed; no AddressSanitizer, leak-sanitizer, or UndefinedBehaviorSanitizer findings.
+
+Synthetic fixture: `phase6-synthetic-completion-fixture`, version `fixture-2026-10-07-v1`; 16 forecast rows, 15 scored outcomes, one missing outcome. Brier mean 0.239000 (SE 0.069968); log-score mean 0.691524 (SE 0.178604); five equal-width reliability bins with three labeled rows each; eight tie-aggregated risk/coverage points; two caller-flagged shift rows. The hand-authored fixture does not defend exchangeability; its conformal status is `unsupported_assumption`, no prediction set or empirical coverage is emitted. Independent unit fixtures stipulate exchangeability only to test the order-statistic implementation, including k>n -> +infinity threshold/full binary label set.
+
+The Phase 0 WMC archive has no labels or calibration split. No benchmark records, odd-indexed holdout bodies, or final-test outcomes were consumed. This is software validation on synthetic fixtures, not benchmark calibration, predictive accuracy, or coverage evidence. Weighted conformal was not implemented because no defensible covariate-shift/density-ratio setup is available; posterior predictive checks are not applicable because no posterior-sampling inference algorithm is implemented. `git diff --check` passed after the implementation and documentation updates.

@@ -148,6 +148,8 @@ Phases 2–4 can be developed in parallel after Phase 1, but their integration m
 
 **Exit gate:** Metrics are computed only on authorized partitions and include definitions, sample counts, versions, and assumptions. No conformal coverage guarantee is emitted when its assumptions cannot be defended.
 
+**Status (2026-10-07): PASS for the synthetic diagnostic harness.** The versioned calibration protocol, partition-manifest enforcement, proper scores, reliability and sharpness summaries, risk/coverage, subgroup/missingness/shift diagnostics, and fail-closed split-conformal boundary are implemented and tested. Fresh Release and ASan/UBSan CTest each passed 8/8. The MCC archive has no labels or calibration split, so this is not benchmark calibration evidence; the hand-authored fixture makes no conformal coverage claim, and no odd-indexed holdout body was opened. See [RESULT/Phase-6.md](RESULT/Phase-6.md), [SPEC/components/05-calibration.md](SPEC/components/05-calibration.md), and [TESTS/validation.log](TESTS/validation.log).
+
 ## Phase 7 — Decision policy, certificates, and abstention
 
 **Goal:** Select among bounded candidate outputs/actions using a declared loss model and fail-closed certificate policy.

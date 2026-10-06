@@ -11,6 +11,7 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 - [x] Phase 0 exact-WMC reference solver, strict public-only archive auditor, frozen protocol, and result report are recorded.
 - [x] Phase 1 shared contracts, canonical JSON rules, failure-state tests, clean-build guidance, version-manifest tool, and report are recorded; fresh Release CTest 3/3 passed. See `RESULT/Phase-1.md`.
 - [x] Phase 5 bounded WMC node-cap adaptation, development-partition checks, CUSUM monitor, baseline rollback, and audit tests are recorded; fresh Release and ASan/UBSan CTest 7/7 passed. See `RESULT/Phase-5.md`.
+- [x] Phase 6 versioned synthetic-only calibration diagnostics, partition enforcement, proper scores, reliability/sharpness, risk-coverage, and assumption-gated conformal behavior are recorded; fresh Release and ASan/UBSan CTest 8/8 passed. See `RESULT/Phase-6.md`.
 - [ ] Implemented end-to-end runtime: not present yet.
 - [ ] Ganak comparison, corpus benchmark, and empirical performance results: not run; reserved for Phase 9. No speed or generalization claim is made.
 - [ ] Production deployment: out of scope for this research plan.
@@ -93,16 +94,16 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 
 ## Phase 6 — Calibration and diagnostics
 
-- [ ] Freeze and version a calibration partition distinct from fitting and final testing.
-- [ ] Implement proper scores relevant to the task, including score definitions and sample accounting.
-- [ ] Add reliability summaries with bin definitions/counts and uncertainty where appropriate.
-- [ ] Add split-conformal prediction only where exchangeability and score assumptions are defensible; test the `k > n` unbounded-set case.
-- [ ] If needed, implement weighted conformal under explicit covariate-shift/density-ratio assumptions and test unsupported cases.
-- [ ] Add risk-versus-coverage, sample-size, missing-outcome, subgroup-count, and shift diagnostics.
-- [ ] Add simulation-based calibration/posterior predictive checks where relevant to inference code.
-- [ ] Keep score, calibration, sharpness, conformal coverage, and shift outputs separate.
+- [x] Freeze and version the synthetic calibration fixture and partition manifest separately from fitting and reserved final-test IDs; no MCC archive split is claimed.
+- [x] Implement Brier and unclipped log scores with score definitions, sample counts, standard errors, and explicit infinite endpoint loss.
+- [x] Add equal-width reliability summaries with counts, mean predictions, event rates, and Wilson intervals.
+- [x] Add split-conformal binary classification with explicit exchangeability gating, finite-sample order statistic, and tested `k > n` infinite-threshold/full-label-set behavior.
+- [x] Weighted conformal was not needed or evaluated: no covariate-shift sample or defensible density-ratio assumptions are available.
+- [x] Add tie-aggregated risk-versus-coverage, sample-size, missing-outcome, subgroup-count, sharpness, and caller-flagged shift diagnostics.
+- [x] Simulation-based calibration/posterior predictive checks are not applicable to the current task; no posterior-sampling inference algorithm is implemented.
+- [x] Keep proper scores, reliability, sharpness, risk/coverage, conformal status, and shift indicators as separate outputs.
 
-**Phase 6 gate:** Reports include method, assumptions, partition, versions, sample counts, and limitations; no unsupported coverage claim is made.
+**Phase 6 gate — PASS for the synthetic diagnostic harness (2026-10-07):** Fresh Release and ASan/UBSan CTest each passed 8/8; the calibration executable passed 9/9 focused groups. The versioned fixture is hand-authored and synthetic only; the Phase 0 WMC archive has no labels/calibration split, no benchmark calibration or coverage claim is made, and no odd-indexed holdout body was opened. See [RESULT/Phase-6.md](RESULT/Phase-6.md), [SPEC/components/05-calibration.md](SPEC/components/05-calibration.md), and [TESTS/validation.log](TESTS/validation.log).
 
 ## Phase 7 — Decision, certificates, and abstention
 

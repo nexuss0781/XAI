@@ -14,7 +14,7 @@ This directory defines the candidate architecture and its mathematical interface
 2. [Learning](components/02-learning.md) — Phase 3 fixed-library sequential WMC completion predictor, log-space mixture updates, partition rules, audit, and replay boundary.
 3. [Evolution and adaptation](components/03-evolution-adaptation.md) — Phase 5 bounded WMC node-cap search, development-only objective, Gaussian CUSUM monitor, and fail-closed baseline rollback.
 4. [Reasoning](components/04-reasoning.md)
-5. [Calibration](components/05-calibration.md)
+5. [Calibration](components/05-calibration.md) — Phase 6 synthetic-only probability metrics, reliability, sharpness, risk/coverage, and assumption-gated split conformal.
 6. [Output and abstention](components/06-output.md)
 
 ## Interpretation

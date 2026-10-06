@@ -1,0 +1,23 @@
+# Phase 6 — Calibration and uncertainty diagnostics
+
+**Phase 6 implementation gate: PASS (2026-10-07), for the versioned synthetic diagnostic harness only.** The C++20 calibration component in [`include/xai/calibration.hpp`](../include/xai/calibration.hpp) and [`src/calibration.cpp`](../src/calibration.cpp) computes binary proper scores, reliability summaries, sharpness, risk-versus-coverage, subgroup/sample-size counts, caller-provided shift indicators, and a fail-closed split-conformal threshold. Its protocol checks that submitted records exactly match a frozen calibration-ID manifest, use the declared calibration partition, and do not overlap the fitting or final-test ID lists. These IDs and partition labels remain caller-supplied—not authenticated provenance.
+
+The frozen fixture is `phase6-synthetic-completion-fixture`, version `fixture-2026-10-07-v1`, under protocol `phase6-synthetic-protocol-v1`. It contains 16 hand-authored synthetic binary forecasts/outcomes, of which 15 have outcomes and one is explicitly missing. The forecasts are identified as `model:synthetic-forecast-fixture-v1`; they were not produced by fitting or evaluating the Phase 3 predictor. The fixture contains no WMC archive rows. Its fitting partition is empty, and the two reserved synthetic final-test IDs in its manifest contain no records or outcomes and were not scored.
+
+On this fixture, the mean Brier score is **0.239000** (standard error **0.069968**) and the mean unclipped logarithmic score is **0.691524** (standard error **0.178604**) over 15 labeled rows. The report keeps sharpness separate: across all 16 forecasts, mean completion probability is **0.500000**, mean confidence is **0.743750**, and mean predictive entropy is **0.516013 nats**. Five equal-width reliability bins contain three labeled forecasts each; their event rates and pointwise Wilson 95% intervals are:
+
+| Forecast-probability bin | Count | Mean forecast | Event rate | Wilson 95% interval |
+|---|---:|---:|---:|---:|
+| [0.0, 0.2) | 3 | 0.100000 | 0.666667 | [0.207660, 0.938508] |
+| [0.2, 0.4) | 3 | 0.300000 | 0.000000 | [0.000000, 0.561497] |
+| [0.4, 0.6) | 3 | 0.466667 | 0.333333 | [0.061492, 0.792340] |
+| [0.6, 0.8) | 3 | 0.700000 | 0.333333 | [0.061492, 0.792340] |
+| [0.8, 1.0] | 3 | 0.900000 | 1.000000 | [0.438503, 1.000000] |
+
+The harness also emitted eight tie-aggregated risk/coverage points and counted two caller-flagged shift records. Those are descriptive fixture summaries, not a validated shift detector or population-level performance estimates. Small subgroup counts are labeled; missing outcomes are excluded from outcome-based scores and conformal calibration but remain in forecast sharpness and total counts.
+
+For binary completion, the conformal nonconformity score is `1 - p(observed class)` and the finite-sample index is `ceil((n + 1) * (1 - alpha))`. No conformal threshold or coverage statement is returned unless the protocol declares an explicit exchangeability basis. The hand-authored report fixture does not defend exchangeability, so its conformal status is `unsupported_assumption`; empirical coverage is **not evaluated**. Separate mathematical fixtures exercise the supported branch and the `k > n` boundary: the threshold becomes `+infinity`, yielding the full finite binary label set. This is not an empirical coverage result or a regression interval. Weighted conformal is not implemented because no covariate-shift data or defensible density-ratio assumptions are available. Simulation-based calibration and posterior predictive checks are not applicable to the current WMC task because this codebase has no posterior-sampling inference algorithm.
+
+Fresh GCC 13.3.0 / CMake 3.28.3 Release and Debug ASan/UBSan builds each passed CTest **8/8**; the focused calibration executable passed **9/9** groups in both builds. The tests cover score definitions and infinite endpoint loss, bin edges and Wilson intervals, tie handling, missing outcomes, shift/subgroup counts, partition-manifest disjointness, final-test rejection, resource limits, unsupported assumptions, and finite plus `k > n` conformal boundaries. `git diff --check` passed. Reproduction commands and the detailed test transcript are in [`TESTS/validation.log`](../TESTS/validation.log).
+
+This gate establishes metric and boundary behavior on synthetic fixtures only. The Phase 0 WMC archive has no outcome labels or calibration split, so no benchmark calibration, predictive accuracy, general-population reliability, conformal coverage, or task-level uncertainty claim is made. No odd-indexed holdout body was opened; benchmark calibration and evaluation remain future work under a separately authorized labeled protocol.
