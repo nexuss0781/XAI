@@ -252,3 +252,31 @@ synthetic; no production WMC proof certificate or exact-count verifier exists.
 No MCC corpus outcomes or odd-indexed holdout bodies were read. No corpus
 performance, real-result certification, end-to-end runtime, or deployment claim
 is made. `git diff --check` passed after implementation and documentation edits.
+
+
+=== Phase 8 supported-input mapping and orchestration acceptance (2026-10-07) ===
+Baseline: 2008e26 (Phases 0-7 complete)
+Toolchain: GCC 13.3.0; CMake 3.28.3; GMP 6.3.0; C++20
+Strict-warning policy: -Wall -Wextra -Werror; WMC targets also compile with -O3.
+
+Fresh Release build:
+  cmake -S . -B /tmp/xai-phase8-release-final3 -DCMAKE_BUILD_TYPE=Release
+  cmake --build /tmp/xai-phase8-release-final3 --parallel 2
+  ctest --test-dir /tmp/xai-phase8-release-final3 --output-on-failure
+  /tmp/xai-phase8-release-final3/xai_orchestration_tests
+Result: clean build passed; CTest 10/10 targets passed; focused orchestration groups 10/10 passed.
+
+Fresh Debug AddressSanitizer/UndefinedBehaviorSanitizer build:
+  cmake -S . -B /tmp/xai-phase8-sanitize-final3 -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer -O1' \
+    -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'
+  cmake --build /tmp/xai-phase8-sanitize-final3 --parallel 2
+  ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1 \
+    ctest --test-dir /tmp/xai-phase8-sanitize-final3 --output-on-failure
+  ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1 \
+    /tmp/xai-phase8-sanitize-final3/xai_orchestration_tests
+Result: clean build passed; CTest 10/10 targets and focused orchestration groups 10/10 passed; no ASan, leak-sanitizer, or UBSan findings.
+
+Coverage includes standard and million-byte SHA-256 vectors; successful exact-rational WMC under a synthetic verifier; final-test rejection before formula hashing/parsing; unknown, inconsistent, and correlated evidence; ambiguous identity and rejected/unsupported content; malformed-weight token redaction; timeout with no partial count; adaptation shift alarm with baseline-limit rollback; missing/mismatched certificate and resource-budget abstention with no exposed count; manifest fingerprints; and deterministic semantic replay. All orchestration fixtures are synthetic. No Phase 0 archive formula or outcome was run, no corpus performance/accuracy/calibration claim is made, and no odd-indexed final-test body was opened.
+
+Implementation commit: 4e2c709. Final `git diff --check` and staged `git diff --cached --check` passed after the phase-status, report, and validation-log updates.

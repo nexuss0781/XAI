@@ -186,6 +186,8 @@ Phases 2–4 can be developed in parallel after Phase 1, but their integration m
 
 **Exit gate:** A clean run consumes a supported input and returns either a fully traced structured output or an explicit failure/abstention. Every transition is auditable; no component failure is converted to confident success.
 
+**Status (2026-10-07): PASS for the synthetic in-process orchestration harness.** The typed public-even DIMACS-WMC route, partition-first rejection, versioned stage trace, provenance and supplemental-input hashes, parser-token redaction, manifest/replay fingerprints, adaptation rollback, and certificate-gated output are implemented. Fresh Release and ASan/UBSan CTest runs each passed 10/10 targets; the focused orchestration suite passed 10/10 groups in both. No Phase 0 archive outcome was run, the eligible public subset was not evaluated, and no odd-indexed holdout body was opened. The synthetic verifier is not a production exact-WMC proof verifier. See [RESULT/Phase-8.md](RESULT/Phase-8.md), [SPEC/components/07-orchestration.md](SPEC/components/07-orchestration.md), [TESTS/validation.log](TESTS/validation.log), and implementation commit [4e2c709](https://github.com/nexuss0781/XAI/commit/4e2c709).
+
 ## Phase 9 — Frozen task-specific evaluation
 
 **Goal:** Test the research hypothesis on a named task without contaminating the final evaluation.

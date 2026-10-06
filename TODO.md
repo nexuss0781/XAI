@@ -121,15 +121,17 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 
 ## Phase 8 — Supported input mapping and orchestration
 
-- [ ] Select supported input path: structured typed input, constrained deterministic parser, or explicitly named permitted preprocessing component.
-- [ ] Define input-to-formal-task mapping and preserve original input/reference, extractor version, uncertainty, and rejected/unsupported content.
-- [ ] Implement versioned orchestration that calls only needed modules and records which were skipped and why.
-- [ ] Propagate component statuses without coercion; enforce schema, state-version, and data-partition boundaries end to end.
-- [ ] Emit run manifest with code/schema/data/model/config hashes, seeds, limits, versions, timing, and resource use.
-- [ ] Add end-to-end fixtures for success, absent/contradictory evidence, correlated sources, ambiguous identity, unsupported input, solver timeout, shift alarm, calibration limitation, invalid certificate, and abstention.
-- [ ] Verify deterministic replay or define stochastic seeds/tolerances.
+- [x] Select supported input path: caller-provided structured, unprojected DIMACS-WMC with a fixed deterministic parser; caller partition labels are not authenticated.
+- [x] Define input-to-formal-task mapping and preserve original input/reference, extractor version, uncertainty, identity candidates, and rejected/unsupported spans.
+- [x] Implement versioned orchestration that calls only needed modules and records which were skipped and why.
+- [x] Propagate component statuses without coercion; enforce schema, run-state, and partition boundaries end to end, rejecting final-test before formula hashing/parsing.
+- [x] Emit a canonical run manifest with code/schema/formula/supplemental-input/model/config hashes, seeds, effective limits, versions, timing, and resource measurements.
+- [x] Add end-to-end fixtures for success, unknown/inconsistent/correlated evidence, ambiguous identity, unsupported content, solver timeout, shift alarm/rollback, skipped calibration, invalid/missing certificate, and abstention.
+- [x] Verify deterministic semantic replay; encode adaptation metrics losslessly and exclude variable timing/resource measurements.
 
-**Phase 8 gate:** A clean supported input yields a traceable output or explicit failure/abstention, with all transitions and skipped modules auditable.
+**Phase 8 gate — PASS (2026-10-07), for the synthetic in-process harness.** Fresh Release and ASan/UBSan CTest runs passed 10/10 targets; focused orchestration groups passed 10/10 in both. The new tests use synthetic inputs and verifier only. No archive formula or outcome was run, the public eligible subset was not evaluated, and no odd-indexed holdout body was opened. See [RESULT/Phase-8.md](RESULT/Phase-8.md), [SPEC/components/07-orchestration.md](SPEC/components/07-orchestration.md), [TESTS/cpp/orchestration_tests.cpp](TESTS/cpp/orchestration_tests.cpp), and [TESTS/validation.log](TESTS/validation.log).
+
+**Implementation commit:** [4e2c709](https://github.com/nexuss0781/XAI/commit/4e2c709).
 
 ## Phase 9 — Task-specific evaluation
 
@@ -161,4 +163,4 @@ Record blockers here with owner/context, date, and the phase gate they affect. D
 - No open Phase 0 blockers. Two out-of-format public candidates are excluded under the exact-rational eligibility rule; Phase 9 corpus/baseline evaluation remains pending and does not block the Phase 0 scope-and-protocol gate.
 - No open Phase 1 blockers. Shared contracts are an in-process foundation only; storage, authentication, runtime integration, and Phase 3 partition enforcement remain later-phase work.
 - No open Phase 2 gate blockers. Phase 2 provides canonical in-process snapshots and checks model/evidence partition consistency, but not persistent storage, authentication, identity resolution, archive eligibility, or split selection.
-- Phase 7's harness gate is complete; a production verifier for an actual exact WMC proof and benchmark-derived utility inputs remain unimplemented and outside this gate. Full orchestration remains Phase 8 work.
+- Phase 7 and Phase 8 harness gates are complete; a production verifier for an actual exact-WMC proof and task-specific benchmark evaluation remain unimplemented. The eligible Phase 0 public subset is reserved for the frozen Phase 9 evaluation; the odd-indexed holdout remains locked.
