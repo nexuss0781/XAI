@@ -1,0 +1,20 @@
+$ g++ -std=c++20 -O2 -Wall -Wextra -Werror TESTS/cpp/pillar_tests.cpp -o /tmp/xai-pillar-tests && /tmp/xai-pillar-tests
+PASS factual_ingestion: posterior 9/13 -> 81/85; normalized
+PASS learning: Bayesian-mixture regret <= ln(1/prior mass)
+PASS evolution: weighted recombination, projection bound, CUSUM alarm at 14
+PASS reasoning: exact finite WMC and causal mechanism smoke test
+PASS calibration: proper-score arithmetic and conformal quantile index
+PASS output: posterior-risk choice and certificate-gated abstention
+RESULT: 6/6 pillar test groups passed. These are mathematical/software checks, not evidence of intelligence or empirical performance.
+
+$ cmake -S . -B /tmp/xai-cmake-build -DCMAKE_BUILD_TYPE=Release
+$ cmake --build /tmp/xai-cmake-build --parallel 2
+$ ctest --test-dir /tmp/xai-cmake-build --output-on-failure
+Internal ctest changing into directory: /tmp/xai-cmake-build
+Test project /tmp/xai-cmake-build
+    Start 1: xai_pillar_tests
+1/1 Test #1: xai_pillar_tests .................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.00 sec

@@ -1,0 +1,21 @@
+# Local build outputs
+/build/
+*.o
+*.a
+*.so
+*.out
+/TESTS/cpp/pillar_tests
+
+# Dataset and model artifacts (not part of this source repository)
+/data/
+/datasets/
+/models/
+*.gguf
+*.safetensors
+*.pt
+*.pth
+
+# Editor and OS files
+.DS_Store
+.vscode/
+.idea/
