@@ -103,7 +103,7 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 - [x] Simulation-based calibration/posterior predictive checks are not applicable to the current task; no posterior-sampling inference algorithm is implemented.
 - [x] Keep proper scores, reliability, sharpness, risk/coverage, conformal status, and shift indicators as separate outputs.
 
-**Phase 6 gate — PASS for the synthetic diagnostic harness (2026-10-07):** Fresh Release and ASan/UBSan CTest each passed 8/8; the calibration executable passed 9/9 focused groups. The versioned fixture is hand-authored and synthetic only; the Phase 0 WMC archive has no labels/calibration split, no benchmark calibration or coverage claim is made, and no odd-indexed holdout body was opened. See [RESULT/Phase-6.md](RESULT/Phase-6.md), [SPEC/components/05-calibration.md](SPEC/components/05-calibration.md), and [TESTS/validation.log](TESTS/validation.log).
+**Phase 6 gate — PASS for the synthetic diagnostic harness (2026-10-07):** Fresh Release and ASan/UBSan CTest each passed 8/8; the calibration executable passed 9/9 focused groups. The versioned fixture is hand-authored and synthetic only; the Phase 0 WMC archive has no labels/calibration split, no benchmark calibration or coverage claim is made, and no odd-indexed holdout body was opened. See [RESULT/Phase-6.md](RESULT/Phase-6.md), [SPEC/components/05-calibration.md](SPEC/components/05-calibration.md), [TESTS/validation.log](TESTS/validation.log), and the [published implementation commit](https://github.com/nexuss0781/XAI/commit/aca3725).
 
 ## Phase 7 — Decision, certificates, and abstention
 
