@@ -8,18 +8,18 @@ Phase 0 selected exact weighted model counting on finite, unprojected CNF instan
 
 ## Current scope
 
-The repository includes a single-threaded C++20 exact WMC reference solver and a public-only archive auditor. The solver uses GMP rational arithmetic, unit propagation, component decomposition, and occurrence-based branching. It is a narrow implementation exercise; it does not validate the composition or performance of the full six-pillar architecture. The Phase 0 protocol, data findings, claims, and remaining boundaries are recorded in [RESULT/Phase-0.md](RESULT/Phase-0.md).
+The repository includes a single-threaded C++20 exact WMC reference solver, a public-only archive auditor, and a lightweight C++20 shared-record contract library. Phase 1's typed IDs, partition/status rules, canonical JSON format, validation tests, and replay/version conventions are documented in [SPEC/CONTRACTS.md](SPEC/CONTRACTS.md) and the [Phase 1 report](RESULT/Phase-1.md). The contracts do not add storage or a complete runtime. The Phase 0 protocol, data findings, claims, and remaining boundaries are in [RESULT/Phase-0.md](RESULT/Phase-0.md).
 
 The broader proposal uses established mathematics, including Bayesian updating, sequential Bayesian model averaging, bounded optimization, sequential change detection, weighted model counting, proper scoring rules, conformal prediction, and Bayesian decision theory. The proposed composition remains a hypothesis requiring separate implementation and evaluation. Raw observations still need an extraction and entity-resolution layer; the repository does not solve unrestricted natural-language understanding.
 
 ## Repository map
 
 - `README.md` — build, run, and evidence boundary.
-- `RESULT/` — Phase 0 report and machine-readable public-data audit.
-- `include/`, `src/` — exact WMC parser, solver, and CLI.
-- `tools/` — reproducible benchmark archive auditor.
-- `SPEC/` — formal architecture paper, end-to-end contract, and component specifications.
-- `TESTS/` — C++20 component and WMC checks, evaluation protocol, build instructions, and recorded results.
+- `RESULT/` — Phase 0/1 reports and machine-readable public-data audit.
+- `include/`, `src/` — shared contracts and exact WMC parser, solver, and CLI.
+- `tools/` — reproducible archive auditor and version-manifest generator.
+- `SPEC/` — formal architecture paper, shared contracts, end-to-end contract, and component specifications.
+- `TESTS/` — C++20 component, contract, and WMC checks, evaluation protocol, build instructions, and validation results.
 
 ## Research discipline
 

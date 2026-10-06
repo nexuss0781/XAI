@@ -9,6 +9,7 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 - [x] GCC strict-warning build and CMake/CTest paths are documented.
 - [x] Fresh Release build: CTest 2/2, exact-WMC suite 8/8, 67 weighted exhaustive-oracle cases, and six-pillar suite 6/6; finite software/math checks only. See `TESTS/validation.log`.
 - [x] Phase 0 exact-WMC reference solver, strict public-only archive auditor, frozen protocol, and result report are recorded.
+- [x] Phase 1 shared contracts, canonical JSON rules, failure-state tests, clean-build guidance, version-manifest tool, and report are recorded; fresh Release CTest 3/3 passed. See `RESULT/Phase-1.md`.
 - [ ] Implemented end-to-end runtime: not present yet.
 - [ ] Ganak comparison, corpus benchmark, and empirical performance results: not run; reserved for Phase 9. No speed or generalization claim is made.
 - [ ] Production deployment: out of scope for this research plan.
@@ -30,15 +31,15 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 
 ## Phase 1 — Contracts and reproducible foundation
 
-- [ ] Define versioned record envelopes and identifiers for runs, observations, evidence, facts, models, schemas, partitions, queries, certificates, and outputs.
-- [ ] Define machine-readable status/error semantics for success, unsupported input, unknown, inconsistency, timeout, approximation, non-identification, alarms, certificate rejection, and abstention.
-- [ ] Specify canonical serialization, numeric rules, replay metadata, schema evolution, and logging/retention boundaries.
-- [ ] Add shared C++ types and interface/contract tests.
-- [ ] Add tests for malformed records, schema mismatch, provenance identifiers, partition labels, serialization round trips, and explicit failure states.
-- [ ] Establish clean build/test and version-manifest procedure.
-- [ ] Document the exact limits of deterministic replay and numeric tolerances.
+- [x] Define versioned record envelopes and identifiers for runs, observations, sources, evidence, facts/entities, models, schemas, code builds, partitions, queries, certificates, and results.
+- [x] Define machine-readable status/error semantics for success, unsupported input, invalid schema, unknown, inconsistency/zero normalizer, timeout/resource limit, approximation, non-identification, alarm/frozen, certificate rejection, and abstention.
+- [x] Specify canonical serialization, numeric rules, replay metadata, schema evolution, and logging/retention boundaries.
+- [x] Add shared C++ types and interface/contract tests.
+- [x] Add tests for malformed records, schema ID/version mismatch, provenance identifiers, partition labels, serialization round trips, explicit unknown, and distinct failure states.
+- [x] Establish clean build/test instructions and a code/data/config version-manifest tool.
+- [x] Document the exact limits of deterministic replay and numeric tolerances.
 
-**Phase 1 gate:** Components can exchange versioned records and preserve errors; a clean build and tests pass from a fresh build directory.
+**Phase 1 gate — PASS (2026-10-07):** The interface and status catalog are in [`SPEC/CONTRACTS.md`](SPEC/CONTRACTS.md), shared types/tests are built by CMake, and the clean GCC Release build passes CTest 3/3. Canonical replay preserves success and explicit failure statuses; the full validation record is in [`RESULT/Phase-1.md`](RESULT/Phase-1.md) and [`TESTS/validation.log`](TESTS/validation.log). Persistent storage, authentication, cross-process transport, and later-phase partition enforcement remain out of scope.
 
 ## Phase 2 — Factual ingestion and provenance
 
@@ -153,3 +154,4 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 Record blockers here with owner/context, date, and the phase gate they affect. Do not silently move a blocked item to complete.
 
 - No open Phase 0 blockers. Two out-of-format public candidates are excluded under the exact-rational eligibility rule; Phase 9 corpus/baseline evaluation remains pending and does not block the Phase 0 scope-and-protocol gate.
+- No open Phase 1 blockers. Shared contracts are an in-process foundation only; storage, authentication, runtime integration, and Phase 3 partition enforcement remain later-phase work.

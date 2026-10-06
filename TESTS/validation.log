@@ -80,3 +80,14 @@ Final independent review verification (GCC 13.3.0; 2026-10-07):
 
 Archive-audit reproduction after exact-index validation:
 The pinned archive checksum matched; the regenerated JSON exactly matched `RESULT/wmc-public-audit.json`, with all 200 unique indices present, all 100 even/public members parsed, all 100 odd/holdout bodies left unopened, and 98 exact-weight-eligible records. The two excluded public records remain `random_196` and `random_198`.
+
+
+# Phase 1 clean Release validation — 2026-10-07 (UTC+09:00)
+Environment: GCC 13.3.0; CMake 3.28.3; fresh out-of-tree Release build; C++20.
+Strict compiler policy: -Wall -Wextra -Werror; WMC targets also retain -O3.
+Commands: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release; cmake --build build --parallel; ctest --test-dir build --output-on-failure.
+Results: CTest 3/3 targets passed (pillar, shared-contract, WMC); contract groups 4/4; WMC groups 8/8 including 67 weighted exhaustive-oracle cases; pillar groups 6/6. Contract fixtures cover typed IDs/partitions, malformed records, schema ID/version mismatches, canonical JSON round trips, explicit machine-readable failure statuses including unknown, floating-point number rejection, and resource-budget overrun rejection.
+The version-manifest generator passed a temporary-input check: tracked-source hashes were emitted, supplied data/config files had independently verified SHA-256 and byte counts, and tracked/untracked worktree signals were reported. Python syntax compilation and git diff --check passed.
+These are software/contract checks only; they do not establish benchmark performance, task accuracy, or broader system capability.
+
+Fresh Phase 1 AddressSanitizer/UndefinedBehaviorSanitizer build: `/tmp/xai-phase1-sanitized.y8n15g`; C++20 Debug with `-fsanitize=address,undefined -fno-omit-frame-pointer`, leak detection enabled, and UBSan halt-on-error enabled. After the final enum-validation changes, rebuilt the contract library/tests and reran CTest: 3/3 targets passed with no sanitizer findings.
