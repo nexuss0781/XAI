@@ -117,6 +117,8 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 
 **Phase 7 gate — PASS (2026-10-07), for the in-process harness.** Fresh Release and ASan/UBSan CTest each passed 9/9; the dedicated suite passed 8/8 groups. The verifier is synthetic only and does not establish a production exact-count proof. See [RESULT/Phase-7.md](RESULT/Phase-7.md) and [TESTS/validation.log](TESTS/validation.log).
 
+**Published implementation commit:** [cff2409](https://github.com/nexuss0781/XAI/commit/cff2409).
+
 ## Phase 8 — Supported input mapping and orchestration
 
 - [ ] Select supported input path: structured typed input, constrained deterministic parser, or explicitly named permitted preprocessing component.
