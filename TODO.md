@@ -56,15 +56,15 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 
 ## Phase 3 — Predictive learning
 
-- [ ] Select and version an initial task-appropriate predictive model library and prior.
-- [ ] Define feature schema, missing-data behavior, sufficient statistics, and update policy.
-- [ ] Implement sequential mixture prediction and weight updates in stable log space.
-- [ ] Track predictive log scores, model weights, model/library hashes, and training-use decisions.
-- [ ] Enforce training/development/calibration/final-test boundaries in code.
-- [ ] Define unsupported-input and all-models-zero-probability behavior without silent fallback certainty.
-- [ ] Test known finite mixture/regret fixtures, replay, state serialization/resume, and partition enforcement.
+- [x] Select and version an initial task-appropriate predictive model library and prior.
+- [x] Define feature schema, missing-data behavior, sufficient statistics, and update policy.
+- [x] Implement sequential mixture prediction and weight updates in stable log space.
+- [x] Track predictive log scores, model weights, model/library hashes, and training-use decisions.
+- [x] Enforce training/development/calibration/final-test boundaries in code.
+- [x] Define unsupported-input and all-models-zero-probability behavior without silent fallback certainty.
+- [x] Test known finite mixture/regret fixtures, replay, state serialization/resume, and partition enforcement.
 
-**Phase 3 gate:** Predictions/updates are replayable and auditable; guarantees are stated only relative to the declared library and priors.
+**Phase 3 gate — PASS (2026-10-07):** The gate passed on the fixed three-expert library with a read-only prediction path, training/streaming-only updates, auditable partition decisions, deterministic same-runtime replay, and a tested relative log-loss bound. Fresh Release CTest 5/5 and fresh ASan/UBSan CTest 5/5 passed. See [RESULT/Phase-3.md](RESULT/Phase-3.md) and [TESTS/validation.log](TESTS/validation.log). No corpus outcomes were read or evaluated; empirical predictive performance remains future work.
 
 ## Phase 4 — Bounded symbolic and causal reasoning
 

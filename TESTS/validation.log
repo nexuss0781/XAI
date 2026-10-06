@@ -114,3 +114,22 @@ Fresh sanitizer build:
 Result: build succeeded; CTest 4/4 passed; no AddressSanitizer, leak-sanitizer, or UndefinedBehaviorSanitizer report.
 
 Additional checks: the parser-backed weighted-CNF adapter returned exact WMC 1/3 and exact marginals 2/5 and 1 for the fixture with a repeated clause; the repeated clause remained linked as an exact duplicate. Tests exercise hostile overlong rational replay, lowered-limit factor replay, direct/aggregate factor caps, arithmetic bit growth, unknown dependence, and unresolved-identity annotation. No benchmark archive was read or scored; no locked odd-indexed holdout body was opened. These are finite software fixtures, not corpus or performance results.
+
+=== Phase 3 predictive-learning acceptance (2026-10-07) ===
+Baseline: 349ac8d (Phase 2 complete)
+Toolchain: GCC 13.3.0; CMake 3.28.3; C++20
+Fresh Release build from an empty directory:
+  cmake -S . -B build-phase3-clean -DCMAKE_BUILD_TYPE=Release
+  cmake --build build-phase3-clean --parallel 4
+  ctest --test-dir build-phase3-clean --output-on-failure
+Result: strict-warning build passed; CTest 5/5 targets passed (pillar, shared-contract, factual-ingestion, predictive-learning, and WMC).
+Predictive-learning executable: 6/6 groups passed. Fixtures cover exact finite mixture probabilities and cumulative scores; the log-loss inequality relative to each of three fixed experts; training/streaming-only updates, read-only prediction and denied-partition audit; Phase 0 eligibility assertion, non-result exclusion, missing features, duplicate IDs and stream order; versioned records, SHA-256 values, canonical state replay/resume and continuation; incompatible schema/library/runtime, forged counter/audit-history rejection, and example/context/audit caps (10,000 hard maximum).
+Fresh Debug AddressSanitizer/UndefinedBehaviorSanitizer build:
+  cmake -S . -B build-phase3-asan -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer' \
+    -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'
+  cmake --build build-phase3-asan --parallel 4
+  ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1 \
+    ctest --test-dir build-phase3-asan --output-on-failure
+Result: CTest 5/5 passed; no ASan, leak-sanitizer, or UBSan report.
+Additional checks: `git diff --check` passed. No MCC archive instance or solver outcome was read, used for fitting/tuning/scoring, or opened from the odd-indexed holdout. No predictive performance, corpus completion, or Ganak-comparison result is claimed.

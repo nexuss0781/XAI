@@ -1,0 +1,27 @@
+# Phase 3 — Predictive learning
+
+**Phase 3 gate: PASS (2026-10-07).** The repository now has a versioned C++20 sequential predictive component with a fixed model library and prior, stable log-space mixture updates, a training-use audit, partition enforcement, model/prior hashes, replayable state, and machine-readable prediction/update records. The fresh Release build passed all five CTest targets, including six new learning test groups; a fresh AddressSanitizer/UndefinedBehaviorSanitizer build also passed all five targets.
+
+## Implemented scope
+
+The component predicts whether an eligible, parser-valid WMC instance will produce an exact solver result within the declared project limits. It distinguishes `completed_exact` from an explicit solver noncompletion. External kills, malformed or ineligible attempts, and other observations without a trustworthy explicit outcome are non-results and cannot enter the model as negative labels. Phase 0's primary task, locked split, and Phase 9 evaluation plan are unchanged.
+
+The fixed library is `library:wmc-completion-v1`, with prior mass `1/3` on each of three Beta(1,1) Bernoulli experts: a global base-rate model, a structural-context model keyed by logarithmic buckets of variables/clauses/literal occurrences, and a previous-outcome model. The required `xai.wmc_structure` v1 features are exact parser counts; the caller must set an explicit Phase 0 eligibility flag after upstream parser and exact-weight validation. The learning component does not parse formulas or verify that caller assertion itself. Missing features and counts beyond the Phase 0 caps fail explicitly; no silent imputation is used. The prior and library are SHA-256 identified as `1cda1b584481138a803b29135576956b4f438e211add283fda6f5bb47a8b4e45` and `7f39e62795eba78a74b2fe78bf1c0c5b83f726fbf226ca1418babcea527070d3`, respectively.
+
+The prediction and weight update use log probabilities and stable log-sum-exp. Exact integer sufficient statistics, per-model predictive log scores, mixture cumulative log score, posterior weights, structural contexts, and the last outcome are retained. The model-library regret inequality is tested against each fixed expert. It is explicitly relative to the declared library and prior and does not promise absolute accuracy.
+
+`predict()` is read-only and takes no target label. `observe()` may update only on training or streaming records; once streaming starts, training cannot resume. Development, calibration, final-test, unlabelled, and invalid-feature/outcome attempts fail closed and are audited without saving the supplied target when the call has valid identity/partition metadata. Calls without the identifiers needed for an audit fail immediately and do not update state. Every successful result carries the feature/partition lineage, sufficient-statistic summary, model weights, scores, hashes, and an `approximate` status for its floating-point log calculations.
+
+Canonical snapshots retain the update audit, counters, scores, hashes, schema IDs, resource limits, and numeric-runtime identity. Restore rejects incompatible hashes/runtime metadata, over-limit or overflowing counters, invalid structural-context keys, mismatched audit histories, and an impossible transition from streaming back to training. Replay/resume is byte-identical for the same implementation and compatible numeric runtime. This remains an in-process component, not persistent storage or an access-control mechanism.
+
+The default and hard maximum are 10,000 accepted examples, audit entries, and structural contexts; callers may choose smaller caps. This finite bound keeps the state and audit within the shared canonical-record resource envelope. Snapshots reject mismatched compiler/standard-library/long-double fingerprints; a matching fingerprint does not guarantee identical math-library behavior, so no cross-runtime equivalence is claimed.
+
+## Validation evidence
+
+A fresh GCC 13.3.0 C++20 Release build from an empty build directory passed strict warnings (`-Wall -Wextra -Werror`) and CTest **5/5**: the pillar, shared-contract, factual-ingestion, predictive-learning, and exact-WMC targets. The new learning suite passed **6/6** groups, covering known finite mixture probabilities and cumulative scores; the mixture log-loss inequality; authorized and denied partitions; eligibility assertion, missing features, and non-results; duplicate observations and training/stream order; state replay/resume and schema compatibility; independently checked SHA-256 values; tampered hash/runtime/counter/audit-history rejection; and example, context, and audit limits.
+
+A separate fresh GCC 13.3.0 Debug build with AddressSanitizer and UndefinedBehaviorSanitizer passed CTest **5/5**, with leak detection enabled and UBSan halt-on-error enabled. `git diff --check` passed. The exact reproduction commands and results are appended to [`TESTS/validation.log`](../TESTS/validation.log).
+
+## Boundary of the result
+
+Only deterministic software fixtures were used. No MCC 2024 archive record or solver outcome was used for training, tuning, or scoring, and no odd-indexed holdout body was opened. There is no corpus completion rate, predictive accuracy, runtime prediction quality, calibration result, Ganak comparison, generalization claim, or deployment result. The harness is available for later explicitly authorized training/streaming sequences; any benchmark-level predictive evaluation remains outside this phase and must follow the frozen task protocol and Phase 9 gate.

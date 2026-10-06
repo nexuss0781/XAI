@@ -11,7 +11,7 @@ This directory defines the candidate architecture and its mathematical interface
 ## Component specifications
 
 1. [Factual ingestion](components/01-factual-ingestion.md) — Phase 2 exact finite belief state, evidence/dependence policy, provenance and resource limits.
-2. [Learning](components/02-learning.md)
+2. [Learning](components/02-learning.md) — Phase 3 fixed-library sequential WMC completion predictor, log-space mixture updates, partition rules, audit, and replay boundary.
 3. [Evolution and adaptation](components/03-evolution-adaptation.md)
 4. [Reasoning](components/04-reasoning.md)
 5. [Calibration](components/05-calibration.md)
