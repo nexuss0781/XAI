@@ -17,9 +17,9 @@
       "version": "Usage: xai_wmc_solver [--timeout-ms N] [--node-limit N] [--max-depth N]"
     }
   },
-  "code_revision": "0f9878727a400f338c3b6a70da120653d89090fa",
-  "code_tree": "82c90df18cf7d094fe3ffe9355cf87580852ccae",
-  "created_utc": "2026-10-06T21:14:56+00:00",
+  "code_revision": "a1a65b5ffdeab261bcdeaf7151c03b0c66213403",
+  "code_tree": "9830cc0fb941675b659d4e3c26a34894901e2c07",
+  "created_utc": "2026-10-06T23:10:36+00:00",
   "environment": {
     "cmake": "cmake version 3.28.3",
     "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
@@ -90,7 +90,7 @@
     "TESTS/cpp/pillar_tests.cpp": "b542b6eda103f24a021b70c078a7fa7f2fe30879b1a1a6655da08ddb1d5e8fa1",
     "TESTS/cpp/reasoning_tests.cpp": "a7c1b8a6b15773d208b873608b87b4cf385436e136c670ee2989363cb2128e2f",
     "TESTS/cpp/wmc_tests.cpp": "3d80b02196f889a4d9234280214fab2dc09e38ba99bf5071022b4e74a6fd09b5",
-    "TESTS/python/test_phase9_eval.py": "8904166c0620e44d75c3b0b6de64318e01fdcfb6268d65bb5c2da11c1b482936",
+    "TESTS/python/test_phase9_eval.py": "35a9198a0ec08afda00e1744032386d5064ad5f7fc299fcf1b3f6196f5defb1e",
     "TODO.md": "59f86581ff5c53f0661ae8f7bacff1456915e65540aa20c37d5a3579cc24a685",
     "include/xai/adaptation.hpp": "b335f70e39f20936bcc988a4ba9228c0b27089b4588f0f8e56db9bb99763d1f0",
     "include/xai/calibration.hpp": "f5c9b9d31411d383f63faed133d647281b8b1a0a07aaf31c5540f864d50e57b6",
@@ -113,7 +113,7 @@
     "src/wmc.cpp": "99dfa5048e89ad827aefbbfc497c798c68801df6912a9e038497649be0aeec2f",
     "tools/audit_wmc_archive.py": "4b0f14e0d4f6844575abcbc65ffb57510da7ed63ba9d8fb383c4534327e0663d",
     "tools/create_version_manifest.py": "5fd9f6069d900ea0ccc72a75a56e7556dda987ea437bbd937f9e8f5a5f852195",
-    "tools/phase9_eval.py": "2bcc64e1fbe078d8ea819b41bb657e7965c1b0a21613100b0430a79f1cfc75ee"
+    "tools/phase9_eval.py": "8b0561f313d9bd6c391eb62abd6fb89877ccb3253c7de41e674d3a6bea24b0db"
   },
   "options": {
     "external_per_process_limits": {
