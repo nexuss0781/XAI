@@ -5,9 +5,9 @@
     "sha256": "314a698a56773f2e3dd1f529325d6a5e6876a33d3596c170754e2404ef27bc1c",
     "size_bytes": 70849024
   },
-  "audit_code_revision": "c9021fffe3be581d59d81440b3ba1fd7e6249387",
+  "audit_code_revision": "1186902f09c22e7c7d64d3cd9b750fa62b8c9ee6",
   "audit_complete": true,
-  "completed_utc": "2026-10-06T21:29:59+00:00",
+  "completed_utc": "2026-10-06T23:25:59+00:00",
   "cross_split_pairs": [
     {
       "clause_jaccard": 0.9680851063829787,
@@ -37,8 +37,8 @@
     173,
     177
   ],
-  "freeze_file_sha256": "866f5fe9c48370e88c056c7abacc07eb32e408ef866ff6c16dc4e82f56b997d2",
-  "frozen_code_revision": "0f9878727a400f338c3b6a70da120653d89090fa",
+  "freeze_file_sha256": "b1b6dff0136f3e299a551d9074a862282347e2cb2aa8ecff161b543aaaaa1d12",
+  "frozen_code_revision": "a1a65b5ffdeab261bcdeaf7151c03b0c66213403",
   "odd_candidate_count": 100,
   "odd_eligibility": [
     {
