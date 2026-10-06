@@ -11,6 +11,9 @@ This repository is a research proposal plus deterministic C++20 checks. It does 
 - [Formal research paper](SPEC/RESEARCH_PAPER.md)
 - [End-to-end specification](SPEC/END_TO_END_FLOW.md)
 - [Test notes and run record](TESTS/README.md)
+- [End-to-end roadmap](ROADMAP.md)
+- [Detailed phase plan](Phase.md)
+- [Phased implementation checklist](TODO.md)
 
 Each pillar has its own specification under `SPEC/components/`. Mathematical sources are linked in the paper and relevant component documents. Test instructions and outcomes live under `TESTS/`, not `SPEC/`.
 
