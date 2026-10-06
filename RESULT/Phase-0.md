@@ -1,0 +1,51 @@
+# Phase 0 — Scope and research protocol
+
+**Phase 0 gate: PASS for the defined 98-instance eligible development subset.** The task, data-use boundary, eligibility rule, split, metrics, baseline, ablations, resource limits, stress cases, and claim boundary are now recorded. The final fresh build and all software tests passed without compiler warnings or unresolved test failures. Two malformed-weight public candidates are explicitly excluded before scoring; they are not solver results. No corpus-scale performance or baseline comparison has been run.
+
+## Selected task
+
+The first bounded task is exact rational weighted model counting (WMC) for finite, unprojected CNF formulas from the 2024 Model Counting Competition Track 2 archive. The question is whether a bounded, CPU-based C++20 solver can return the exact WMC on supported inputs, agree with an independent exact solver when benchmark evaluation is run, and return an explicit status rather than a partial count when input or resource limits are exceeded.
+
+The solver accepts DIMACS-like `p cnf` input and `c p weight` directives. Each explicit literal-weight pair must include both signs, use exact non-negative weights in `[0,1]`, and sum exactly to one; the official `(1,1)` pair and a fully omitted pair both represent an unweighted variable. Negative weights, projected counting, malformed clauses, incomplete pairs, and other non-normalized pairs are rejected. Decimal and fractional text is parsed as exact rational arithmetic, not rounded or renormalized. SAT/UNSAT status is kept separate from WMC: a satisfiable formula may have WMC zero.
+
+## Data and eligible subset
+
+The candidate data are the [Model Counting Competition 2024 instance archive on Zenodo](https://zenodo.org/records/14249068), v1, DOI [10.5281/zenodo.14249068](https://doi.org/10.5281/zenodo.14249068), licensed CC BY 4.0. Attribute dataset creators Johannes Fichte, Markus Hecher, and Arijit Shaw and cite the DOI. The archived Track 2 tar is 70,849,024 bytes; its MD5 matches `1c7e6279eaf29bf3731cebe07eedf107`. The [official 2024 overview](https://mccompetition.org/2024/mc_description.html) and [format specification](https://mccompetition.org/assets/files/mccomp_format_24.pdf) describe the WMC restrictions and public/private split. This study uses the archive’s observed 100 even-indexed public members as its candidate pool and leaves all 100 odd-indexed holdout bodies unopened.
+
+A streaming format audit structurally parsed all 100 public candidates with no syntax errors. **Ninety-eight** meet the exact-rational weight contract and form the development benchmark. `random_196` and `random_198` are excluded before any solver scoring: thousands of their non-default decimal pairs do not sum exactly to one as rational text, and their tokens contain 14–22 fractional digits, exceeding the precision described in the format. The maximum absolute exact-sum deviations are about `1.05e-16` and `1.044e-16`, respectively; IEEE double addition rounds these pairs to 1.0, but this protocol does not substitute floating-point or tolerance semantics. The files remain documented in the audit and are not rounded, renormalized, or counted in the 98-instance denominator. The same deterministic eligibility rule will be applied to odd-indexed files before a future final evaluation.
+
+| Audit item | Result |
+|---|---:|
+| Public candidates / locked holdouts | 100 / 100 |
+| Structurally parseable public candidates | 100 / 100 |
+| Exact-weight eligible development set | 98 / 100 |
+| Public weight-format exclusions | `random_196` (3,671 pairs), `random_198` (3,997 pairs) |
+| Exact duplicate groups / near-duplicate pairs | 0 / 2 |
+| Public candidates with provenance markers | 0 / 100 |
+| Public candidates with label markers | 0 / 100 |
+
+The two near-duplicate pairs within the eligible subset are `random_118`/`random_120` (distinct-clause Jaccard 0.999905) and `random_174`/`random_178` (0.991529). The screen uses equal variable counts and Jaccard similarity of canonical distinct clause sets at or above 0.95; it is a leakage screen, not proof of semantic equivalence. No `c r` origin tags were present, so source-family dependence is unknown. There are no zero-weight literals, empty clauses, or tautological clauses in the public audit, and no gold WMC labels; the task is deterministic and does not use a training or calibration set.
+
+Among the 98 eligible records, variable counts range from 60 to 8,284,993 (upper median 1,296); clause counts range from 78 to 14,592,512 (upper median 10,652); and literal occurrences range from 234 to 63,982,870 (upper median 28,282). Two otherwise-valid candidates exceed the solver’s predeclared structural caps: `random_088` exceeds the 1,000,000-variable limit, and `random_170` exceeds the 10,000,000-clause limit. They remain in the 98-item bounded-utility denominator and are treated as explicit resource-limit outcomes, not silently dropped. The largest public input is 915,731,636 decompressed bytes; all other audited structural measures remain within their corresponding parser caps.
+
+The archive contains a selected challenge set, not a random or representative sample of WMC use. Report counts and rates only for this named subset; do not attach general-population confidence claims. The formal eligibility and leakage rules, complete per-record measurements, and holdout handling are documented in [`TESTS/EVALUATION_PLAN.md`](../TESTS/EVALUATION_PLAN.md) and [`RESULT/wmc-public-audit.json`](wmc-public-audit.json).
+
+## Frozen evaluation protocol
+
+The primary correctness measure is exact rational agreement with every instance both implementations complete. The primary bounded-utility measure is the number and fraction completed among the 98 eligible public instances. Parser errors, unsupported inputs, timeouts/unknowns, external resource kills, and mismatches are reported separately; a killed process or partial count is never treated as a result. A mismatch stops the run and invalidates an exactness claim.
+
+The selected baseline is [Ganak v2.7.0](https://github.com/meelgroup/ganak/releases), pinned to commit `e8f51841832efbbad4c1dc30e7e628ea39e8eec6` in exact rational mode. The baseline and corpus comparison have **not** been run. Planned ablations disable unit propagation, component decomposition, and occurrence-based branching, one at a time. Exhaustive rational enumeration is reserved for fixtures and any benchmark instance satisfying both `nvars <= 20` and `2^nvars × literal_occurrences <= 50,000,000`.
+
+The project budget is 600 seconds for the whole process, one CPU core, and 4 GiB resident memory, enforced by an external runner. The solver’s own search timer begins after parsing. Default parser caps are 1,000,000 variables, 10,000,000 clauses, 100,000,000 literal occurrences, a 16-MiB line, and a 4-GiB input stream; solver defaults are 10,000,000 recursive nodes, 600,000 ms, and depth 4,096. Any operating-system or external memory-governor kill is recorded as out-of-budget. These are project limits, not the [competition’s 3,600-second/32-GB limits](https://mccompetition.org/2024/mc_description.html).
+
+The practical proof-of-concept threshold for the later task-specific evaluation is at least one nontrivial eligible public instance completed by both this solver and the pinned baseline within limits with exactly matching rational counts, with truthful statuses on every attempt and no mismatch. No speedup target is claimed. The target is intentionally falsifiable, but has not yet been measured.
+
+The historical even/odd split is retained rather than creating a new random split. There is no training or calibration partition for deterministic WMC, and no temporal or domain-shift set is defined for this static benchmark. Before opening the holdout for scoring, freeze the solver, baseline options, and analysis plan; then run the predeclared cross-split hash/source/near-duplicate audit. Any related group is excluded from claims and reported. XZ decompression is transport-only: pass the original formula text unchanged to both solvers.
+
+## Implementation and verification
+
+The repository now includes a single-threaded C++20 exact reference solver using GMP arbitrary-precision rationals, strict DIMACS-like parsing, DPLL branching, unit propagation, component decomposition, and occurrence-based branching. It has explicit parse, unsupported-input, and resource-limit statuses and does not emit partial counts. Release builds use CPU optimization; no multithreaded, SIMD, GPU, or speed advantage is claimed. The implementation and build details are in [`src/wmc.cpp`](../src/wmc.cpp), [`include/xai/wmc.hpp`](../include/xai/wmc.hpp), [`src/main.cpp`](../src/main.cpp), and [`TESTS/WMC_SOLVER.md`](../TESTS/WMC_SOLVER.md).
+
+A fresh Release build used GCC 13.3.0, CMake 3.28.3, and GMP 6.3.0 with strict warnings treated as errors. CTest passed 2/2 targets; the WMC suite passed 8/8 groups, including 67 weighted formulas checked against an independent exhaustive oracle, exact-rational parsing, strict invalid-input cases, resource limits, ablations, and SAT/zero-WMC separation. The existing six-pillar suite passed 6/6 groups. CLI checks confirmed explicit `(1,1)` yields SAT with exact count 2, while a high-precision decimal pair that is not an exact rational complement returns `s UNKNOWN` with `status=unsupported` (exit 3). `git diff --check` and Python syntax validation passed. Final review also removed an unused API counter and changed timeout checks to compare elapsed time directly; the corrected Release build again passed all suites, and AddressSanitizer/UndefinedBehaviorSanitizer CTest passed 2/2. The final solver binary SHA-256 is `bc889b0e92289c74148334bd0b015dd58bd59a64220cab12f404cb5631ce29ca`; the detailed record is [`TESTS/validation.log`](../TESTS/validation.log).
+
+These results establish a scoped protocol, a working bounded implementation, and finite software/math checks. They do **not** establish corpus-scale exact-counting accuracy, runtime or memory performance, a comparison against Ganak, benchmark superiority, general WMC competence, or capability of the broader six-pillar architecture. No model was trained, no held-out formula was opened, and no final evaluation or deployment was performed.

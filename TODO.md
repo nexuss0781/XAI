@@ -1,30 +1,32 @@
 # XAI Phased TODO
 
-This checklist tracks implementation and research work against [ROADMAP.md](ROADMAP.md) and [Phase.md](Phase.md). An unchecked item is not a claim that work has started. A phase is complete only when its exit gate is supported by committed evidence; source documents or passing toy fixtures alone do not establish empirical capability.
+This checklist tracks implementation and research work against [ROADMAP.md](ROADMAP.md) and [Phase.md](Phase.md). An unchecked item is not a claim that work has started. A phase is complete only when its exit gate is supported by recorded evidence; source documents or passing toy fixtures alone do not establish empirical capability.
 
 ## Current baseline
 
 - [x] Candidate six-pillar architecture and end-to-end information flow are specified in `SPEC/`.
 - [x] Deterministic C++20 component fixtures exist for the six pillars.
 - [x] GCC strict-warning build and CMake/CTest paths are documented.
-- [x] Existing checks were run during roadmap preparation: six component groups passed and CTest passed (2026-10-07). These remain finite software/math checks only.
+- [x] Fresh Release build: CTest 2/2, exact-WMC suite 8/8, 67 weighted exhaustive-oracle cases, and six-pillar suite 6/6; finite software/math checks only. See `TESTS/validation.log`.
+- [x] Phase 0 exact-WMC reference solver, strict public-only archive auditor, frozen protocol, and result report are recorded.
 - [ ] Implemented end-to-end runtime: not present yet.
-- [ ] Corpus-based training, task benchmark, and empirical performance results: not present yet.
+- [ ] Ganak comparison, corpus benchmark, and empirical performance results: not run; reserved for Phase 9. No speed or generalization claim is made.
 - [ ] Production deployment: out of scope for this research plan.
 
 ## Phase 0 — Scope and research protocol
 
-- [ ] Select one bounded initial task and write a falsifiable research question.
-- [ ] Define target population, permitted use, supported input/output, outcome timing, and task success measure.
-- [ ] Select/inspect candidate data; document coverage, duplicates/near-duplicates, source dependence, missingness, label quality, and bias.
-- [ ] Define training, development, calibration (if used), untouched final-test, and temporal/domain-shift partitions.
-- [ ] Define leakage controls for entities, sources, and near-duplicates.
-- [ ] Select simple task-appropriate baselines and targeted ablations before final-test access.
-- [ ] Define stress cases, resource budgets, minimum practically meaningful result, and stopping criteria.
-- [ ] Write the claim boundary and identify any required privacy, safety, or domain review.
-- [ ] Record task/data/protocol decisions and alternatives in a decision log.
+- [x] Select one bounded initial task and write a falsifiable research question: exact rational WMC on the named MCC 2024 Track 2 archive.
+- [x] Define target population, permitted use, supported input/output, outcome timing, and task success measure; target is the 98 eligible public/even members.
+- [x] Select/inspect candidate data; document coverage, duplicates/near-duplicates, source dependence, missingness, label availability, and selection bias.
+- [x] Define split and eligibility: public evens form development candidates; 98 pass the exact-weight contract, two are excluded before scoring; odds remain locked for final evaluation under the same rule. No training/calibration split applies.
+- [x] Define leakage controls for exact hashes, source tags, and near-duplicates; document unknown source dependence and the later locked cross-split audit.
+- [x] Select Ganak v2.7.0 exact-rational baseline and three targeted ablations before final-test access; baseline is pinned but not yet run.
+- [x] Define stress cases, project resource budgets, practical threshold, and stopping criteria.
+- [x] Write the claim boundary and identify privacy/safety/domain review needs; no person-level data or human-subject review is involved.
+- [x] Record task/data/protocol decisions, exclusions, and alternatives in the Phase 0 report and decision log.
+- [x] Implement and verify the bounded C++20 exact-WMC reference solver and streaming public-data auditor.
 
-**Phase 0 gate:** The question, data-use boundaries, split plan, baselines, metrics, and claims are reviewable before fitting or final-test access.
+**Phase 0 gate — PASS (2026-10-07):** The selected 98-instance scope, data-use boundary, eligibility and holdout rules, baseline, metrics, project resource limits, ablations, claims, and clean software verification are documented in [`RESULT/Phase-0.md`](RESULT/Phase-0.md). Two out-of-format public candidates are explicitly excluded; there are no unresolved build or test failures. Corpus performance evaluation remains Phase 9 work.
 
 ## Phase 1 — Contracts and reproducible foundation
 
@@ -150,4 +152,4 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 
 Record blockers here with owner/context, date, and the phase gate they affect. Do not silently move a blocked item to complete.
 
-- None recorded. Initial task, population, dataset, and empirical success criterion remain to be selected in Phase 0.
+- No open Phase 0 blockers. Two out-of-format public candidates are excluded under the exact-rational eligibility rule; Phase 9 corpus/baseline evaluation remains pending and does not block the Phase 0 scope-and-protocol gate.

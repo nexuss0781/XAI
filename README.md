@@ -1,34 +1,36 @@
 # XAI
 
-A research specification for a candidate modular, non-neural architecture built from explicit mathematical components.
+XAI is a research proposal for a candidate modular, non-neural architecture built from explicit mathematical components. The initial bounded empirical task is exact weighted model counting (WMC) on a defined subset of the 2024 Model Counting Competition Track 2 benchmark. This narrow task is not an end-to-end evaluation of the broader architecture.
 
-This repository is a research proposal plus deterministic C++20 checks. It does **not** claim general intelligence, novelty, real-dataset performance, or production readiness.
+The repository now includes an optimized single-threaded C++20 reference solver for unprojected DIMACS-like WMC, using GMP exact rationals, DPLL branching, unit propagation, component decomposition, strict validation, and explicit resource-limit statuses. It does **not** claim general intelligence, novelty, production readiness, or superiority over established solvers.
 
 ## Project documents
 
 - [Project overview](Project.md)
+- [Phase 0 protocol and result](RESULT/Phase-0.md)
+- [WMC solver build, input, and limits](TESTS/WMC_SOLVER.md)
 - [Specification index](SPEC/README.md)
 - [Formal research paper](SPEC/RESEARCH_PAPER.md)
 - [End-to-end specification](SPEC/END_TO_END_FLOW.md)
-- [Test notes and run record](TESTS/README.md)
+- [Test notes and recorded validation](TESTS/README.md)
+- [Evaluation plan](TESTS/EVALUATION_PLAN.md)
 - [End-to-end roadmap](ROADMAP.md)
 - [Detailed phase plan](Phase.md)
 - [Phased implementation checklist](TODO.md)
 
-Each pillar has its own specification under `SPEC/components/`. Mathematical sources are linked in the paper and relevant component documents. Test instructions and outcomes live under `TESTS/`, not `SPEC/`.
+## Build and run
 
-## Run the checks
-
-Requirements: GCC or another C++20 compiler.
+Requirements: CMake 3.20+, a C++20 compiler, and GMP/GMPXX development headers and libraries.
 
 ```sh
-g++ -std=c++20 -O2 -Wall -Wextra -Werror \
-  TESTS/cpp/pillar_tests.cpp -o /tmp/xai-pillar-tests
-/tmp/xai-pillar-tests
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
+./build/xai_wmc_solver --timeout-ms 600000 --node-limit 10000000 instance.cnf
 ```
 
-See [TESTS/README.md](TESTS/README.md) for the checked scope and limitations.
+The solver prints SAT status independently from the exact weighted count: a satisfiable formula can have WMC zero when its satisfying assignments carry zero weight. Unsupported or malformed input and exhausted limits return `s UNKNOWN` with a machine-readable reason; no partial count is emitted. See [TESTS/WMC_SOLVER.md](TESTS/WMC_SOLVER.md) for supported syntax and ablations.
 
-## Current status
+## Evidence boundary
 
-The mathematical composition is a research hypothesis assembled from established methods. The current tests cover selected finite examples and invariants; no corpus training, fine-tuning, performance benchmark, or deployment has been performed. A file size of 1 GB is not a dataset sufficiency criterion.
+The Phase 0 fixtures establish exact agreement with exhaustive enumeration on the stated small formulas and validation cases. They do not establish benchmark-scale performance, general WMC competence, a speed advantage over Ganak, representative workload coverage, or capability of the complete six-pillar system. No training or broad natural-language evaluation is part of this task.

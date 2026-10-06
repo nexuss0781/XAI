@@ -30,9 +30,9 @@ This record separates established mathematical results from the finite C++ check
 
 **Mathematical basis:** exact weighted model counting over a finite propositional model and a supplied structural causal mechanism.
 
-**Executed check:** for \(H=(A\lor B)\land(\neg A\lor B)\), with independent weights \(P(A)=0.3\), \(P(B)=0.6\), exact enumeration gives \(\operatorname{WMC}(H)=0.6\), \(\operatorname{WMC}(H\land A)=0.18\), and \(P(A\mid H)=0.3\). A separate mechanism smoke fixture checks two supplied conditional values.
+**Executed check:** for \(H=(A\lor B)\land(\neg A\lor B)\), with independent weights \(P(A)=0.3\), \(P(B)=0.6\), exact enumeration gives \(\operatorname{WMC}(H)=0.6\), \(\operatorname{WMC}(H\land A)=0.18\), and \(P(A\mid H)=0.3\). The C++20/GMP solver is also checked against independent exhaustive enumeration on fixed fixtures and 67 exact-weight formulas with two variables. Tests cover zero-WMC-but-SAT, free variables, disconnected components, malformed input, the declared ablations, and explicit resource exhaustion. A separate mechanism smoke fixture checks two supplied conditional values.
 
-**Boundary:** truth-table enumeration on two variables and a supplied causal mechanism; no scalable solver or real causal identification is implemented.
+**Boundary:** solver evidence is limited to finite software fixtures and a small exhaustive oracle grid; no benchmark-scale accuracy, runtime advantage, or real causal identification is established.
 
 ## Calibration
 
@@ -52,4 +52,4 @@ This record separates established mathematical results from the finite C++ check
 
 ## Reproducibility and overall status
 
-The harness is in `cpp/pillar_tests.cpp`; `README.md` gives the GCC/C++20 build command; `validation.log` records the run. The overall claim is limited to passing these deterministic checks. The checks do not verify an end-to-end production architecture, train or evaluate on any real corpus, establish performance, establish novelty, or prove intelligence.
+The pillar harness is in `TESTS/cpp/pillar_tests.cpp`; the WMC harness is in `TESTS/cpp/wmc_tests.cpp`; and CMake/CTest commands are in `TESTS/README.md`. `validation.log` records the latest clean run. These finite checks do not verify an end-to-end production architecture, establish benchmark-scale performance, establish novelty, or prove intelligence.

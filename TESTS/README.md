@@ -2,17 +2,7 @@
 
 ## Build and run
 
-Requirements: GCC 13+ or another conforming C++20 compiler. The project also provides a CMake/CTest path.
-
-Direct build:
-
-```sh
-g++ -std=c++20 -O2 -Wall -Wextra -Werror \
-  TESTS/cpp/pillar_tests.cpp -o /tmp/xai-pillar-tests
-/tmp/xai-pillar-tests
-```
-
-CMake and CTest:
+Requirements: CMake 3.20+, a C++20 compiler, and GMP/GMPXX development headers and libraries.
 
 ```sh
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
@@ -20,18 +10,24 @@ cmake --build build --parallel
 ctest --test-dir build --output-on-failure
 ```
 
-The harness uses fixed, deterministic inputs. The recorded output is in [`validation.log`](validation.log), and the pillar-by-pillar evidence boundaries are in [`MATHEMATICAL_VERIFICATION.md`](MATHEMATICAL_VERIFICATION.md).
+The CMake build uses `-Wall -Wextra -Werror`; the WMC targets are optimized with `-O3` on GCC/Clang and `/O2` on MSVC. The recorded final run is in [`validation.log`](validation.log). Solver input, statuses, compiler options, and explicit resource limits are described in [`WMC_SOLVER.md`](WMC_SOLVER.md).
+
+To reproduce the public-only benchmark audit, obtain the official CC BY 4.0 archive from the [Zenodo record](https://zenodo.org/records/14249068) and run:
+
+```sh
+python3 tools/audit_wmc_archive.py \
+  data/raw/mc2024-track2-wmc_competition.tar \
+  --output RESULT/wmc-public-audit.json
+```
+
+The script verifies the archive checksum and that member indices 0–199 each occur exactly once, parses only even-indexed public Track 2 members, and records odd-indexed member names without reading their bodies. The measured Phase 0 summary is in [`RESULT/Phase-0.md`](../RESULT/Phase-0.md), with per-instance audit fields in [`RESULT/wmc-public-audit.json`](../RESULT/wmc-public-audit.json).
 
 ## Coverage
 
-The six groups check selected examples: Bayesian posterior updates and normalization; a finite Bayesian model-mixture log-loss inequality case; weighted recombination, projection into a declared bound, and a CUSUM sample; exact finite weighted model counting plus a causal-mechanism smoke fixture; proper-score arithmetic and a conformal order-statistic index; and risk minimization with a certificate-gated abstention path.
+The original six pillar groups check selected finite arithmetic and contract fixtures for evidence updates, a Bayesian model mixture, bounded recombination/change detection, WMC/causal smoke values, proper scores/conformal indexing, and certificate-gated abstention.
+
+The separate WMC suite has eight groups: exact rational parsing; exact WMC and SAT/UNSAT/zero-WMC status; free variables, tautologies, and disconnected components; equivalence across all three solver ablations; strict input and typed-instance validation; node/depth/time limits; fixed exhaustive-oracle formulas; and a 67-case weighted formula grid checked against independent brute-force enumeration. The oracle fixtures are small software checks, not benchmark results.
 
 ## Limits
 
-A passing test means only that the tested code produced the expected results for those fixtures. It is not a proof of the full architecture, suitability of the assumptions, correct inference on arbitrary inputs, real-data calibration, learning quality, performance, novelty, or intelligence. The causal fixture checks supplied mechanism values; it does not estimate a causal effect. The adaptation fixture does not implement a complete covariance-matrix adaptation strategy. The harness does not train on a corpus, run a performance benchmark, fine-tune, or deploy a model.
-
-No training or evaluation on a 1 GB dataset has been conducted. Dataset sufficiency must be established for a named task and evaluation population, not inferred from byte size.
-
-## Reproducibility record
-
-The previous recorded run used GCC 13.3, C++20, optimization, and `-Wall -Wextra -Werror`. Rebuild locally to verify the current source on your toolchain; the existing log is a historical result, not a claim about every environment.
+A passing test establishes only that tested code matched the expected answer on those fixtures. It does not establish correctness on arbitrary formulas, benchmark-scale accuracy, empirical speed, superiority over Ganak, dataset representativeness, or the behavior of the broader architecture. No full Track 2 solving experiment, corpus training, calibration study, deployment, or real causal identification is claimed.

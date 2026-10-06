@@ -2,7 +2,7 @@
 
 ## Purpose and status
 
-This roadmap turns the current candidate architecture into a staged, testable research program. It describes intended work, not completed capability: today the repository contains mathematical specifications and deterministic C++ component checks, but no end-to-end runtime, corpus training, empirical benchmark, or deployment.
+This roadmap turns the candidate architecture into a staged, testable research program. The repository contains mathematical specifications, deterministic C++ component checks, and a narrow exact-WMC reference solver for the selected Phase 0 task; it still has no end-to-end architecture runtime, corpus training, benchmark-performance result, or deployment.
 
 The objective is a bounded research demonstrator that takes a task in a declared input format, preserves evidence and assumptions, computes supported beliefs and predictions, answers only questions its formal modules can handle, calibrates uncertainty on correctly partitioned data, and either chooses an admissible action or abstains. The initial demonstrator should prefer explicit, typed inputs and narrow task scopes over a claim of unrestricted language understanding.
 

@@ -1,5 +1,6 @@
 # Local build outputs
 /build/
+/build-phase0/
 *.o
 *.a
 *.so
@@ -10,6 +11,8 @@
 /data/
 /datasets/
 /models/
+__pycache__/
+*.pyc
 *.gguf
 *.safetensors
 *.pt

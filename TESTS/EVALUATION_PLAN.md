@@ -1,25 +1,15 @@
-# Evaluation Plan (Future Work)
+# Evaluation Plan
 
-No real-dataset experiment has been run. This plan is a checklist for a later, task-specific evaluation—not evidence that the system works.
+## Phase 0 task
 
-## Define the task and data
+The selected initial task is exact rational WMC for bounded, unprojected DIMACS-like CNF instances in the named 2024 Model Counting Competition Track 2 archive. Explicit probability-weight pairs must lie in [0,1] and sum exactly to one; the official special pair `(1,1)` and an omitted pair both mean the unweighted/#SAT default. The candidate pool is the release’s 100 even-numbered public members; the eligible development subset is the 98 that pass this exact-rational contract. `random_196` and `random_198` are excluded before scoring because their high-precision non-default decimal pairs do not sum exactly to one; no rounding or renormalization is applied. The 100 odd-numbered members remain locked for final evaluation, with the same eligibility rule applied before scoring. There is no training or calibration partition for this deterministic exact-counting task. The frozen selection, data-use rules, audit findings, metrics, resource budget, baseline, ablations, stress cases, claims, and decision log are recorded in [RESULT/Phase-0.md](../RESULT/Phase-0.md).
 
-Before training or inference experiments, define the task, target population, data schema, preprocessing, deduplication policy, labels, outcome timing, and allowed input/output. Inspect the actual corpus: record count, duplicates, label quality, coverage of cases, source dependence, noise, and machine-readable fraction. A 1 GB file is not a sufficiency metric.
+The primary correctness outcome is exact rational agreement with pinned Ganak v2.7.0 in rational mode on every eligible instance both implementations complete. The primary bounded-utility outcome is the number and fraction completed among the 98 eligible public instances under the fixed per-instance budget, with parser errors, unsupported input, timeout/unknown, external resource kills, and count mismatches reported separately; any externally killed run is a non-result. The eligible set is a curated finite benchmark, not a probability sample; report corpus counts and rates descriptively, without general-population confidence claims, and disclose that source dependence is unknown where provenance is absent. Use exhaustive enumeration for fixtures and benchmark items only when `nvars <= 20` and `2^nvars * total_literal_occurrences <= 50,000,000`; this caps the independent oracle workload. The evaluation cap is 600 seconds for the whole process (including parsing), one CPU core, and 4 GiB resident memory, enforced by the external harness. This plan selects the comparisons; it does not imply that the baseline or corpus experiment has been run.
 
-Freeze a training split, a development split, a separate calibration split where required, an untouched final test split, and a temporal or domain-shift test. Prevent entity, source, or near-duplicate leakage across splits when it would invalidate the evaluation.
+## Broader system evaluation (future work)
 
-## Comparisons and ablations
+Before evaluating the complete architecture, define its task-specific target population, input/output contract, permitted data, preprocessing, label/outcome timing, and practical success criterion. Inspect the actual corpus for coverage, duplicate/near-duplicate records, source dependence, missingness, labels, and collection bias. Freeze training, development, calibration where needed, untouched final test, and temporal/domain-shift sets; prevent entity, source, or near-duplicate leakage.
 
-Compare simple task-appropriate baselines with the full system and targeted ablations: without provenance tracking; with independent-evidence assumptions versus dependency-aware updates; without adaptation; without abstention; and under distinct memory/resource budgets. Keep the data and tuning budget comparable.
+Compare the full system with task-appropriate baselines and targeted ablations under comparable data and tuning budgets. Report task utility, suitable predictive scores and calibration, conformal coverage only under its assumptions, selective risk, provenance/extraction fidelity, failures/abstentions, runtime, memory, and all protocol deviations. Stress copied/correlated reports, contradictions, identity errors, missing evidence, drift, out-of-domain inputs, solver limits, and malformed records.
 
-## Measures
-
-Report task-specific accuracy or utility; proper probabilistic scores and calibration; conformal coverage only under its assumptions plus prediction-set size; selective risk versus coverage; retrieval/provenance fidelity; contradiction and entity-resolution errors; runtime, peak memory, stored-state size, I/O, and approximation status/error. Include confidence intervals, all failures, seeds, software versions, data versions, and the exact protocol.
-
-## Stress cases
-
-Include copied reports, correlated sources, entity-resolution mistakes, contradictions, temporal drift, missing evidence, out-of-domain inputs, solver timeouts, and corrupted or incomplete records. Record whether the system abstains or reports an explicit failure.
-
-## Claim boundary
-
-A successful result can support only a bounded performance claim for the named task, dataset, implementation, and evaluation conditions. It does not establish general intelligence or novelty. The mathematical guarantees apply only when their formal assumptions are met.
+A result can support only a bounded claim for the named task, population, implementation, and protocol. It does not establish general intelligence, novelty, production readiness, or broad representativeness. Mathematical guarantees hold only when their formal assumptions are met.

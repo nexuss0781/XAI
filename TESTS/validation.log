@@ -18,3 +18,65 @@ Test project /tmp/xai-cmake-build
 100% tests passed, 0 tests failed out of 1
 
 Total Test time (real) =   0.00 sec
+
+# Phase 0 final clean build and validation — 2026-10-07 (UTC+09:00)
+Environment: GCC 13.3.0; CMake 3.28.3; GMP 6.3.0; Intel Xeon Processor @ 2.50 GHz.
+Flags: C++20, Release; -Wall -Wextra -Werror; solver and WMC tests compiled with -O3.
+
+$ cmake -S . -B /tmp/xai-phase0-final-build -DCMAKE_BUILD_TYPE=Release
+$ cmake --build /tmp/xai-phase0-final-build --parallel 2
+$ ctest --test-dir /tmp/xai-phase0-final-build --output-on-failure
+100% tests passed, 0 tests failed out of 2.
+
+$ /tmp/xai-phase0-final-build/xai_wmc_tests
+PASS rational_parser
+PASS counting_status
+PASS structure
+PASS ablations
+PASS validation
+PASS resource_limits (node, depth, and wall-time)
+PASS oracle_grid
+PASS exhaustive_grid: 67 weighted formulas agree with independent enumeration
+RESULT: 8/8 WMC test groups passed; no performance or corpus result is implied.
+
+$ sha256sum /tmp/xai-phase0-final-build/xai_wmc_solver
+ a2f115f454a250cfedf4b0bfd931cc3d70415c72479395d93435b74622f18136  xai_wmc_solver
+
+$ /tmp/xai-phase0-final-build/xai_wmc_solver (executable-level smoke cases)
+PASS exact positive WMC: 3/10
+PASS satisfiable formula with zero WMC: `s SATISFIABLE`, exact rational 0
+PASS unsatisfiable formula: `s UNSATISFIABLE`, exact rational 0
+PASS malformed clause count: `s UNKNOWN`, `parse_error`, exit 2
+PASS node-limit exhaustion: `s UNKNOWN`, `resource_limit`, no partial count, exit 4
+
+$ /tmp/xai-phase0-final-build/xai_pillar_tests
+RESULT: 6/6 pillar test groups passed (final fresh build).
+
+Final corrected implementation verification (explicit (1,1) default exception):
+- Fresh Release build: /tmp/xai-phase0-final-build-2 (GCC 13.3.0; warnings treated as errors; clean build).
+- CTest: 2/2 targets passed; dedicated WMC suite: 8/8 groups passed, including 67 weighted exhaustive-oracle cases, strict parser validation, resource limits, SAT/zero-WMC distinction, and explicit (1,1) default acceptance.
+- Existing pillar suite: 6/6 groups passed.
+- Python audit-parser regression: explicit (1,1) canonicalizes identically to an omitted default; other non-normalized pairs remain flagged. Python syntax check passed.
+- Final CLI regression: explicit (1,1) returned SAT with exact count 2; a 0.5/0.4 pair returned `s UNKNOWN` with `status=unsupported` and exit 3.
+- Final solver SHA-256: 11d086b918c4b5e5e6ad80d4d5fd6c06b4df5fee1acd60a150f9649f3605b7aa.
+- git diff --check passed. These are correctness/build checks, not runtime-performance results.
+
+
+Final Phase 0 verification (GCC 13.3.0, CMake 3.28.3, GMP 6.3.0; fresh Release build at /tmp/xai-phase0-final-build-3):
+- Strict-warning build completed without emitted warnings; CTest 2/2, WMC groups 8/8, 67 weighted exhaustive-oracle fixtures, and six-pillar groups 6/6 passed.
+- The exact-rational regression rejects the high-precision non-complement sample from the excluded records; the CLI accepts explicit (1,1) as the unweighted default and returns exact WMC 2, while the non-complement input yields `s UNKNOWN` with `status=unsupported` (exit 3).
+- Solver executable SHA-256: 11d086b918c4b5e5e6ad80d4d5fd6c06b4df5fee1acd60a150f9649f3605b7aa. `git diff --check` and Python syntax compilation passed.
+- Corrected public-only archive audit: archive MD5 verified; 200 members comprise 100 public even and 100 held-out odd; all 100 public bodies are structurally parseable and no held-out body was opened. The strict exact-rational eligibility rule admits 98 public records and excludes `random_196` (3,671 non-default pairs not exactly normalized) and `random_198` (3,997 such pairs); no rounding/renormalization was applied.
+- Public candidate pool: no parse errors, zero-weight literals, empty clauses, tautological clauses, or exact duplicate groups; two near-duplicate pairs (four participants) at Jaccard >=0.95; provenance missing for all 100 and no label markers. Two otherwise-valid records (`random_088`, `random_170`) exceed default parser caps (variables and clauses, respectively) and remain explicit resource-limit outcomes in the eligible denominator.
+- Candidate-pool dimensions: variables 60–8,284,993 (upper median 1,547); clauses 78–14,592,512 (upper median 10,871); literal occurrences 234–63,982,870; uncompressed size 3,914–915,731,636 bytes.
+
+
+Final independent review verification (GCC 13.3.0; 2026-10-07):
+- Removed the unused `SolverStats::propagation_work` field and replaced deadline construction with elapsed-duration comparison to avoid overflow converting very large millisecond limits.
+- Fresh Release build: `/tmp/xai-audit-final-20261007`; strict-warning build passed, CTest 2/2, WMC suite 8/8 (including 67 exact exhaustive-oracle formulas), and six-pillar suite 6/6.
+- CLI accepted the configured maximum `--timeout-ms 1000000000000` on an empty formula and returned SAT with exact count 1.
+- Fresh AddressSanitizer/UndefinedBehaviorSanitizer build: `/tmp/xai-audit-sanitized-final-20261007`; CTest 2/2 passed with leak detection and UBSan halt-on-error enabled.
+- Final solver executable SHA-256: `bc889b0e92289c74148334bd0b015dd58bd59a64220cab12f404cb5631ce29ca`.
+
+Archive-audit reproduction after exact-index validation:
+The pinned archive checksum matched; the regenerated JSON exactly matched `RESULT/wmc-public-audit.json`, with all 200 unique indices present, all 100 even/public members parsed, all 100 odd/holdout bodies left unopened, and 98 exact-weight-eligible records. The two excluded public records remain `random_196` and `random_198`.
