@@ -68,15 +68,15 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 
 ## Phase 4 — Bounded symbolic and causal reasoning
 
-- [ ] Define typed finite task representation, domains, hard constraints, weights, evidence, query, and solver budgets.
-- [ ] Implement small exact SAT/WMC reference path and explicit status/result contract.
-- [ ] Add independent oracle/differential and property tests for satisfiable, unsatisfiable, normalized, zero-denominator, malformed, and over-budget cases.
-- [ ] Define solver adapter/selection only after benchmarking a justified need.
-- [ ] Specify causal model requirements and return `non_identified` when the encoded query is not identified.
-- [ ] Ensure solver timeout, unsupported grounding, and incomplete synthesis return `unknown`/explicit status rather than false unsatisfiability.
-- [ ] Defer optional bounded program synthesis unless required by the initial task; if required, define grammar, verifier, and timeout semantics.
+- [x] Define typed finite task representation, domains, allowed-tuple hard constraints, unary weights, evidence, query, and solver budgets.
+- [x] Implement small exact finite SAT/WMC reference path and explicit status/result contract.
+- [x] Add an independent recursive oracle and property checks for satisfiable, unsatisfiable, normalized, zero-denominator, malformed, and over-budget cases; all 256 three-variable Boolean relations agree.
+- [x] Defer solver-adapter selection until benchmarking demonstrates a need; no optimized adapter is included in this phase.
+- [x] Specify causal model requirements and return `non_identified` when required declarations/identification support are absent; return explicit unsupported status when an estimator is not implemented.
+- [x] Ensure timeout and unsupported grounding have distinct explicit statuses and no partial results; synthesis is deferred and has no result path in this phase.
+- [x] Defer optional bounded program synthesis; it is not required by the initial task.
 
-**Phase 4 gate:** Exact reference fixtures match independent results and solver limits/failures cannot be mistaken for successful reasoning.
+**Phase 4 gate — PASS (2026-10-07):** Fresh Release CTest 6/6 and ASan/UBSan CTest 6/6 passed; the independent oracle agreed on all 256 three-variable Boolean relations. Exactness, failure statuses, caps, causal policy, and the claim boundary are documented in [RESULT/Phase-4.md](RESULT/Phase-4.md), [SPEC/components/04-reasoning.md](SPEC/components/04-reasoning.md), and [TESTS/validation.log](TESTS/validation.log). No corpus or performance result was produced.
 
 ## Phase 5 — Bounded adaptation and change monitoring
 

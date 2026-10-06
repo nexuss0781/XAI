@@ -133,3 +133,33 @@ Fresh Debug AddressSanitizer/UndefinedBehaviorSanitizer build:
     ctest --test-dir build-phase3-asan --output-on-failure
 Result: CTest 5/5 passed; no ASan, leak-sanitizer, or UBSan report.
 Additional checks: `git diff --check` passed. No MCC archive instance or solver outcome was read, used for fitting/tuning/scoring, or opened from the odd-indexed holdout. No predictive performance, corpus completion, or Ganak-comparison result is claimed.
+
+=== Phase 4 bounded reasoning acceptance (2026-10-07) ===
+Baseline: 340fbc9 (Phase 3 complete)
+Toolchain: GCC 13.3.0; CMake 3.28.3; GMP 6.3.0; C++20
+Fresh Release build:
+  cmake -S . -B build-phase4 -DCMAKE_BUILD_TYPE=Release
+  cmake --build build-phase4 --parallel 4
+  ctest --test-dir build-phase4 --output-on-failure
+  ./build-phase4/xai_reasoning_tests
+Result: strict-warning build passed; CTest 6/6 passed (pillar, contracts,
+  ingestion, learning, WMC, reasoning). The reasoning executable passed 7/7
+  groups: exact conditional mass/probability and complement normalization;
+  SAT/UNSAT and zero-normalizer distinction; query/evidence edge cases;
+  all 256 Boolean relations over three variables against an independent
+  recursive Cartesian-product oracle; malformed schema and unsupported
+  groundings; state/operation/table/deadline limits with no partial answers;
+  and fail-closed causal status policy.
+Fresh Debug AddressSanitizer/UndefinedBehaviorSanitizer build:
+  cmake -S . -B build-phase4-sanitize -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer' \
+    -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'
+  cmake --build build-phase4-sanitize --parallel 4
+  ctest --test-dir build-phase4-sanitize --output-on-failure
+Result: CTest 6/6 passed; no AddressSanitizer or UndefinedBehaviorSanitizer
+  findings.
+Additional checks: `git diff --check` passed. No MCC archive instance, locked
+  holdout formula, or Ganak result was used. No benchmark, performance, causal
+  identification, synthesis, or general reasoning claim is made.
+
+Final verification rerun after identifier-contract, validation-deadline, and exact-budget-boundary refinements: both build directories were removed and recreated from scratch; Release CTest remained 6/6 and the reasoning executable remained 7/7 groups. The sanitizer run used `ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1`; CTest passed 6/6 with no findings. Exact-limit assignment/operation caps were accepted, while just-over-limit, zero-deadline, unsupported, and zero-normalizer cases retained their explicit statuses. `git diff --check` passed.

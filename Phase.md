@@ -110,6 +110,8 @@ Phases 2–4 can be developed in parallel after Phase 1, but their integration m
 
 **Exit gate:** Exact fixtures agree with an independent oracle; inconsistent input, zero denominator, timeout, unsupported grounding, and non-identification produce distinct explicit outcomes. Worst-case complexity and enforced limits are documented.
 
+**Status (2026-10-07): PASS.** The typed finite-domain harness, exact rational WMC/query path, independent 256-relation oracle grid, distinct failure statuses, explicit budgets, and causal fail-closed policy are recorded in [RESULT/Phase-4.md](RESULT/Phase-4.md). Fresh Release and ASan/UBSan CTest runs each passed 6/6. No corpus performance or causal-identification claim is made.
+
 ## Phase 5 — Bounded adaptation and change monitoring
 
 **Goal:** Permit controlled configuration search without allowing unbounded or opaque self-modification.
