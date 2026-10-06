@@ -129,6 +129,8 @@ Phases 2–4 can be developed in parallel after Phase 1, but their integration m
 
 **Exit gate:** No update can exceed declared bounds or use final-test data; alarms and invariant failures freeze exploration and restore the baseline. Document that projection does not prove system-wide stability and detector guarantees are assumption-dependent.
 
+**Status (2026-10-07): PASS.** The finite WMC node-cap search, development-only objective boundary, Gaussian CUSUM policy, versioned baseline rollback, reset/hold-off behavior, and assumption limits are recorded in [SPEC/components/03-evolution-adaptation.md](SPEC/components/03-evolution-adaptation.md) and [RESULT/Phase-5.md](RESULT/Phase-5.md). Fresh Release and ASan/UBSan CTest each passed 7/7; no benchmark outcomes were used.
+
 ## Phase 6 — Calibration and uncertainty diagnostics
 
 **Goal:** Measure probabilistic outputs honestly and make coverage/risk assumptions visible.

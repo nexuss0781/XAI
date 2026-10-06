@@ -2,7 +2,7 @@
 
 XAI is a research proposal for a candidate modular, non-neural architecture built from explicit mathematical components. The initial bounded empirical task is exact weighted model counting (WMC) on a defined subset of the 2024 Model Counting Competition Track 2 benchmark. This narrow task is not an end-to-end evaluation of the broader architecture.
 
-The repository includes an optimized single-threaded C++20 exact WMC reference solver for unprojected DIMACS-like inputs, a shared C++20 record-contract library, a bounded exact factual-ingestion component with a weighted-CNF adapter, a versioned sequential predictive harness for exact-completion outcomes, and a bounded finite-domain symbolic reasoning harness. The ingestion path provides exact finite marginals, explicit source-dependence semantics, append-only evidence, canonical snapshot replay, provenance, and resource/failure statuses. The learning component uses a fixed three-expert mixture and fixture-only validation; the reasoning component exactly enumerates declared finite tasks and fails closed on unsupported groundings and causal requests. No benchmark outcomes were used for training or scoring. These components do **not** claim general intelligence, novelty, production readiness, or superiority over established solvers.
+The repository includes an optimized single-threaded C++20 exact WMC reference solver for unprojected DIMACS-like inputs, a shared C++20 record-contract library, a bounded exact factual-ingestion component with a weighted-CNF adapter, a versioned sequential predictive harness for exact-completion outcomes, a bounded finite-domain symbolic reasoning harness, and a development-only WMC node-cap adaptation harness with change monitoring and baseline rollback. The ingestion path provides exact finite marginals, explicit source-dependence semantics, append-only evidence, canonical snapshot replay, provenance, and resource/failure statuses. The learning component uses a fixed three-expert mixture and fixture-only validation; the reasoning component exactly enumerates declared finite tasks and fails closed on unsupported groundings and causal requests. Phase 5 uses synthetic development fixtures only; no benchmark outcomes were used for adaptation or scoring. These components do **not** claim general intelligence, novelty, production readiness, or superiority over established solvers.
 
 ## Project documents
 
@@ -12,9 +12,11 @@ The repository includes an optimized single-threaded C++20 exact WMC reference s
 - [Phase 2 factual-ingestion and provenance report](RESULT/Phase-2.md)
 - [Phase 3 predictive-learning report](RESULT/Phase-3.md)
 - [Phase 4 bounded-reasoning report](RESULT/Phase-4.md)
+- [Phase 5 bounded-adaptation report](RESULT/Phase-5.md)
 - [Shared record contracts](SPEC/CONTRACTS.md)
 - [Predictive-learning specification](SPEC/components/02-learning.md)
 - [Bounded-reasoning specification](SPEC/components/04-reasoning.md)
+- [Bounded-adaptation and change-monitoring specification](SPEC/components/03-evolution-adaptation.md)
 - [WMC solver build, input, and limits](TESTS/WMC_SOLVER.md)
 - [Specification index](SPEC/README.md)
 - [Formal research paper](SPEC/RESEARCH_PAPER.md)
@@ -42,4 +44,4 @@ To record hashes for the tracked source and explicitly supplied inputs, see the 
 
 ## Evidence boundary
 
-The Phase 0 fixtures establish exact agreement with exhaustive enumeration on the stated small formulas and validation cases. The Phase 1 tests check record invariants and deterministic serialization fixtures. Phase 2 adds exact finite-model and parser-adapter fixtures; Phase 3 adds fixed-library sequential-prediction and partition-boundary fixtures; and Phase 4 adds exact finite-domain reasoning checks against an independent oracle. These are software checks, not corpus evaluation. No phase establishes benchmark-scale performance, general WMC competence, predictive accuracy, a speed advantage over Ganak, representative workload coverage, causal identification, or capability of the complete six-pillar system. No benchmark training or broad natural-language evaluation is part of this task.
+The Phase 0 fixtures establish exact agreement with exhaustive enumeration on the stated small formulas and validation cases. The Phase 1 tests check record invariants and deterministic serialization fixtures. Phase 2 adds exact finite-model and parser-adapter fixtures; Phase 3 adds fixed-library sequential-prediction and partition-boundary fixtures; Phase 4 adds exact finite-domain reasoning checks against an independent oracle; and Phase 5 adds synthetic bounded-search, partition-rejection, CUSUM, and rollback checks. These are software checks, not corpus evaluation. Partition labels in the adaptation API are caller-supplied, not authenticated provenance. No phase establishes benchmark-scale performance, general WMC competence, predictive accuracy, a speed advantage over Ganak, representative workload coverage, empirical detector quality, causal identification, or capability of the complete six-pillar system. No benchmark training or broad natural-language evaluation is part of this task.

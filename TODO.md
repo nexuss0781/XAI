@@ -10,6 +10,7 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 - [x] Fresh Release build: CTest 2/2, exact-WMC suite 8/8, 67 weighted exhaustive-oracle cases, and six-pillar suite 6/6; finite software/math checks only. See `TESTS/validation.log`.
 - [x] Phase 0 exact-WMC reference solver, strict public-only archive auditor, frozen protocol, and result report are recorded.
 - [x] Phase 1 shared contracts, canonical JSON rules, failure-state tests, clean-build guidance, version-manifest tool, and report are recorded; fresh Release CTest 3/3 passed. See `RESULT/Phase-1.md`.
+- [x] Phase 5 bounded WMC node-cap adaptation, development-partition checks, CUSUM monitor, baseline rollback, and audit tests are recorded; fresh Release and ASan/UBSan CTest 7/7 passed. See `RESULT/Phase-5.md`.
 - [ ] Implemented end-to-end runtime: not present yet.
 - [ ] Ganak comparison, corpus benchmark, and empirical performance results: not run; reserved for Phase 9. No speed or generalization claim is made.
 - [ ] Production deployment: out of scope for this research plan.
@@ -80,15 +81,15 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 
 ## Phase 5 — Bounded adaptation and change monitoring
 
-- [ ] Name mutable parameters, permitted bounds, owning module, objective, baseline, version, and rollback rules.
-- [ ] Enforce development-only candidate evaluation and prevent final-test data from reaching adaptation code.
-- [ ] Implement initial bounded search/recombination; add full covariance adaptation only if required and fully tested.
-- [ ] Define monitored residuals, reference/shift distributions, thresholds, sample cadence, and alarm/hold-off/reset policy.
-- [ ] Implement alarm/invariant/regression freeze and baseline rollback with auditable state transitions.
-- [ ] Test bounds, regression detection, alarm/freeze, rollback, restart, and replay.
-- [ ] Document that bounded parameters do not establish system-wide stability and detector properties are assumption-dependent.
+- [x] Name mutable parameter `xai_wmc.SolverOptions::node_limit`, allowed set `{1,2,4,8,16,32,64,128}`, development-completion objective, candidate scan, version format, 128-node baseline, and rollback rules.
+- [x] Enforce development-only candidate scoring; reject final-test-labeled suites/records before formula payloads are scored. Partition labels remain caller-supplied and are not authenticated.
+- [x] Implement deterministic bounded grid search; full covariance adaptation is unnecessary for this one-parameter finite fixture.
+- [x] Define the log-node residual, shared-variance Gaussian in-control/shift distributions, CUSUM threshold, sample cadence, and hold-off/reset policy; state that false-alarm/delay behavior is assumption-dependent.
+- [x] Implement shift-alarm, invariant-failure, and objective-regression freeze with versioned baseline rollback and auditable candidate scores/state transitions.
+- [x] Test bounds, deterministic replay, regression detection, alarm/freeze, rollback, hold-off, reset, recovery, and final-test rejection.
+- [x] Document that bounded parameters do not establish system-wide stability and that detector guarantees depend on residual assumptions.
 
-**Phase 5 gate:** No out-of-bound or final-test-driven update is possible; alarm/failure selects the baseline.
+**Phase 5 gate — PASS (2026-10-07):** No candidate is generated outside the declared finite node-cap grid; labeled final-test inputs are rejected before payload evaluation; alarms, invariant failures, and objective regression restore the baseline and freeze search. Fresh Release and ASan/UBSan CTest each passed 7/7. See [RESULT/Phase-5.md](RESULT/Phase-5.md), [SPEC/components/03-evolution-adaptation.md](SPEC/components/03-evolution-adaptation.md), and [TESTS/validation.log](TESTS/validation.log). Validation used synthetic fixtures only; caller-supplied partition labels are not cryptographic provenance, and no empirical detector guarantee is claimed.
 
 ## Phase 6 — Calibration and diagnostics
 

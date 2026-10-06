@@ -163,3 +163,27 @@ Additional checks: `git diff --check` passed. No MCC archive instance, locked
   identification, synthesis, or general reasoning claim is made.
 
 Final verification rerun after identifier-contract, validation-deadline, and exact-budget-boundary refinements: both build directories were removed and recreated from scratch; Release CTest remained 6/6 and the reasoning executable remained 7/7 groups. The sanitizer run used `ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=halt_on_error=1`; CTest passed 6/6 with no findings. Exact-limit assignment/operation caps were accepted, while just-over-limit, zero-deadline, unsupported, and zero-normalizer cases retained their explicit statuses. `git diff --check` passed.
+
+
+=== Phase 5 bounded adaptation and change-monitoring acceptance (2026-10-07) ===
+Baseline: d8822e6 (Phase 4 complete)
+Toolchain: GCC 13.3.0; CMake 3.28.3; GMP 6.3.0; C++20
+Strict-warning policy: -Wall -Wextra -Werror; clean out-of-tree builds.
+
+Fresh Release build:
+  cmake -S . -B /tmp/xai-phase5-release -DCMAKE_BUILD_TYPE=Release
+  cmake --build /tmp/xai-phase5-release --parallel 4
+  ctest --test-dir /tmp/xai-phase5-release --output-on-failure
+  /tmp/xai-phase5-release/xai_adaptation_tests
+Result: build passed with strict warnings; CTest 7/7 targets passed. The dedicated adaptation executable passed 5/5 groups: finite candidate grid and development-only objective; held-out/mixed-partition and duplicate-ID rejection; deterministic replay and candidate-score audit; regression rollback, hold-off, reset, and recovery; and CUSUM cadence/alarm plus oracle/stream invariant rollback.
+
+Fresh Debug AddressSanitizer/UndefinedBehaviorSanitizer build:
+  cmake -S . -B /tmp/xai-phase5-sanitize -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer' \
+    -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'
+  cmake --build /tmp/xai-phase5-sanitize --parallel 4
+  ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=print_stacktrace=1 \
+    ctest --test-dir /tmp/xai-phase5-sanitize --output-on-failure
+Result: CTest 7/7 passed with leak detection enabled and no ASan/UBSan findings.
+
+The mutable setting is `xai_wmc.SolverOptions::node_limit`, limited to {1,2,4,8,16,32,64,128}; baseline is 128. Search maximizes exact development completions, breaking ties toward a smaller cap. The detector uses a development-centered log-node residual and configured one-sided Gaussian CUSUM; tested shifted residuals trigger rollback, while reset is blocked until hold-off expires. `git diff --check` passed after implementation review. All Phase 5 inputs were synthetic fixtures: no Phase 0 public benchmark record was used for adaptation, and no odd-indexed final-test body was opened. Partition enforcement trusts caller-supplied labels; no benchmark-utility or detector false-alarm/delay claim is made.

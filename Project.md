@@ -8,18 +8,18 @@ Phase 0 selected exact weighted model counting on finite, unprojected CNF instan
 
 ## Current scope
 
-The repository includes a single-threaded C++20 exact WMC reference solver, a public-only archive auditor, a lightweight C++20 shared-record contract library, a bounded exact factual-ingestion component, and a versioned sequential predictive harness. Phase 1's typed IDs, partition/status rules, canonical JSON format, and replay conventions are documented in [SPEC/CONTRACTS.md](SPEC/CONTRACTS.md). Phase 2 implements finite exact priors, evidence updates, dependency-aware ingestion, provenance, canonical state replay, and a parsed weighted-CNF adapter; see the [factual-ingestion specification](SPEC/components/01-factual-ingestion.md) and [Phase 2 report](RESULT/Phase-2.md). Phase 3 adds a fixed three-expert Bernoulli mixture for predicting exact WMC completion from structural counts; it has fixture-only validation and no benchmark training or performance result. See the [learning specification](SPEC/components/02-learning.md) and [Phase 3 report](RESULT/Phase-3.md). These are in-process foundations, not persistent storage, authentication, or a complete runtime. The Phase 0 protocol, data findings, claims, and remaining boundaries are in [RESULT/Phase-0.md](RESULT/Phase-0.md).
+The repository includes a single-threaded C++20 exact WMC reference solver, a public-only archive auditor, a lightweight C++20 shared-record contract library, a bounded exact factual-ingestion component, a versioned sequential predictive harness, a finite-domain reasoning harness, and a bounded development-only WMC node-cap adaptation harness with change monitoring and baseline rollback. Phase 1's typed IDs, partition/status rules, canonical JSON format, and replay conventions are documented in [SPEC/CONTRACTS.md](SPEC/CONTRACTS.md). Phase 2 implements finite exact priors, evidence updates, dependency-aware ingestion, provenance, canonical state replay, and a parsed weighted-CNF adapter; see the [factual-ingestion specification](SPEC/components/01-factual-ingestion.md) and [Phase 2 report](RESULT/Phase-2.md). Phase 3 adds a fixed three-expert Bernoulli mixture for predicting exact WMC completion from structural counts; it has fixture-only validation and no benchmark training or performance result. Phase 4 adds exact finite-domain reasoning fixtures. Phase 5 tunes only a bounded WMC node cap on caller-labeled development fixtures and checks CUSUM-triggered rollback; neither phase has corpus or performance results. See the [learning specification](SPEC/components/02-learning.md), [adaptation specification](SPEC/components/03-evolution-adaptation.md), and [Phase 5 report](RESULT/Phase-5.md). These are in-process foundations, not persistent storage, authenticated provenance, or a complete runtime. The Phase 0 protocol, data findings, claims, and remaining boundaries are in [RESULT/Phase-0.md](RESULT/Phase-0.md).
 
 The broader proposal uses established mathematics, including Bayesian updating, sequential Bayesian model averaging, bounded optimization, sequential change detection, weighted model counting, proper scoring rules, conformal prediction, and Bayesian decision theory. The proposed composition remains a hypothesis requiring separate implementation and evaluation. Raw observations still need an extraction and entity-resolution layer; the repository does not solve unrestricted natural-language understanding.
 
 ## Repository map
 
 - `README.md` — build, run, and evidence boundary.
-- `RESULT/` — Phase 0–3 reports and machine-readable public-data audit.
-- `include/`, `src/` — shared contracts, factual ingestion, predictive learning, and exact WMC parser, solver, and CLI.
+- `RESULT/` — Phase 0–5 reports and machine-readable public-data audit.
+- `include/`, `src/` — shared contracts, factual ingestion, predictive learning, bounded adaptation, reasoning, and exact WMC parser, solver, and CLI.
 - `tools/` — reproducible archive auditor and version-manifest generator.
 - `SPEC/` — formal architecture paper, shared contracts, end-to-end contract, and component specifications.
-- `TESTS/` — C++20 component, contract, and WMC checks, evaluation protocol, build instructions, and validation results.
+- `TESTS/` — C++20 component, contract, WMC, and adaptation checks, evaluation protocol, build instructions, and validation results.
 
 ## Research discipline
 
