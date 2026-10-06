@@ -18,14 +18,14 @@
           "1",
           "--verb",
           "0",
-          "/tmp/xai-phase9-stress-nmlrxidn/weighted_or.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/weighted_or.cnf"
         ],
-        "cpu_ms_sampled": 0,
+        "cpu_ms_sampled": 10,
         "exact_count": "5/6",
         "memory_limit_killed": false,
-        "peak_rss_bytes_sampled": 0,
+        "peak_rss_bytes_sampled": 1736704,
         "reported_status": null,
-        "resource_sample_count": 1,
+        "resource_sample_count": 4,
         "returncode": 0,
         "solver_sat_label": "SATISFIABLE",
         "stderr": "",
@@ -33,7 +33,7 @@
         "stdout": "c o Total time [Arjun+GANAK]: 0.00\ns SATISFIABLE\nc s type wmc\nc s log10-estimate -7.91812460e-02\nc o exact quadruple float 8.33333333e-01\nc s exact arb frac 5/6\nc s pac guarantees epsilon: 0 delta: 0\n",
         "stdout_sha256": "be4b3d045e61ffa9adc9c01f6334d9f2f3b90f75c4b7f9ec123a28f935cebaa3",
         "system_status": "solved_exact",
-        "wall_ms": 40,
+        "wall_ms": 121,
         "wall_timeout": false
       },
       "independent_oracle": {
@@ -62,7 +62,7 @@
           "10000000",
           "--max-depth",
           "4096",
-          "/tmp/xai-phase9-stress-nmlrxidn/weighted_or.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/weighted_or.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": "5/6",
@@ -77,7 +77,7 @@
         "stdout": "s SATISFIABLE\nc s exact rational 5/6\nc xai status=solved variables=2 clauses=1 nodes=3 decisions=1 propagations=1 component_splits=0 max_depth=1 elapsed_ms=0\n",
         "stdout_sha256": "4d620d38ebe5b46570b52901dd30270edbe79ab6d235afe0710a1f93c7fddced",
         "system_status": "solved_exact",
-        "wall_ms": 41,
+        "wall_ms": 42,
         "wall_timeout": false
       }
     },
@@ -99,7 +99,7 @@
           "1",
           "--verb",
           "0",
-          "/tmp/xai-phase9-stress-nmlrxidn/duplicate_clause_invariance.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/duplicate_clause_invariance.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": "5/6",
@@ -114,7 +114,7 @@
         "stdout": "c o Total time [Arjun+GANAK]: 0.00\ns SATISFIABLE\nc s type wmc\nc s log10-estimate -7.91812460e-02\nc o exact quadruple float 8.33333333e-01\nc s exact arb frac 5/6\nc s pac guarantees epsilon: 0 delta: 0\n",
         "stdout_sha256": "be4b3d045e61ffa9adc9c01f6334d9f2f3b90f75c4b7f9ec123a28f935cebaa3",
         "system_status": "solved_exact",
-        "wall_ms": 38,
+        "wall_ms": 41,
         "wall_timeout": false
       },
       "independent_oracle": {
@@ -143,7 +143,7 @@
           "10000000",
           "--max-depth",
           "4096",
-          "/tmp/xai-phase9-stress-nmlrxidn/duplicate_clause_invariance.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/duplicate_clause_invariance.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": "5/6",
@@ -158,7 +158,7 @@
         "stdout": "s SATISFIABLE\nc s exact rational 5/6\nc xai status=solved variables=2 clauses=2 nodes=3 decisions=1 propagations=1 component_splits=0 max_depth=1 elapsed_ms=0\n",
         "stdout_sha256": "b73d6506ea30dfd030e571c47e2ec6df2c6f7b8418f88677ff110d027c1d6e93",
         "system_status": "solved_exact",
-        "wall_ms": 39,
+        "wall_ms": 41,
         "wall_timeout": false
       }
     },
@@ -180,7 +180,7 @@
           "1",
           "--verb",
           "0",
-          "/tmp/xai-phase9-stress-nmlrxidn/free_variable_default_weight.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/free_variable_default_weight.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": "2/3",
@@ -195,7 +195,7 @@
         "stdout": "c o Total time [Arjun+GANAK]: 0.00\ns SATISFIABLE\nc s type wmc\nc s log10-estimate -1.76091259e-01\nc o exact quadruple float 6.66666667e-01\nc s exact arb frac 2/3\nc s pac guarantees epsilon: 0 delta: 0\n",
         "stdout_sha256": "d96d008a0304caeff6e67f7a8662bd1f9111fa28cf12c59449d86692d20137de",
         "system_status": "solved_exact",
-        "wall_ms": 38,
+        "wall_ms": 41,
         "wall_timeout": false
       },
       "independent_oracle": {
@@ -224,7 +224,7 @@
           "10000000",
           "--max-depth",
           "4096",
-          "/tmp/xai-phase9-stress-nmlrxidn/free_variable_default_weight.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/free_variable_default_weight.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": "2/3",
@@ -261,7 +261,7 @@
           "1",
           "--verb",
           "0",
-          "/tmp/xai-phase9-stress-nmlrxidn/variable_renaming_invariance.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/variable_renaming_invariance.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": "2/3",
@@ -276,7 +276,7 @@
         "stdout": "c o Total time [Arjun+GANAK]: 0.00\ns SATISFIABLE\nc s type wmc\nc s log10-estimate -1.76091259e-01\nc o exact quadruple float 6.66666667e-01\nc s exact arb frac 2/3\nc s pac guarantees epsilon: 0 delta: 0\n",
         "stdout_sha256": "d96d008a0304caeff6e67f7a8662bd1f9111fa28cf12c59449d86692d20137de",
         "system_status": "solved_exact",
-        "wall_ms": 38,
+        "wall_ms": 40,
         "wall_timeout": false
       },
       "independent_oracle": {
@@ -305,7 +305,7 @@
           "10000000",
           "--max-depth",
           "4096",
-          "/tmp/xai-phase9-stress-nmlrxidn/variable_renaming_invariance.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/variable_renaming_invariance.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": "2/3",
@@ -342,7 +342,7 @@
           "1",
           "--verb",
           "0",
-          "/tmp/xai-phase9-stress-nmlrxidn/omitted_weights_default_to_unweighted_count.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/omitted_weights_default_to_unweighted_count.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": "2/1",
@@ -357,7 +357,7 @@
         "stdout": "c o Total time [Arjun+GANAK]: 0.00\ns SATISFIABLE\nc s type wmc\nc s log10-estimate 3.01029996e-01\nc o exact quadruple float 2.00000000e+00\nc s exact arb frac 2\nc s pac guarantees epsilon: 0 delta: 0\n",
         "stdout_sha256": "974738719f317f72a85f619039fc256560303feb6d3d06e5b6394fa822f07d45",
         "system_status": "solved_exact",
-        "wall_ms": 38,
+        "wall_ms": 41,
         "wall_timeout": false
       },
       "independent_oracle": {
@@ -386,7 +386,7 @@
           "10000000",
           "--max-depth",
           "4096",
-          "/tmp/xai-phase9-stress-nmlrxidn/omitted_weights_default_to_unweighted_count.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/omitted_weights_default_to_unweighted_count.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": "2/1",
@@ -401,7 +401,7 @@
         "stdout": "s SATISFIABLE\nc s exact rational 2\nc xai status=solved variables=1 clauses=0 nodes=1 decisions=0 propagations=0 component_splits=0 max_depth=0 elapsed_ms=0\n",
         "stdout_sha256": "f811ff595e69bd7cc766fdb3be39b8ee7c0153f375f4df936275ad93ac4afe96",
         "system_status": "solved_exact",
-        "wall_ms": 38,
+        "wall_ms": 43,
         "wall_timeout": false
       }
     },
@@ -423,7 +423,7 @@
           "1",
           "--verb",
           "0",
-          "/tmp/xai-phase9-stress-nmlrxidn/contradictory_units_unsat.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/contradictory_units_unsat.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": "0/1",
@@ -438,7 +438,7 @@
         "stdout": "c o Total time [Arjun+GANAK]: 0.00\ns UNSATISFIABLE\nc s type wmc\nc s log10-estimate -inf\nc o exact quadruple float 0.00000000e+00\nc s exact arb frac 0\nc s pac guarantees epsilon: 0 delta: 0\n",
         "stdout_sha256": "6b36e2e1fbd28f382cd0e09b4ada1d56655aa7e39ee810eef9b837ffe3bd1d6a",
         "system_status": "solved_exact",
-        "wall_ms": 39,
+        "wall_ms": 40,
         "wall_timeout": false
       },
       "independent_oracle": {
@@ -467,7 +467,7 @@
           "10000000",
           "--max-depth",
           "4096",
-          "/tmp/xai-phase9-stress-nmlrxidn/contradictory_units_unsat.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/contradictory_units_unsat.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": "0/1",
@@ -482,7 +482,7 @@
         "stdout": "s UNSATISFIABLE\nc s exact rational 0\nc xai status=solved variables=1 clauses=2 nodes=1 decisions=0 propagations=1 component_splits=0 max_depth=0 elapsed_ms=0\n",
         "stdout_sha256": "94ebccc75ac41e32ee7c31bb066594ff6850256665ae02e83edf9b3290f9ac33",
         "system_status": "solved_exact",
-        "wall_ms": 40,
+        "wall_ms": 43,
         "wall_timeout": false
       }
     },
@@ -504,7 +504,7 @@
           "1",
           "--verb",
           "0",
-          "/tmp/xai-phase9-stress-nmlrxidn/satisfiable_zero_wmc.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/satisfiable_zero_wmc.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": "0/1",
@@ -519,7 +519,7 @@
         "stdout": "c o Total time [Arjun+GANAK]: 0.00\ns UNSATISFIABLE\nc s type wmc\nc s log10-estimate -inf\nc o exact quadruple float 0.00000000e+00\nc s exact arb frac 0\nc s pac guarantees epsilon: 0 delta: 0\n",
         "stdout_sha256": "6b36e2e1fbd28f382cd0e09b4ada1d56655aa7e39ee810eef9b837ffe3bd1d6a",
         "system_status": "solved_exact",
-        "wall_ms": 42,
+        "wall_ms": 46,
         "wall_timeout": false
       },
       "independent_oracle": {
@@ -548,14 +548,14 @@
           "10000000",
           "--max-depth",
           "4096",
-          "/tmp/xai-phase9-stress-nmlrxidn/satisfiable_zero_wmc.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/satisfiable_zero_wmc.cnf"
         ],
-        "cpu_ms_sampled": null,
+        "cpu_ms_sampled": 0,
         "exact_count": "0/1",
         "memory_limit_killed": false,
-        "peak_rss_bytes_sampled": null,
+        "peak_rss_bytes_sampled": 0,
         "reported_status": "solved",
-        "resource_sample_count": 0,
+        "resource_sample_count": 1,
         "returncode": 0,
         "solver_sat_label": "SATISFIABLE",
         "stderr": "",
@@ -563,7 +563,7 @@
         "stdout": "s SATISFIABLE\nc s exact rational 0\nc xai status=solved variables=1 clauses=1 nodes=1 decisions=0 propagations=1 component_splits=0 max_depth=0 elapsed_ms=0\n",
         "stdout_sha256": "a6501c819889222f7796a1658ca942d4472ee5e66a44688e9fece6f12d9781af",
         "system_status": "solved_exact",
-        "wall_ms": 17,
+        "wall_ms": 40,
         "wall_timeout": false
       }
     },
@@ -581,7 +581,7 @@
           "10000000",
           "--max-depth",
           "4096",
-          "/tmp/xai-phase9-stress-nmlrxidn/malformed_weight_sum.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/malformed_weight_sum.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": null,
@@ -596,7 +596,7 @@
         "stdout": "s UNKNOWN\nc xai status=unsupported reason=complementary literal weights must sum exactly to one\n",
         "stdout_sha256": "b0351037977cb09c565d1701b88b7676625f78a991178cb3a7addaef5c5929f4",
         "system_status": "unsupported",
-        "wall_ms": 40,
+        "wall_ms": 47,
         "wall_timeout": false
       }
     },
@@ -614,7 +614,7 @@
           "10000000",
           "--max-depth",
           "4096",
-          "/tmp/xai-phase9-stress-nmlrxidn/corrupted_clause_count.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/corrupted_clause_count.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": null,
@@ -629,7 +629,7 @@
         "stdout": "s UNKNOWN\nc xai status=parse_error reason=declared and parsed clause counts do not match\n",
         "stdout_sha256": "a0728a746396879a13a1a4d7d48aa22406b21e2418d2897894e288658a8abc88",
         "system_status": "parse_error",
-        "wall_ms": 39,
+        "wall_ms": 42,
         "wall_timeout": false
       }
     },
@@ -647,7 +647,7 @@
           "10000000",
           "--max-depth",
           "4096",
-          "/tmp/xai-phase9-stress-nmlrxidn/unsupported_projected_query.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/unsupported_projected_query.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": null,
@@ -662,7 +662,7 @@
         "stdout": "s UNKNOWN\nc xai status=unsupported reason=unsupported problem-specific directive: show\n",
         "stdout_sha256": "344a01f8a2922b0a5d4b5e45dbae87fedcbbbffbec511e04acfaee57cb9b7c7b",
         "system_status": "unsupported",
-        "wall_ms": 38,
+        "wall_ms": 41,
         "wall_timeout": false
       }
     },
@@ -680,7 +680,7 @@
           "1",
           "--max-depth",
           "4096",
-          "/tmp/xai-phase9-stress-nmlrxidn/node_limit_exhaustion.cnf"
+          "/tmp/xai-phase9-stress-w4qoqwtk/node_limit_exhaustion.cnf"
         ],
         "cpu_ms_sampled": 0,
         "exact_count": null,
@@ -695,15 +695,15 @@
         "stdout": "s UNKNOWN\nc xai status=resource_limit reason=recursive node limit exceeded\n",
         "stdout_sha256": "84df77b0e7eac95c69c937b1db67b87eef952243c94bacc90c62e3e8db6e2410",
         "system_status": "resource_limit",
-        "wall_ms": 39,
+        "wall_ms": 41,
         "wall_timeout": false
       }
     }
   ],
   "claim_scope": "synthetic stress checks only; no benchmark or certificate evidence",
-  "completed_utc": "2026-10-06T21:15:17+00:00",
-  "freeze_file_sha256": "866f5fe9c48370e88c056c7abacc07eb32e408ef866ff6c16dc4e82f56b997d2",
-  "frozen_code_revision": "0f9878727a400f338c3b6a70da120653d89090fa",
+  "completed_utc": "2026-10-06T23:11:03+00:00",
+  "freeze_file_sha256": "b1b6dff0136f3e299a551d9074a862282347e2cb2aa8ecff161b543aaaaa1d12",
+  "frozen_code_revision": "a1a65b5ffdeab261bcdeaf7151c03b0c66213403",
   "invariance_checks": [
     {
       "ganak_counts": [
