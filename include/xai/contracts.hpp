@@ -159,6 +159,7 @@ using DecodeResult = std::variant<RecordEnvelope, DecodeFailure>;
 
 [[nodiscard]] bool valid_identifier(std::string_view value) noexcept;
 [[nodiscard]] std::vector<std::string> validate_record(const RecordEnvelope& record);
+[[nodiscard]] std::string encode_canonical_value(const CanonicalValue& value);
 [[nodiscard]] std::string encode_record(const RecordEnvelope& record);
 [[nodiscard]] DecodeResult decode_record(
     std::string_view json,

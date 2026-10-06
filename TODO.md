@@ -12,6 +12,7 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 - [x] Phase 1 shared contracts, canonical JSON rules, failure-state tests, clean-build guidance, version-manifest tool, and report are recorded; fresh Release CTest 3/3 passed. See `RESULT/Phase-1.md`.
 - [x] Phase 5 bounded WMC node-cap adaptation, development-partition checks, CUSUM monitor, baseline rollback, and audit tests are recorded; fresh Release and ASan/UBSan CTest 7/7 passed. See `RESULT/Phase-5.md`.
 - [x] Phase 6 versioned synthetic-only calibration diagnostics, partition enforcement, proper scores, reliability/sharpness, risk-coverage, and assumption-gated conformal behavior are recorded; fresh Release and ASan/UBSan CTest 8/8 passed. See `RESULT/Phase-6.md`.
+- [x] Phase 7 exact-rational decision policy, fail-closed certificate interface, canonical output, and explicit abstention harness are recorded; fresh Release and ASan/UBSan CTest 9/9 passed. Synthetic verifier only; no production WMC proof verifier. See `RESULT/Phase-7.md`.
 - [ ] Implemented end-to-end runtime: not present yet.
 - [ ] Ganak comparison, corpus benchmark, and empirical performance results: not run; reserved for Phase 9. No speed or generalization claim is made.
 - [ ] Production deployment: out of scope for this research plan.
@@ -107,14 +108,14 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 
 ## Phase 7 — Decision, certificates, and abstention
 
-- [ ] Define task-specific actions, loss, resource cost, abstention cost, and tie-breaking rules.
-- [ ] Define certificate policy, format, verifier/version, and exact property established.
-- [ ] Implement fail-closed eligibility: absent, invalid, stale, or mismatched required certificate excludes an action.
-- [ ] Validate probability mass, loss, cost, and output schema; map unresolved high-risk states to explicit failure/abstention.
-- [ ] Emit structured decision/abstention with expected risk, cost, lineage, assumptions, certificate status, and limitations.
-- [ ] Test risk ordering, tie behavior, malformed values, verifier failure, certificate mismatch, and no-certified-action cases.
+- [x] Define the exact-result action, state-dependent loss contract, normalized CPU/RAM cost, abstention cost, risk aggregation, and deterministic tie-breaking.
+- [x] Define certificate fields, property `xai.wmc.exact-rational-result.v1`, verifier identity/version, input/result SHA-256 bindings, and validity interval.
+- [x] Implement fail-closed eligibility: absent, malformed, stale, mismatched, or verifier-rejected certificates exclude an action.
+- [x] Validate exact probability mass, complete non-negative losses, resource costs, and structured output; unresolved mass and non-success upstream states lead to explicit abstention.
+- [x] Emit canonical structured decision/abstention output with exact expected risk/cost, lineage, assumptions, certificate status, exactness, and limitations.
+- [x] Test risk ordering, action and abstention tie behavior, malformed values, verifier rejection/exception, certificate mismatch, resource limits, and no-certified-action behavior.
 
-**Phase 7 gate:** No inadmissible action can be selected or described as certified; abstention is a working path.
+**Phase 7 gate — PASS (2026-10-07), for the in-process harness.** Fresh Release and ASan/UBSan CTest each passed 9/9; the dedicated suite passed 8/8 groups. The verifier is synthetic only and does not establish a production exact-count proof. See [RESULT/Phase-7.md](RESULT/Phase-7.md) and [TESTS/validation.log](TESTS/validation.log).
 
 ## Phase 8 — Supported input mapping and orchestration
 
@@ -158,3 +159,4 @@ Record blockers here with owner/context, date, and the phase gate they affect. D
 - No open Phase 0 blockers. Two out-of-format public candidates are excluded under the exact-rational eligibility rule; Phase 9 corpus/baseline evaluation remains pending and does not block the Phase 0 scope-and-protocol gate.
 - No open Phase 1 blockers. Shared contracts are an in-process foundation only; storage, authentication, runtime integration, and Phase 3 partition enforcement remain later-phase work.
 - No open Phase 2 gate blockers. Phase 2 provides canonical in-process snapshots and checks model/evidence partition consistency, but not persistent storage, authentication, identity resolution, archive eligibility, or split selection.
+- Phase 7's harness gate is complete; a production verifier for an actual exact WMC proof and benchmark-derived utility inputs remain unimplemented and outside this gate. Full orchestration remains Phase 8 work.

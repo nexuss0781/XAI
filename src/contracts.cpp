@@ -772,6 +772,13 @@ std::vector<std::string> validate_record(const RecordEnvelope& record) {
     return issues;
 }
 
+std::string encode_canonical_value(const CanonicalValue& value) {
+    const auto output = serialize_value(value);
+    if (output.size() > kMaximumRecordBytes)
+        throw std::invalid_argument("canonical value exceeds the 16 MiB size limit");
+    return output;
+}
+
 std::string encode_record(const RecordEnvelope& record) {
     const auto issues = validate_record(record);
     if (!issues.empty()) throw std::invalid_argument("invalid record: " + issues.front());

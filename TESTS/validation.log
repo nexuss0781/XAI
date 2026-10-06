@@ -213,3 +213,42 @@ Result: CTest 8/8 and the focused calibration executable 9/9 passed; no AddressS
 Synthetic fixture: `phase6-synthetic-completion-fixture`, version `fixture-2026-10-07-v1`; 16 forecast rows, 15 scored outcomes, one missing outcome. Brier mean 0.239000 (SE 0.069968); log-score mean 0.691524 (SE 0.178604); five equal-width reliability bins with three labeled rows each; eight tie-aggregated risk/coverage points; two caller-flagged shift rows. The hand-authored fixture does not defend exchangeability; its conformal status is `unsupported_assumption`, no prediction set or empirical coverage is emitted. Independent unit fixtures stipulate exchangeability only to test the order-statistic implementation, including k>n -> +infinity threshold/full binary label set.
 
 The Phase 0 WMC archive has no labels or calibration split. No benchmark records, odd-indexed holdout bodies, or final-test outcomes were consumed. This is software validation on synthetic fixtures, not benchmark calibration, predictive accuracy, or coverage evidence. Weighted conformal was not implemented because no defensible covariate-shift/density-ratio setup is available; posterior predictive checks are not applicable because no posterior-sampling inference algorithm is implemented. `git diff --check` passed after the implementation and documentation updates.
+
+=== Phase 7 decision policy, certificates, and abstention acceptance (2026-10-07) ===
+Baseline: 403f270 (Phase 6 published; Phase 7 implementation follows)
+Toolchain: GCC 13.3.0; CMake 3.28.3; C++20; GMP/GMPXX
+Strict-warning policy: -Wall -Wextra -Werror.
+Fresh Release build:
+  cmake -S . -B build-phase7 -DCMAKE_BUILD_TYPE=Release
+  cmake --build build-phase7 --parallel 4
+  ctest --test-dir build-phase7 --output-on-failure
+  ./build-phase7/xai_decision_tests
+Result: strict-warning build passed; CTest 9/9 targets passed; focused decision
+executable passed 8/8 groups. Coverage includes exact expected-risk ranking and
+certificate-before-ranking; deterministic action and abstention tie rules;
+invalid probability mass, unavailable loss, duplicate certificate IDs, and the
+256-state cap; missing, malformed, stale, and mismatched certificates; verifier
+rejection and exception; no-certified-action, resource-limit, and unresolved-
+state abstention; upstream status/exactness propagation; and canonical output
+carrying the selected exact-rational value/risk plus exact CPU/RAM cost
+normalization. The verifier receives the candidate value, not metadata alone.
+Fresh Debug AddressSanitizer/UndefinedBehaviorSanitizer build:
+  cmake -S . -B build-phase7-asan -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer' \
+    -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'
+  cmake --build build-phase7-asan --parallel 4
+  ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1 \
+    ctest --test-dir build-phase7-asan --output-on-failure
+  ASAN_OPTIONS=detect_leaks=1 UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1 \
+    ./build-phase7-asan/xai_decision_tests
+Result: CTest 9/9 and the focused decision executable 8/8 passed; no
+AddressSanitizer or UndefinedBehaviorSanitizer findings.
+Policy conventions: resource cost is max(CPU_ms/600000, peak_RSS_bytes/4GiB),
+resource weight 1, abstention cost 1, unresolved-mass allowance 0 by default,
+and abstention wins exact action-risk ties. State probabilities are caller-supplied;
+the WMC action uses a declared zero/one loss, and generic action losses remain
+caller-supplied; neither is benchmark-calibrated. The verifier used in tests is
+synthetic; no production WMC proof certificate or exact-count verifier exists.
+No MCC corpus outcomes or odd-indexed holdout bodies were read. No corpus
+performance, real-result certification, end-to-end runtime, or deployment claim
+is made. `git diff --check` passed after implementation and documentation edits.

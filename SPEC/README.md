@@ -15,7 +15,7 @@ This directory defines the candidate architecture and its mathematical interface
 3. [Evolution and adaptation](components/03-evolution-adaptation.md) — Phase 5 bounded WMC node-cap search, development-only objective, Gaussian CUSUM monitor, and fail-closed baseline rollback.
 4. [Reasoning](components/04-reasoning.md)
 5. [Calibration](components/05-calibration.md) — Phase 6 synthetic-only probability metrics, reliability, sharpness, risk/coverage, and assumption-gated split conformal.
-6. [Output and abstention](components/06-output.md)
+6. [Output and abstention](components/06-output.md) — Phase 7 exact-rational risk, certificate-gated eligibility, structured output, and fail-closed abstention; synthetic verifier only.
 
 ## Interpretation
 

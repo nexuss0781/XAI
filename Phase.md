@@ -167,6 +167,8 @@ Phases 2–4 can be developed in parallel after Phase 1, but their integration m
 
 **Exit gate:** Every chosen action is admissible under the declared policy; every required certificate is checked; an absent/invalid certificate excludes an action; unsupported inputs cannot produce an unqualified answer. Document that certificates prove only the encoded property under verifier assumptions.
 
+**Status (2026-10-07): PASS for the in-process decision harness.** The exact-rational action gate, 256-state/action caps, WMC resource-cost convention, tie rules, certificate bindings, explicit abstention, and canonical output are implemented in [`SPEC/components/06-output.md`](SPEC/components/06-output.md). Fresh GCC 13.3 Release and ASan/UBSan builds each passed CTest 9/9; the dedicated decision suite passed 8/8 groups. Tests use a synthetic verifier only: no production WMC proof verifier, benchmark-derived loss model, or end-to-end runtime exists, and no real result is claimed certified. See [`RESULT/Phase-7.md`](RESULT/Phase-7.md) and [`TESTS/validation.log`](TESTS/validation.log).
+
 ## Phase 8 — Supported input mapping and end-to-end orchestration
 
 **Goal:** Connect component contracts into a reproducible full path without claiming unrestricted language understanding.
