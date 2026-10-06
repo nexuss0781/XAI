@@ -58,6 +58,18 @@ LOCKED_PATHS = [
 ]
 
 
+def oracle_work_plan(nvars: Any, occurrences: Any) -> dict[str, Any]:
+    """Estimate exhaustive work only when nvars is already within the frozen cap."""
+    if nvars is None or occurrences is None:
+        return {"eligible_by_cap": False, "nvars": nvars, "literal_occurrences": occurrences,
+                "estimated_literal_checks": None}
+    nvars, occurrences = int(nvars), int(occurrences)
+    work = (1 << nvars) * occurrences if 0 <= nvars <= ORACLE_MAX_VARIABLES else None
+    eligible = work is not None and work <= ORACLE_MAX_WORK
+    return {"eligible_by_cap": eligible, "nvars": nvars,
+            "literal_occurrences": occurrences, "estimated_literal_checks": work}
+
+
 def now_utc() -> str:
     return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
 
@@ -731,8 +743,12 @@ def bounded_exact_oracle(input_path: Path) -> dict[str, Any]:
         return {"system_status": "oracle_parse_error", "exact_count": None,
                 "reason": str(exc)}
 
+    if nvars > ORACLE_MAX_VARIABLES:
+        return {"system_status": "not_eligible_by_oracle_cap", "exact_count": None,
+                "nvars": nvars, "literal_occurrences": occurrences,
+                "estimated_literal_checks": None}
     workload = (1 << nvars) * occurrences
-    if nvars > ORACLE_MAX_VARIABLES or workload > ORACLE_MAX_WORK:
+    if workload > ORACLE_MAX_WORK:
         return {"system_status": "not_eligible_by_oracle_cap", "exact_count": None,
                 "nvars": nvars, "literal_occurrences": occurrences,
                 "estimated_literal_checks": workload}
@@ -924,14 +940,10 @@ def run_evaluation(args: argparse.Namespace) -> None:
             meta = metadata_by_index[index]
             nvars = meta.get("nvars")
             occurrences = meta.get("literal_occurrences")
-            estimated_work = (1 << int(nvars)) * int(occurrences) if nvars is not None and occurrences is not None else None
-            oracle_eligible = (nvars is not None and occurrences is not None and
-                               int(nvars) <= ORACLE_MAX_VARIABLES and estimated_work is not None and
-                               estimated_work <= ORACLE_MAX_WORK)
-            oracle_plan = {"eligible_by_cap": bool(oracle_eligible), "nvars": nvars,
-                           "literal_occurrences": occurrences,
-                           "estimated_literal_checks": estimated_work,
-                           "max_variables": ORACLE_MAX_VARIABLES, "max_work": ORACLE_MAX_WORK}
+            oracle_plan = oracle_work_plan(nvars, occurrences)
+            oracle_plan.update({"max_variables": ORACLE_MAX_VARIABLES,
+                                "max_work": ORACLE_MAX_WORK})
+            oracle_eligible = oracle_plan["eligible_by_cap"]
             outcome = run_member(archive_path, member, xai, ganak, cpu, record_dir,
                                  bool(oracle_eligible))
             outcome["oracle"].update(oracle_plan)

@@ -1,3 +1,4 @@
+import json
 import importlib.util
 import sys
 import tempfile
@@ -108,9 +109,16 @@ class Phase9EvaluationTests(unittest.TestCase):
             formula.write_text("c t wmc\np cnf 1 0\n")
             result = phase9.bounded_exact_oracle(formula)
             self.assertEqual(result["exact_count"], "2/1")
-            formula.write_text("c t wmc\np cnf 21 0\n")
+            formula.write_text("c t wmc\np cnf 14847 0\n")
             capped = phase9.bounded_exact_oracle(formula)
         self.assertEqual(capped["system_status"], "not_eligible_by_oracle_cap")
+        self.assertIsNone(capped["estimated_literal_checks"])
+
+    def test_oracle_work_estimate_short_circuits_above_variable_cap(self):
+        plan = phase9.oracle_work_plan(14847, 3551275)
+        self.assertFalse(plan["eligible_by_cap"])
+        self.assertIsNone(plan["estimated_literal_checks"])
+        self.assertIn('"estimated_literal_checks": null', json.dumps(plan))
 
 
 if __name__ == "__main__":

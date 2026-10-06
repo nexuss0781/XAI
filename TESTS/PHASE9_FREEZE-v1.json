@@ -1,0 +1,203 @@
+{
+  "archive": {
+    "md5": "1c7e6279eaf29bf3731cebe07eedf107",
+    "path_at_freeze": "/workspace/XAI/data/raw/mc2024-track2-wmc_competition.tar",
+    "sha256": "314a698a56773f2e3dd1f529325d6a5e6876a33d3596c170754e2404ef27bc1c",
+    "size_bytes": 70849024
+  },
+  "binaries": {
+    "ganak": {
+      "path_at_freeze": "/workspace/XAI/data/vendor/ganak-build/ganak",
+      "sha256": "e5e693720d1baf052acd2c1efa592412136abbeb2febf15b9f77ba1fc7bf08d4",
+      "version": "c o Ganak SHA1: e8f51841832efbbad4c1dc30e7e628ea39e8eec6"
+    },
+    "xai": {
+      "path_at_freeze": "/workspace/XAI-build-phase9-final/xai_wmc_solver",
+      "sha256": "bc889b0e92289c74148334bd0b015dd58bd59a64220cab12f404cb5631ce29ca",
+      "version": "Usage: xai_wmc_solver [--timeout-ms N] [--node-limit N] [--max-depth N]"
+    }
+  },
+  "code_revision": "0f9878727a400f338c3b6a70da120653d89090fa",
+  "code_tree": "82c90df18cf7d094fe3ffe9355cf87580852ccae",
+  "created_utc": "2026-10-06T21:14:56+00:00",
+  "environment": {
+    "cmake": "cmake version 3.28.3",
+    "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.50GHz",
+    "flint": "3.0.1",
+    "gmp": "6.3.0",
+    "logical_cpu_affinity_available": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "mpfr": "4.2.1",
+    "platform": "Linux-6.18.38+-x86_64-with-glibc2.39",
+    "python": "3.12.3"
+  },
+  "evaluation_plan_sha256": "beb3580914a7c85be8055a5d4818a485a190d5ae0cfd0bff2c3a67638a5570b3",
+  "ganak_build": {
+    "build_args": [
+      "--parallel",
+      "2",
+      "--target",
+      "ganak-bin"
+    ],
+    "build_only_note": "Ubuntu FLINT pkg-config omitted -lflint; explicit standard-library link flag resolved the pinned CLI symbols without modifying Ganak source.",
+    "cmake_args": [
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DENABLE_TESTING=OFF",
+      "-DBUILD_PYTHON_EXTENSION=OFF",
+      "-DCMAKE_CXX_STANDARD_LIBRARIES=-lflint"
+    ],
+    "cmake_cache_sha256": "df01dbc86371c9e15ac44512633e7de6eadb1b064c247a249931ac3a5a17a3d9",
+    "link_command_sha256": "d2563fcd618c17b9a53c4089b9ba5463c362c341ac46ef83d364d01aaba3e4b6"
+  },
+  "ganak_source": {
+    "build_path_at_freeze": "/workspace/XAI/data/vendor/ganak-build",
+    "commit": "e8f51841832efbbad4c1dc30e7e628ea39e8eec6",
+    "dependency_commits": {
+      "approxmc": "f0a95fb4899880c1bedd03f8e2cf889f94731e6e",
+      "arjun": "b99b7ea7b7d0cf6910ed7a4db4a1b7dc14254ce6",
+      "cadiback": "445ddc2f2b5e54421af64e0652c2eb8444175322",
+      "cadical": "818c9562f114b315a9246ced943b66b60b38e8fb",
+      "cryptominisat5": "2bf89cfb3e126e559d472388486327813f735f7e",
+      "ganak": "e8f51841832efbbad4c1dc30e7e628ea39e8eec6",
+      "sbva": "bf157b1fea71c155251d2991b5fe0de37c57efba",
+      "treedecomp": "0495b40c220b0b97a0d7c8e8d86480b4060476a8"
+    },
+    "path_at_freeze": "/workspace/XAI/data/vendor/ganak",
+    "repository": "https://github.com/meelgroup/ganak"
+  },
+  "locked_file_sha256": {
+    "CMakeLists.txt": "c5245cfd37e61ecb63a3e6c1f0e2579f0e9cd6440db1b2bf340f371542f2e7cf",
+    "Phase.md": "af4d26cc24105f06e4d1bf3dc1bcf3a6fe7d50264e775dbb184b9a6ac7e886a9",
+    "RESULT/Phase-0.md": "7514e8aadd1d595e54bedb9462cc82127d68d18653fe415c42e5d053fa165dbd",
+    "TESTS/EVALUATION_PLAN.md": "beb3580914a7c85be8055a5d4818a485a190d5ae0cfd0bff2c3a67638a5570b3",
+    "TESTS/PHASE9_PROTOCOL.md": "62b3047b1389ef62ee17f0de11da804fdc25987ce327e92396feca02d930ca2a",
+    "TESTS/cpp/adaptation_tests.cpp": "b5cc53db88160d2922fd2ea2ca9c1255c594c118157130a597771ca33fba53d6",
+    "TESTS/cpp/calibration_tests.cpp": "82cb36644373d67c634c0fe573ff550c3d73d789c093981f6433db7f694a8f11",
+    "TESTS/cpp/contracts_tests.cpp": "9fc4d06f43ee49fc85635a0ff571d02933e576d3734e7402d0d5af77590aa499",
+    "TESTS/cpp/decision_tests.cpp": "e97e79f86af558a5a90357c7945d5021dfbfd97d703b67b66c66a2656eae6ecb",
+    "TESTS/cpp/ingestion_tests.cpp": "2a387a9e870aa67d43ae6549820225fa07e60804e4fc5538e34bd1138e40cd68",
+    "TESTS/cpp/learning_tests.cpp": "dc2e0f94ff805bb1881c37565399c2c8a6d11ea1e60adfda985548c7343159fa",
+    "TESTS/cpp/orchestration_tests.cpp": "abd6c7a6e1cb3fbe80947bc86b35344feaef63eadf6235597d916ba367ccc7d9",
+    "TESTS/cpp/pillar_tests.cpp": "b542b6eda103f24a021b70c078a7fa7f2fe30879b1a1a6655da08ddb1d5e8fa1",
+    "TESTS/cpp/reasoning_tests.cpp": "a7c1b8a6b15773d208b873608b87b4cf385436e136c670ee2989363cb2128e2f",
+    "TESTS/cpp/wmc_tests.cpp": "3d80b02196f889a4d9234280214fab2dc09e38ba99bf5071022b4e74a6fd09b5",
+    "TESTS/python/test_phase9_eval.py": "8904166c0620e44d75c3b0b6de64318e01fdcfb6268d65bb5c2da11c1b482936",
+    "TODO.md": "59f86581ff5c53f0661ae8f7bacff1456915e65540aa20c37d5a3579cc24a685",
+    "include/xai/adaptation.hpp": "b335f70e39f20936bcc988a4ba9228c0b27089b4588f0f8e56db9bb99763d1f0",
+    "include/xai/calibration.hpp": "f5c9b9d31411d383f63faed133d647281b8b1a0a07aaf31c5540f864d50e57b6",
+    "include/xai/contracts.hpp": "c41f77c211f016cd1f41cb9735e3798292e9d6b6fd19b0077a59136ffdf11f97",
+    "include/xai/decision.hpp": "f28f0c4c452a2f1b6ff2ba0a83403854f1260ed5d9a910ea5833de02151d2481",
+    "include/xai/ingestion.hpp": "79ee0581daac6805d0ef7f062b33153cb7eb96876b0eff3741d0dbd313ce2d7f",
+    "include/xai/learning.hpp": "817a206562f8e62c69843c6f5b1b0722b78d0593245d688a0af1433dcbd8c4f6",
+    "include/xai/orchestration.hpp": "21a676c67af2d9cebd73e875cc83017061daa8d4554d672aea3509557796c804",
+    "include/xai/reasoning.hpp": "6007f28440462f754faf01b81351ed3a35f62d6746792172e3cb2bb7410c14a0",
+    "include/xai/wmc.hpp": "e35b4af1f7c3ddb6f3d51f747483004592c6d4509f555dd93f04218f2bfc7617",
+    "src/adaptation.cpp": "4194e2d0e0f4e5716b534211f3c0ee719b32623e38c24e1be041b772fcdbaa2f",
+    "src/calibration.cpp": "6aacc63d76bb2e6b2ecbd84270d8c817ffae5d9fbf148a7382619da8da1d4eb7",
+    "src/contracts.cpp": "2dfc1c79ec41229c7105b10ed9a651ee1353b735c8f43f06a602e108753a5d80",
+    "src/decision.cpp": "5b4d697d6b297e8b8b2aa12f9bf17d5a392d2b2639f9b6c03362aa2e18f9f9fa",
+    "src/ingestion.cpp": "1c50a441c7e26290ef17139e6b265871721e9fbbf853ef5dd745562fe0281b2d",
+    "src/learning.cpp": "dfaff7daf3a2a1c4702272b57a1c3e6ba8a1f62f923a8af08129fd02f2b03691",
+    "src/main.cpp": "993e617919b6469280ae033a483cfdab0ea6639ff8b4a31fba706dba1827436f",
+    "src/orchestration.cpp": "64370510847e81da50acda10cbe9e9ac61c6c8fc498088c4930ab0a9b1a4eb1c",
+    "src/reasoning.cpp": "598b8648ac6dee99869ed0193be230bc6b021a48de2ee8e0811bbc964fe8b7a5",
+    "src/wmc.cpp": "99dfa5048e89ad827aefbbfc497c798c68801df6912a9e038497649be0aeec2f",
+    "tools/audit_wmc_archive.py": "4b0f14e0d4f6844575abcbc65ffb57510da7ed63ba9d8fb383c4534327e0663d",
+    "tools/create_version_manifest.py": "5fd9f6069d900ea0ccc72a75a56e7556dda987ea437bbd937f9e8f5a5f852195",
+    "tools/phase9_eval.py": "2bcc64e1fbe078d8ea819b41bb657e7965c1b0a21613100b0430a79f1cfc75ee"
+  },
+  "options": {
+    "external_per_process_limits": {
+      "cpu_affinity": "one logical CPU",
+      "cpu_seconds_soft_hard": [
+        601,
+        602
+      ],
+      "memory_enforcement": "10-ms /proc process-group RSS monitor; kill process group at/above 4 GiB; peak RSS recorded",
+      "resident_memory_bytes": 4294967296,
+      "wall_seconds_including_solver_parse": 600
+    },
+    "ganak": {
+      "binary_args": [
+        "--mode",
+        "1",
+        "--prob",
+        "0",
+        "--seed",
+        "1",
+        "--maxcache=16000",
+        "--threads",
+        "1",
+        "--verb",
+        "0"
+      ],
+      "commit": "e8f51841832efbbad4c1dc30e7e628ea39e8eec6",
+      "note": "--mode 1 exact rationals; --prob 0 disables probabilistic hashing; --maxcache=16000 follows Ganak's exact MCC runner; seed fixed at 1.",
+      "threads": 1,
+      "version": "2.7.0"
+    },
+    "input_handling": "decompress XZ transport once to a temporary file; pass identical unmodified decompressed formula bytes to all systems",
+    "randomness": {
+      "ganak_seed": 1,
+      "xai": "deterministic"
+    },
+    "xai": {
+      "ablations": [
+        {
+          "args": [
+            "--no-unit-propagation"
+          ],
+          "name": "xai_no_unit_propagation"
+        },
+        {
+          "args": [
+            "--no-components"
+          ],
+          "name": "xai_no_components"
+        },
+        {
+          "args": [
+            "--first-branch"
+          ],
+          "name": "xai_first_branch"
+        }
+      ],
+      "binary_args": [
+        "--timeout-ms",
+        "600000",
+        "--node-limit",
+        "10000000",
+        "--max-depth",
+        "4096"
+      ],
+      "full_solver": "unit propagation + component decomposition + occurrence branching",
+      "parser_limits": {
+        "max_clauses": 10000000,
+        "max_input_bytes": 4294967296,
+        "max_line_bytes": 16777216,
+        "max_literal_occurrences": 100000000,
+        "max_variables": 1000000
+      }
+    }
+  },
+  "predeclared_analysis": {
+    "calibration_or_predictive_scores": "not estimable: benchmark has no outcome labels or calibration split",
+    "claim_scope": "directly compared exact WMC solver outputs only; no certificate claim from the Phase 8 synthetic verifier",
+    "correctness": "exact Fraction equality for direct XAI/Ganak successful counts; any mismatch stops the run and invalidates the exactness claim",
+    "inference": "named challenge archive only; descriptive finite-set counts/rates; no population confidence intervals or generalization claims",
+    "no_tuning": true,
+    "stopping_rule": "finish all eligible records/configurations unless a count mismatch occurs; any mismatch halts immediately; individual attempt is capped at 600 s wall and CPU, one CPU and 4 GiB RSS",
+    "utility": "completed exact results / exact-weight-eligible benchmark members; report each noncompletion category separately"
+  },
+  "protocol_sha256": "62b3047b1389ef62ee17f0de11da804fdc25987ce327e92396feca02d930ca2a",
+  "schema": "xai.phase9.freeze.v1"
+}
