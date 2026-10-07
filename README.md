@@ -6,33 +6,31 @@ The repository includes an optimized single-threaded C++20 exact WMC reference s
 
 ## Project documents
 
-- [Project overview](Project.md)
-- [Phase 0 protocol and result](RESULT/Phase-0.md)
-- [Phase 1 contracts and validation report](RESULT/Phase-1.md)
-- [Phase 2 factual-ingestion and provenance report](RESULT/Phase-2.md)
-- [Phase 3 predictive-learning report](RESULT/Phase-3.md)
-- [Phase 4 bounded-reasoning report](RESULT/Phase-4.md)
-- [Phase 5 bounded-adaptation report](RESULT/Phase-5.md)
-- [Phase 6 calibration and diagnostics report](RESULT/Phase-6.md)
-- [Phase 7 decision policy and abstention report](RESULT/Phase-7.md)
-- [Phase 8 orchestration report](RESULT/Phase-8.md)
+### Project guides (repository root)
+
+- [Project overview and repository map](Project.md)
+- [Component-wise training protocol](TRAINING.md)
+- [Training scope and component freeze rules](SPEC/TRAINING_PLAN.md)
+- [End-to-end roadmap](ROADMAP.md), [detailed phase plan](Phase.md), and [implementation checklist](TODO.md)
+
+### Specifications (`SPEC/`)
+
+- [Specification index](SPEC/README.md)
+- [Shared record contracts](SPEC/CONTRACTS.md)
+- [Formal research paper](SPEC/RESEARCH_PAPER.md) and [end-to-end specification](SPEC/END_TO_END_FLOW.md)
+- [Predictive learning](SPEC/components/02-learning.md), [bounded reasoning](SPEC/components/04-reasoning.md), and [bounded adaptation](SPEC/components/03-evolution-adaptation.md)
+- [Calibration and uncertainty](SPEC/components/05-calibration.md), [decision and abstention](SPEC/components/06-output.md), and [orchestration](SPEC/components/07-orchestration.md)
+
+### Tests and evaluation (`TESTS/`)
+
+- [Test notes and recorded validation](TESTS/README.md)
+- [Evaluation plan](TESTS/EVALUATION_PLAN.md), [WMC solver guide](TESTS/WMC_SOLVER.md), and [Phase 9 frozen protocol](TESTS/PHASE9_PROTOCOL.md)
+
+### Results and evidence (`RESULT/`)
+
+- [Results index](RESULT/README.md)
 - [Phase 9 scope-limited closeout — project sequencing complete; benchmark incomplete](RESULT/Phase-9-closeout.md)
 - [Phase 10 scope-limited closeout — independent-reproduction/release gate not passed](RESULT/Phase-10-closeout.md)
-- [Shared record contracts](SPEC/CONTRACTS.md)
-- [Predictive-learning specification](SPEC/components/02-learning.md)
-- [Bounded-reasoning specification](SPEC/components/04-reasoning.md)
-- [Bounded-adaptation and change-monitoring specification](SPEC/components/03-evolution-adaptation.md)
-- [Calibration and uncertainty diagnostics specification](SPEC/components/05-calibration.md)
-- [Decision, certificates, and abstention specification](SPEC/components/06-output.md)
-- [WMC solver build, input, and limits](TESTS/WMC_SOLVER.md)
-- [Specification index](SPEC/README.md)
-- [Formal research paper](SPEC/RESEARCH_PAPER.md)
-- [End-to-end specification](SPEC/END_TO_END_FLOW.md)
-- [Test notes and recorded validation](TESTS/README.md)
-- [Evaluation plan](TESTS/EVALUATION_PLAN.md)
-- [End-to-end roadmap](ROADMAP.md)
-- [Detailed phase plan](Phase.md)
-- [Phased implementation checklist](TODO.md)
 
 ## Build and run
 

@@ -7,6 +7,7 @@ This directory defines the candidate architecture and its mathematical interface
 - [Shared record contracts](CONTRACTS.md) — versioned envelope, typed IDs, status semantics, canonical serialization, replay/migration policy, and logging boundary.
 - [Formal research paper](RESEARCH_PAPER.md) — research framing, mathematical proposal, prior-art limits, and implementation boundary.
 - [End-to-end specification](END_TO_END_FLOW.md) — system state, module order, interface contract, and cross-pillar invariants.
+- [Training plan](TRAINING_PLAN.md) — component-specific fitting, evidence updates, development-only adaptation, calibration, and holdout rules.
 
 ## Component specifications
 

@@ -14,12 +14,23 @@ The broader proposal uses established mathematics, including Bayesian updating, 
 
 ## Repository map
 
-- `README.md` — build, run, and evidence boundary.
-- `RESULT/` — Phase 0–10 reports, scope-limited Phase 9 and Phase 10 closeouts, partial benchmark artifacts, and machine-readable audit/reproduction artifacts.
-- `include/`, `src/` — shared contracts, factual ingestion, predictive learning, bounded adaptation, reasoning, calibration, decision policy, and exact WMC parser, solver, and CLI.
-- `tools/` — reproducible archive auditor and version-manifest generator.
-- `SPEC/` — formal architecture paper, shared contracts, end-to-end contract, and component specifications.
-- `TESTS/` — C++20 component and orchestration tests, Phase 9 protocol/evaluator, Phase 10 clean-build/artifact-verification harness, build instructions, and validation results.
+The repository is grouped by purpose. Existing paths are kept stable because reports, build definitions, and reproduction instructions link to them.
+
+```text
+README.md, Project.md       Entry points, scope, and repository map
+TRAINING.md                 Detailed component-wise training protocol
+ROADMAP.md, Phase.md, TODO.md
+                            Research roadmap, phase gates, and work checklist
+include/xai/                Public C++ component interfaces
+src/                        C++ implementations and command-line entry point
+SPEC/                       Architecture, contracts, component specs, training plan
+TESTS/                       C++/Python tests, protocols, and validation notes
+RESULT/                      Phase reports, closeouts, and retained evidence artifacts
+tools/                        Archive, manifest, and frozen-evaluation utilities
+build/                        Local generated CMake output (ignored by Git)
+```
+
+For training work, start with [`TRAINING.md`](TRAINING.md) for the detailed procedure and [`SPEC/TRAINING_PLAN.md`](SPEC/TRAINING_PLAN.md) for the architectural scope and data/freeze rules. They are complementary: the former is the working protocol, while the latter records what “training” means for each component and what remains outside the present implementation. See [`SPEC/README.md`](SPEC/README.md) for the specification index, [`TESTS/README.md`](TESTS/README.md) for validation instructions, and [`RESULT/README.md`](RESULT/README.md) for phase evidence.
 
 ## Research discipline
 
