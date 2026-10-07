@@ -66,6 +66,41 @@ else()
   target_compile_options(xai_text_input_tests PRIVATE -Wall -Wextra -Werror)
 endif()
 
+add_library(xai_perception
+  src/perception_input.cpp
+  src/perception_surface.cpp
+  src/perception_english_rules.cpp
+  src/perception_graph.cpp
+  src/perception.cpp)
+target_include_directories(xai_perception PUBLIC include)
+target_compile_features(xai_perception PUBLIC cxx_std_20)
+target_link_libraries(xai_perception PUBLIC xai_text_input)
+target_compile_definitions(xai_perception PRIVATE
+  XAI_BUILD_CODE_SHA256="${XAI_BUILD_CODE_SHA256}")
+if(MSVC)
+  target_compile_options(xai_perception PRIVATE /W4 /WX)
+else()
+  target_compile_options(xai_perception PRIVATE -Wall -Wextra -Werror)
+endif()
+
+add_executable(xai_text_perception src/text_perception_main.cpp)
+target_link_libraries(xai_text_perception PRIVATE xai_perception)
+target_compile_features(xai_text_perception PRIVATE cxx_std_20)
+if(MSVC)
+  target_compile_options(xai_text_perception PRIVATE /W4 /WX)
+else()
+  target_compile_options(xai_text_perception PRIVATE -Wall -Wextra -Werror)
+endif()
+
+add_executable(xai_perception_tests TESTS/cpp/perception_tests.cpp)
+target_link_libraries(xai_perception_tests PRIVATE xai_perception)
+target_compile_features(xai_perception_tests PRIVATE cxx_std_20)
+if(MSVC)
+  target_compile_options(xai_perception_tests PRIVATE /W4 /WX)
+else()
+  target_compile_options(xai_perception_tests PRIVATE -Wall -Wextra -Werror)
+endif()
+
 add_library(xai_ingestion src/ingestion.cpp)
 target_include_directories(xai_ingestion PUBLIC include ${GMP_INCLUDE_DIR})
 target_compile_features(xai_ingestion PUBLIC cxx_std_20)
@@ -243,6 +278,7 @@ if(BUILD_TESTING)
   add_test(NAME xai_pillar_tests COMMAND xai_pillar_tests)
   add_test(NAME xai_contract_tests COMMAND xai_contract_tests)
   add_test(NAME xai_text_input_tests COMMAND xai_text_input_tests)
+  add_test(NAME xai_perception_tests COMMAND xai_perception_tests)
   add_test(NAME xai_ingestion_tests COMMAND xai_ingestion_tests)
   add_test(NAME xai_learning_tests COMMAND xai_learning_tests)
   add_test(NAME xai_wmc_tests COMMAND xai_wmc_tests)
