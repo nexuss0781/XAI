@@ -18,6 +18,14 @@
         "sha256": "85e6ac6385cb0a7ed0630d113942548e05c331f2c91ecad2a9d07a36822bf304",
         "size_bytes": 3104
       },
+      "RESULT/Phase-9-public-even-repeat-index8-summary.json": {
+        "sha256": "30620a56ebafb902788136f45d8b0e65278be7d8056257c4e71c0d0f669ef402",
+        "size_bytes": 2821
+      },
+      "RESULT/Phase-9-public-even-repeat-index8.jsonl": {
+        "sha256": "63ba9e94408f3c412e1efadb230be644175942b664007836663567ecbb33ef93",
+        "size_bytes": 6585
+      },
       "RESULT/Phase-9-public-even.jsonl": {
         "sha256": "7e83b7a28c8f6971db73593cf96e79f849aca70220e7b55bead25b303eef264e",
         "size_bytes": 125252
@@ -33,7 +41,24 @@
       "TESTS/PHASE9_FREEZE.json": {
         "sha256": "b1b6dff0136f3e299a551d9074a862282347e2cb2aa8ecff161b543aaaaa1d12",
         "size_bytes": 9868
+      },
+      "tools/phase9_repeat_case.py": {
+        "sha256": "248d38683f973c1590b11c491fd6d97e4254aa4651224e2012d4e2599c47be19",
+        "size_bytes": 5115
       }
+    },
+    "bounded_benchmark_repeat": {
+      "attempts": 5,
+      "count_mismatch": false,
+      "final_odd_records_scored": 0,
+      "ganak_exact_count_matches_original": true,
+      "independent_reproduction": false,
+      "index": 8,
+      "phase9_practical_gate": false,
+      "records_repeated": 1,
+      "same_formula_as_original": true,
+      "status_pattern_matches_original": true,
+      "summary_regenerated_byte_identically": true
     },
     "frozen_binaries": {
       "ganak": {
@@ -181,23 +206,25 @@
         "--input",
         "/workspace/XAI/RESULT/Phase-9-public-even.jsonl",
         "--output",
-        "/tmp/xai-phase10-summary-g6vi__2i/summary.json"
+        "/tmp/xai-phase10-summary-g56skc6n/summary.json"
       ],
       "sha256": "85e6ac6385cb0a7ed0630d113942548e05c331f2c91ecad2a9d07a36822bf304",
       "stdout": "{\n  \"schema\": \"xai.phase9.summary.v1\",\n  \"split\": \"public-even\",\n  \"records\": 19,\n  \"expected_records\": 98,\n  \"frozen_code_revision\": \"a1a65b5ffdeab261bcdeaf7151c03b0c66213403\",\n  \"direct_verification_only\": true,\n  \"systems\": {\n    \"ganak\": {\n      \"statuses\": {\n        \"memory_limit\": 6,\n        \"solved_exact\": 10,\n        \"timeout\": 3\n      },\n      \"solved_exact\": 10,\n      \"completion_rate_in_evaluated_rows\": \"10/19\",\n      \"median_wall_ms\": 200124,\n      \"max_wall_ms\": 814576,\n      \"max_sampled_rss_bytes\": 4302950400,\n      \"resource_sampled_runs\": 19\n    },\n    \"xai_full\": {\n      \"statuses\": {\n        \"memory_limit\": 2,\n        \"resource_limit\": 11,\n        \"timeout\": 6\n      },\n      \"solved_exact\": 0,\n      \"completion_rate_in_evaluated_rows\": \"0/19\",\n      \"median_wall_ms\": 50507,\n      \"max_wall_ms\": 624606,\n      \"max_sampled_rss_bytes\": 4318244864,\n      \"resource_sampled_runs\": 19,\n      \"directly_verified_against_ganak\": 0,\n      \"both_completed\": 0,\n      \"exact_match_fraction_among_both_completed\": \"not estimable\"\n    },\n    \"xai_no_unit_propagation\": {\n      \"statuses\": {\n        \"memory_limit\": 3,\n        \"resource_limit\": 12,\n        \"timeout\": 4\n      },\n      \"solved_exact\": 0,\n      \"completion_rate_in_evaluated_rows\": \"0/19\",\n      \"median_wall_ms\": 34451,\n      \"max_wall_ms\": 600078,\n      \"max_sampled_rss_bytes\": 4306272256,\n      \"resource_sampled_runs\": 19,\n      \"directly_verified_against_ganak\": 0,\n      \"both_completed\": 0,\n      \"exact_match_fraction_among_both_completed\": \"not estimable\"\n    },\n    \"xai_no_components\": {\n      \"statuses\": {\n        \"memory_limit\": 2,\n        \"resource_limit\": 13,\n        \"timeout\": 4\n      },\n      \"solved_exact\": 0,\n      \"completion_rate_in_evaluated_rows\": \"0/19\",\n      \"median_wall_ms\": 77912,\n      \"max_wall_ms\": 600090,\n      \"max_sampled_rss_bytes\": 4306952192,\n      \"resource_sampled_runs\": 19,\n      \"directly_verified_against_ganak\": 0,\n      \"both_completed\": 0,\n      \"exact_match_fraction_among_both_completed\": \"not estimable\"\n    },\n    \"xai_first_branch\": {\n      \"statuses\": {\n        \"memory_limit\": 1,\n        \"resource_limit\": 11,\n        \"timeout\": 7\n      },\n      \"solved_exact\": 0,\n      \"completion_rate_in_evaluated_rows\": \"0/19\",\n      \"median_wall_ms\": 54824,\n      \"max_wall_ms\": 766131,\n      \"max_sampled_rss_bytes\": 4299522048,\n      \"resource_sampled_runs\": 19,\n      \"directly_verified_against_ganak\": 0,\n      \"both_completed\": 0,\n      \"exact_match_fraction_among_both_completed\": \"not estimable\"\n    }\n  },\n  \"mismatch_indices\": [],\n  \"independent_oracle\": {\n    \"eligible_by_predeclared_cap\": 0,\n    \"statuses\": {\n      \"not_eligible_by_oracle_cap\": 19\n    },\n    \"solver_pairs_compared\": 0,\n    \"solver_pairs_matched\": 0,\n    \"mismatch_indices\": []\n  },\n  \"evaluation_complete\": false,\n  \"nontrivial_full_solver_matches\": 0,\n  \"phase9_practical_gate\": false,\n  \"claim_note\": \"Descriptive finite challenge-set counts only; no population confidence intervals. A verified result means successful directly compared exact rational outputs, not a Phase 8 certificate.\"\n}\n"
     }
   },
-  "benchmark_attempts_repeated": false,
+  "benchmark_attempts_repeated": true,
+  "benchmark_repeat_independent": false,
+  "benchmark_repeat_records": 1,
   "build": {
-    "build_directory": "/tmp/xai-phase10-clean-final",
+    "build_directory": "/tmp/xai-phase10-bounded-repeat-final",
     "build_type": "Release",
     "configure_build_ctest_passed": true,
     "ctest_success_summary": "100% tests passed, 0 tests failed out of 11",
     "direct_python_test_exit": 0
   },
-  "claim_boundary": "Build/tests and committed diagnostic artifacts were reproduced; historical solver attempts were not rerun.",
-  "completed_utc": "2026-10-07T05:47:32+00:00",
+  "claim_boundary": "Build/tests and the committed diagnostic artifacts were reproduced, plus one separate same-environment public-even record was rerun. This is not an independent reproduction and does not complete Phase 9.",
+  "completed_utc": "2026-10-07T06:02:52+00:00",
   "schema": "xai.phase10.reproduction.v1",
-  "tested_commit": "d0680df22157897e3c4a32161c729f26d5b63976",
+  "tested_commit": "3fcdb587abaa7022c2b1594eb1a6ebfe5cb259db",
   "tested_worktree_clean": true
 }
