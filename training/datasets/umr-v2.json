@@ -1,0 +1,39 @@
+{
+  "dataset_id": "umr-v2-lindat-2025-05-17",
+  "role": "selected_initial_multilingual_semantic_graph_dataset_candidate",
+  "source": "https://lindat.mff.cuni.cz/repository/items/239427de-bcaa-401d-a0ae-2c69602daa67",
+  "download": "https://lindat.mff.cuni.cz/repository/items/239427de-bcaa-401d-a0ae-2c69602daa67",
+  "version": "Uniform Meaning Representation 2.0",
+  "issued": "2025-05-17",
+  "archive": "UMR Release 2.0.zip",
+  "archive_size_display": "54.71 MB",
+  "published_counts": {
+    "files": 7711,
+    "sentences": 210237,
+    "tokens": 3104299,
+    "concepts": 2333830
+  },
+  "languages": [
+    {"name": "Arapaho", "graphbank": "Arapaho-UMR", "license": "CC BY-NC-ND 4.0"},
+    {"name": "Chinese", "graphbank": "Chinese-UMR", "license": "CC BY-NC-ND 4.0"},
+    {"name": "Czech", "graphbank": "Czech-UMR", "license": "CC BY-NC-SA 4.0"},
+    {"name": "English", "graphbank": "English-UMR", "license": "CC BY-SA 4.0"},
+    {"name": "Kukama", "graphbank": "Kukama-UMR", "license": "CC BY-NC-ND 4.0"},
+    {"name": "Latin", "graphbank": "Latin-UMR", "license": "CC BY-NC-SA 4.0"},
+    {"name": "Navajo", "graphbank": "Navajo-UMR", "license": "CC BY-NC-ND 4.0"},
+    {"name": "Sanapaná", "graphbank": "Sanapana-UMR", "license": "CC BY-NC-ND 4.0"}
+  ],
+  "license_source": "https://lindat.mff.cuni.cz/repository/static/license-umr-2.0.html",
+  "published_data_description": "https://github.com/umr4nlp/umr-data",
+  "selection_rationale": "Official multilingual sentence- and document-level semantic graph annotations, a stable public release, and explicit per-graphbank terms. This is the closest verified graph-supervision resource found for the proposal.",
+  "known_limits": [
+    "Per-graphbank terms differ; several graphbanks are non-commercial and prohibit derivatives. No graphbank is approved for XAI model training by this repository manifest until rights for that use and the planned model artifacts are confirmed.",
+    "The published 2.0 release has one annotated graph per sentence, not a set of materially acceptable alternate readings.",
+    "The release has about 3.1 million tokens in total and is too small by itself for the proposed multilingual denoising-pretraining schedule.",
+    "The official data repository distinguishes manually annotated non-partial-conversion data from partial conversions. Partial conversions must be excluded from the graph-supervision target unless separately audited and explicitly approved.",
+    "UMR is not the XAI candidate-graph schema. A reviewed mapping and exact original-text byte-span alignment are required; token-index alignments must not be silently treated as UTF-8 byte spans."
+  ],
+  "training_status": "blocked_pending_rights_review_annotation_mapping_and_additional_pretraining_corpus",
+  "archive_downloaded": false,
+  "training_started": false
+}

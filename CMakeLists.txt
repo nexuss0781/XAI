@@ -292,4 +292,6 @@ if(BUILD_TESTING)
   add_test(NAME xai_text_adapter_encoding_tests
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/TESTS/python/test_text_adapter_encodings.py
             $<TARGET_FILE:xai_text_adapter>)
+  add_test(NAME xai_training_pipeline_tests
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/TESTS/python/test_training_pipeline.py)
 endif()

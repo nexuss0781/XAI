@@ -1,0 +1,4 @@
+# Install in a dedicated training environment; these packages were not installed here.
+# Select the PyTorch wheel matching the training machine's CUDA runtime when applicable.
+torch>=2.5,<3
+sentencepiece==0.2.0

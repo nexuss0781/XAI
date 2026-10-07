@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "model": {
+    "family": "from_scratch_encoder_decoder_transformer",
+    "tokenizer": {"algorithm": "sentencepiece_unigram", "vocab_size": 32000, "byte_fallback": true, "normalization": "identity", "fit_partition": "training_only"},
+    "encoder_layers": 8,
+    "decoder_layers": 8,
+    "d_model": 512,
+    "attention_heads": 8,
+    "feed_forward_dim": 2048,
+    "pre_layer_norm": true,
+    "activation": "gelu",
+    "dropout": 0.1,
+    "position_embeddings": "learned_absolute",
+    "max_input_tokens": 1024,
+    "initialization": "normal_mean_0_std_0.02",
+    "layer_norm_scale": 1.0,
+    "layer_norm_bias": 0.0
+  },
+  "pretraining": {
+    "objective": "span_denoising",
+    "mask_fraction": 0.15,
+    "mean_span_length": 3,
+    "language_sampling": "uniform_then_document_uniform",
+    "peak_learning_rate": 0.0003,
+    "tokens_per_update": 8192,
+    "max_updates": 200000
+  },
+  "graph_training": {
+    "objective": "equal_weight_all_accepted_readings",
+    "language_sampling": "uniform_then_document_uniform_then_reading_uniform",
+    "peak_learning_rate": 0.0001,
+    "actions_per_update": 4096,
+    "max_updates": 20000
+  },
+  "optimizer": {"name": "AdamW", "beta1": 0.9, "beta2": 0.98, "epsilon": 1e-8, "weight_decay": 0.01, "max_gradient_norm": 1.0},
+  "schedule": {"warmup_fraction": 0.02, "decay": "cosine_to_zero"},
+  "seed": 20261008,
+  "checkpoint_selection": {"primary": "development_macro_graph_recall_at_3", "tie_breakers": ["lower_false_resolution_rate", "lower_exact_span_error"]},
+  "inference": {"beam_width": 12, "max_candidates": 3, "probabilities_exposed": false},
+  "execution": {"training_enabled": false, "pretrained_checkpoint": null, "synthetic_examples_allowed": false}
+}
