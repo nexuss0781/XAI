@@ -221,8 +221,10 @@ Phases 2–4 can be developed in parallel after Phase 1, but their integration m
 
 **Deliverables:** reproducibility instructions and evidence; claim audit; research release notes; updated limitation and open-issue log.
 
-**Exit gate:** A clean reproduction succeeds within documented tolerance, documentation matches measured evidence, and there is no implication that component fixtures establish general capability or real-world safety.
+**Formal exit gate:** A clean independent reproduction succeeds within documented tolerance, documentation matches measured evidence, and there is no implication that component fixtures establish general capability or real-world safety. This exit gate is not passed because no independent researcher reproduced the historical solver experiment.
+
+**Project status (2026-10-07): CLOSED AT SCOPE-LIMITED PHASE 10, at the user's direction.** This stops the project at the evidence already verified; it does not mark the formal reproduction/research-release gate passed, and no independent research release is claimed. See [RESULT/Phase-10-closeout.md](RESULT/Phase-10-closeout.md).
 
 ## Completion record
 
-Record each phase as `not started`, `in progress`, `blocked`, or `complete` in [TODO.md](TODO.md). For each completion, link the implementation, tests, protocol/report, and commit that provide the evidence. A checkbox without a corresponding artifact is not a gate pass.
+Record each phase as `not started`, `in progress`, `blocked`, `complete`, or `closed—scope-limited` in [TODO.md](TODO.md). `Closed—scope-limited` means no further work is planned for the current project scope; it does not mean an unmet formal exit gate passed. Link the implementation, tests, protocol/report, and commit that support the recorded status. A checkbox without a corresponding artifact is not a gate pass.
