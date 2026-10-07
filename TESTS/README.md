@@ -25,6 +25,16 @@ python3 tools/create_version_manifest.py \
 
 Repeat `--data` and `--config` for each file that affects a run; omit either option when that category is not applicable. The script records the current Git revision, whether tracked files differ from that revision, SHA-256 and byte size for every Git-tracked source/document file, plus hashes and sizes for explicitly supplied data/config files. File contents are never copied into the manifest. Ignored or untracked files are not silently included in the tracked-source set; pass all run-relevant data and configuration explicitly. Keep the manifest with the run report or build artifact, not in a directory exposed to unauthorized readers if file names themselves are sensitive.
 
+## KILT T-REx training utility checks
+
+The offline KILT T-REx preparation and surface-form ranking utility uses only the Python standard library. Its unit tests exercise prompt parsing, answer-withheld test handling, alias-aware SQLite ranking, and development metrics on tiny synthetic fixtures; they do not download the dataset or train on it:
+
+```sh
+python3 -m unittest discover -s TESTS/python -p 'test_*.py' -v
+```
+
+The production-size model is built only by the utility's explicit `train` subcommand; see [`../tools/README.md`](../tools/README.md).
+
 ## Phase 0 archive audit
 
 To reproduce the public-only benchmark audit, obtain the official CC BY 4.0 archive from the [Zenodo record](https://zenodo.org/records/14249068) and run:
