@@ -28,6 +28,9 @@ EXPECTED_HASHES = {
     "RESULT/Phase-9-reduced-status-v2.json": "2827316efdac968c990da9b2eae13bf5b7b725ef1422e3658036a1ab6cd86922",
     "RESULT/Phase-9-stress-v2.json": "a8f67f4e01483afca530345de58e994c0e4016bb46460c63c0f202e4653b5ee7",
     "RESULT/Phase-10-stress-rerun.json": "98a79aa692baba702a832d228869d08c97eea218490971be4b7bc8f65a33d98f",
+    "RESULT/Phase-9-public-even-repeat-index8.jsonl": "63ba9e94408f3c412e1efadb230be644175942b664007836663567ecbb33ef93",
+    "RESULT/Phase-9-public-even-repeat-index8-summary.json": "30620a56ebafb902788136f45d8b0e65278be7d8056257c4e71c0d0f669ef402",
+    "tools/phase9_repeat_case.py": "248d38683f973c1590b11c491fd6d97e4254aa4651224e2012d4e2599c47be19",
 }
 EXPECTED_LOCKED_FILE_COUNT = 39
 EXPECTED_STATUSES = {
@@ -178,6 +181,76 @@ def verify_artifacts() -> dict[str, Any]:
             .read_text(encoding="utf-8").splitlines() if line.strip()]
     row_audit = verify_rows(rows, freeze, freeze_sha, sha256(ROOT / "RESULT/Phase-9-cross-split-audit.json"), summary)
 
+    repeat_path = ROOT / "RESULT/Phase-9-public-even-repeat-index8.jsonl"
+    repeat_rows = [json.loads(line) for line in repeat_path.read_text(encoding="utf-8").splitlines()
+                   if line.strip()]
+    require(len(repeat_rows) == 1, "bounded repeat must contain exactly one result row")
+    repeat = repeat_rows[0]
+    original_by_index = {row["index"]: row for row in rows}
+    original = original_by_index.get(8)
+    require(original is not None, "original partial diagnostic lacks public-even index 8")
+    require(repeat.get("schema") == "xai.phase9.instance-result.v1"
+            and repeat.get("split") == "public-even" and repeat.get("index") == 8
+            and repeat.get("smoke_run") is True and repeat.get("eligibility_denominator") == 98,
+            "bounded repeat scope or smoke marker is incorrect")
+    require(repeat.get("frozen_code_revision") == freeze["code_revision"]
+            and repeat.get("freeze_file_sha256") == freeze_sha
+            and repeat.get("cross_split_audit_sha256") == sha256(ROOT / "RESULT/Phase-9-cross-split-audit.json"),
+            "bounded repeat freeze or audit provenance differs")
+    require(repeat.get("raw_formula_sha256") == original.get("raw_formula_sha256"),
+            "bounded repeat formula bytes differ from original index 8")
+    require(repeat.get("count_mismatch") is False and not repeat.get("mismatch_systems"),
+            "bounded repeat contains an exact-count mismatch")
+    require(set(repeat.get("systems", {})) == set(original["systems"]),
+            "bounded repeat is missing a predeclared solver configuration")
+    status_matches_original = True
+    repeat_attempts = 0
+    for system, outcome in repeat["systems"].items():
+        previous = original["systems"][system]
+        require(outcome.get("system_status") == previous.get("system_status"),
+                f"bounded repeat status changed at index 8 for {system}")
+        status_matches_original &= outcome.get("system_status") == previous.get("system_status")
+        repeat_attempts += outcome.get("system_status") != "not_run_after_mismatch"
+        for key in ("stdout", "stderr"):
+            digest_key = key + "_sha256"
+            if outcome.get(digest_key) is not None:
+                require(hashlib.sha256(outcome.get(key, "").encode("utf-8")).hexdigest()
+                        == outcome[digest_key],
+                        f"bounded repeat {key} hash mismatch for {system}")
+        if outcome.get("system_status") == "solved_exact":
+            require(outcome.get("exact_count") == previous.get("exact_count"),
+                    f"bounded repeat exact count changed for {system}")
+    require(repeat_attempts == 5, f"expected 5 bounded repeat attempts, found {repeat_attempts}")
+    repeat_summary_path = ROOT / "RESULT/Phase-9-public-even-repeat-index8-summary.json"
+    repeat_summary = json.loads(repeat_summary_path.read_text(encoding="utf-8"))
+    require(repeat_summary.get("records") == 1 and repeat_summary.get("expected_records") == 98
+            and repeat_summary.get("evaluation_complete") is False
+            and repeat_summary.get("phase9_practical_gate") is False,
+            "bounded repeat summary must remain explicitly incomplete/not passed")
+    with tempfile.TemporaryDirectory(prefix="xai-phase10-repeat-summary-") as temp:
+        regenerated_repeat = pathlib.Path(temp) / "summary.json"
+        command = [sys.executable, str(ROOT / "tools/phase9_eval.py"), "summarize",
+                   "--input", str(repeat_path), "--output", str(regenerated_repeat)]
+        subprocess.run(command, cwd=ROOT, check=True, text=True,
+                       stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        require(regenerated_repeat.read_bytes() == repeat_summary_path.read_bytes(),
+                "regenerated bounded-repeat summary does not byte-match its artifact")
+    repeat_validation = {
+        "records_repeated": 1,
+        "index": 8,
+        "attempts": repeat_attempts,
+        "same_formula_as_original": True,
+        "status_pattern_matches_original": status_matches_original,
+        "ganak_exact_count_matches_original": (
+            repeat["systems"]["ganak"].get("exact_count")
+            == original["systems"]["ganak"].get("exact_count")),
+        "count_mismatch": False,
+        "summary_regenerated_byte_identically": True,
+        "final_odd_records_scored": 0,
+        "independent_reproduction": False,
+        "phase9_practical_gate": False,
+    }
+
     reduced = read_json("RESULT/Phase-9-reduced-status-v2.json")
     require(reduced.get("status") == "incomplete_diagnostic"
             and reduced.get("phase9_gate") == "not_passed",
@@ -239,7 +312,8 @@ def verify_artifacts() -> dict[str, Any]:
     return {"artifacts": artifact_hashes, "historical_freeze": frozen_tree,
             "row_audit": row_audit, "archive": {"path": str(archive_path),
             "sha256": sha256(archive_path), "matches_freeze": True},
-            "frozen_binaries": binary_verification, "summary_regeneration": summarize_run}
+            "frozen_binaries": binary_verification, "summary_regeneration": summarize_run,
+            "bounded_benchmark_repeat": repeat_validation}
 
 
 def main() -> int:
@@ -282,8 +356,10 @@ def main() -> int:
                   next((line.strip() for line in ctest.stdout.splitlines() if "tests passed" in line), "see transcript"),
                   "direct_python_test_exit": python_tests.returncode},
         "artifacts": artifacts,
-        "benchmark_attempts_repeated": False,
-        "claim_boundary": "Build/tests and committed diagnostic artifacts were reproduced; historical solver attempts were not rerun.",
+        "benchmark_attempts_repeated": True,
+        "benchmark_repeat_records": 1,
+        "benchmark_repeat_independent": False,
+        "claim_boundary": "Build/tests and the committed diagnostic artifacts were reproduced, plus one separate same-environment public-even record was rerun. This is not an independent reproduction and does not complete Phase 9.",
     }
     rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.report:

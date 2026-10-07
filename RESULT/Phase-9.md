@@ -18,6 +18,22 @@ Ganak returned an exact count on **10/19** records. The XAI full configuration r
 
 Across 95 solver attempts (19 records × five systems), the run recorded **10 exact completions, 47 resource-limit outcomes, 24 timeouts, and 14 memory-limit outcomes**. The absence of mismatches is limited to these attempted cases; it does not establish exactness or performance on the unrun records.
 
+## Separate bounded repeat — public-even index 8
+
+A separate one-record repeat was executed with the frozen evaluator primitives and frozen solver binaries from a detached checkout of the recorded source revision. It reused the same public-even index 8 formula; the raw decompressed-formula SHA-256 was `600e03d4b2678d5863d0bb9fafeb27678a8b5790b0bd63ebc2d1c86d595946c6`, matching the original row. The original JSONL was left unchanged.
+
+| System | Repeat outcome | Wall time |
+|---|---|---:|
+| Ganak | Exact count; identical rational value to original | 15,534 ms |
+| XAI full | Resource limit | 24,283 ms |
+| XAI without unit propagation | Resource limit | 17,990 ms |
+| XAI without components | Resource limit | 71,489 ms |
+| XAI first-branch ablation | Resource limit | 28,383 ms |
+
+All five statuses matched the original index-8 row, and no mismatch was observed. Ganak's captured stdout differed only in its informational elapsed-time line (`14.74` versus `15.25` seconds); its exact rational count was unchanged. All repeat-row stdout/stderr hashes validate against the captured text. This is a same-environment smoke repeat of **one** member, chosen as a short prior case; it is not an independent reproduction, does not expand the original 19-record evaluation, and provides no new XAI completion. The 1/98 repeat does not meet the Phase 9 gate.
+
+The repeat row and derived summary are [`Phase-9-public-even-repeat-index8.jsonl`](Phase-9-public-even-repeat-index8.jsonl) and [`Phase-9-public-even-repeat-index8-summary.json`](Phase-9-public-even-repeat-index8-summary.json). The selector wrapper is [`../tools/phase9_repeat_case.py`](../tools/phase9_repeat_case.py); it reuses the frozen runner's extraction, commands, process controls, classification, and exact-count comparison functions. To satisfy the evaluator's integrity check, run it from a detached worktree at the frozen source revision with the current freeze manifest and audit copied into that worktree. The exact invocation and validation are documented in the Phase 10 report and `TESTS/README.md`.
+
 ## Leakage audit and unscored final split
 
 The already completed cross-split audit found 98 eligible public-even records and 97 eligible odd candidates. Odd indices **173** and **177** were excluded as near-duplicates of public index **176** (clause-set Jaccard 0.968085 each), leaving 95 eligible odd records in the audited final claim set. The audit had to decompress the odd formulas for the predeclared leakage checks; **no odd formula was solver-scored, used for tuning, or used to choose options** in this reduced run.
@@ -41,6 +57,9 @@ The 19 JSONL rows retain per-system command lines, output hashes, exact counts w
 - Cross-split audit SHA-256: `542b242966f631e42d65d34a242aa62df1d9d95342cf1b5073343787f6060901`.
 - Partial public-even JSONL SHA-256: `7e83b7a28c8f6971db73593cf96e79f849aca70220e7b55bead25b303eef264e`.
 - Partial machine summary SHA-256: `85e6ac6385cb0a7ed0630d113942548e05c331f2c91ecad2a9d07a36822bf304`.
+- Separate index-8 repeat JSONL SHA-256: `63ba9e94408f3c412e1efadb230be644175942b664007836663567ecbb33ef93`.
+- Separate index-8 repeat summary SHA-256: `30620a56ebafb902788136f45d8b0e65278be7d8056257c4e71c0d0f669ef402`.
+- Repeat selector wrapper SHA-256: `248d38683f973c1590b11c491fd6d97e4254aa4651224e2012d4e2599c47be19`.
 - Frozen stress results SHA-256: `a8f67f4e01483afca530345de58e994c0e4016bb46460c63c0f202e4653b5ee7`.
 
 The freeze manifest, locked protocol/code, and solver options remain unchanged. No Phase 9 completion claim is made beyond this reduced diagnostic.

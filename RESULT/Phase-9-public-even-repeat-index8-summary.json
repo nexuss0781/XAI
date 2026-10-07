@@ -1,0 +1,91 @@
+{
+  "claim_note": "Descriptive finite challenge-set counts only; no population confidence intervals. A verified result means successful directly compared exact rational outputs, not a Phase 8 certificate.",
+  "direct_verification_only": true,
+  "evaluation_complete": false,
+  "expected_records": 98,
+  "frozen_code_revision": "a1a65b5ffdeab261bcdeaf7151c03b0c66213403",
+  "independent_oracle": {
+    "eligible_by_predeclared_cap": 0,
+    "mismatch_indices": [],
+    "solver_pairs_compared": 0,
+    "solver_pairs_matched": 0,
+    "statuses": {
+      "not_eligible_by_oracle_cap": 1
+    }
+  },
+  "mismatch_indices": [],
+  "nontrivial_full_solver_matches": 0,
+  "phase9_practical_gate": false,
+  "records": 1,
+  "schema": "xai.phase9.summary.v1",
+  "split": "public-even",
+  "systems": {
+    "ganak": {
+      "completion_rate_in_evaluated_rows": "1/1",
+      "max_sampled_rss_bytes": 307945472,
+      "max_wall_ms": 15534,
+      "median_wall_ms": 15534,
+      "resource_sampled_runs": 1,
+      "solved_exact": 1,
+      "statuses": {
+        "solved_exact": 1
+      }
+    },
+    "xai_first_branch": {
+      "both_completed": 0,
+      "completion_rate_in_evaluated_rows": "0/1",
+      "directly_verified_against_ganak": 0,
+      "exact_match_fraction_among_both_completed": "not estimable",
+      "max_sampled_rss_bytes": 9039872,
+      "max_wall_ms": 28383,
+      "median_wall_ms": 28383,
+      "resource_sampled_runs": 1,
+      "solved_exact": 0,
+      "statuses": {
+        "resource_limit": 1
+      }
+    },
+    "xai_full": {
+      "both_completed": 0,
+      "completion_rate_in_evaluated_rows": "0/1",
+      "directly_verified_against_ganak": 0,
+      "exact_match_fraction_among_both_completed": "not estimable",
+      "max_sampled_rss_bytes": 7532544,
+      "max_wall_ms": 24283,
+      "median_wall_ms": 24283,
+      "resource_sampled_runs": 1,
+      "solved_exact": 0,
+      "statuses": {
+        "resource_limit": 1
+      }
+    },
+    "xai_no_components": {
+      "both_completed": 0,
+      "completion_rate_in_evaluated_rows": "0/1",
+      "directly_verified_against_ganak": 0,
+      "exact_match_fraction_among_both_completed": "not estimable",
+      "max_sampled_rss_bytes": 8138752,
+      "max_wall_ms": 71489,
+      "median_wall_ms": 71489,
+      "resource_sampled_runs": 1,
+      "solved_exact": 0,
+      "statuses": {
+        "resource_limit": 1
+      }
+    },
+    "xai_no_unit_propagation": {
+      "both_completed": 0,
+      "completion_rate_in_evaluated_rows": "0/1",
+      "directly_verified_against_ganak": 0,
+      "exact_match_fraction_among_both_completed": "not estimable",
+      "max_sampled_rss_bytes": 6422528,
+      "max_wall_ms": 17990,
+      "median_wall_ms": 17990,
+      "resource_sampled_runs": 1,
+      "solved_exact": 0,
+      "statuses": {
+        "resource_limit": 1
+      }
+    }
+  }
+}
