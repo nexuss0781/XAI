@@ -14,7 +14,7 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 - [x] Phase 6 versioned synthetic-only calibration diagnostics, partition enforcement, proper scores, reliability/sharpness, risk-coverage, and assumption-gated conformal behavior are recorded; fresh Release and ASan/UBSan CTest 8/8 passed. See `RESULT/Phase-6.md`.
 - [x] Phase 7 exact-rational decision policy, fail-closed certificate interface, canonical output, and explicit abstention harness are recorded; fresh Release and ASan/UBSan CTest 9/9 passed. Synthetic verifier only; no production WMC proof verifier. See `RESULT/Phase-7.md`.
 - [ ] Implemented end-to-end runtime: not present yet.
-- [ ] Ganak comparison, corpus benchmark, and empirical performance results: not run; reserved for Phase 9. No speed or generalization claim is made.
+- [x] Frozen Phase 9 protocol, leakage audit, stress checks, and bounded solver comparison are recorded; the diagnostic is partial and has zero exact XAI completions. Full benchmark scoring is deferred and non-gating for project progression. See `RESULT/Phase-9-closeout.md`.
 - [ ] Production deployment: out of scope for this research plan.
 
 ## Phase 0 — Scope and research protocol
@@ -135,15 +135,13 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 
 ## Phase 9 — Task-specific evaluation
 
-- [ ] Freeze the protocol, data snapshot, preprocessing, splits, metric definitions, baselines, ablations, thresholds, search budget, seeds, and stopping rules.
-- [ ] Run baselines, full pipeline, and ablations with comparable data and tuning budgets.
-- [ ] Run stress tests for duplicates/correlation, contradictions, identity errors, missing evidence, drift, out-of-domain input, solver/resource limits, and corrupted records.
-- [ ] Report task utility and uncertainty, proper scores, calibration, conformal coverage/set size only under assumptions, risk/coverage, provenance/extraction errors, failure/abstention counts, and resource use.
-- [ ] Record all exclusions, failures, confidence intervals, seeds, code/data/config versions, and protocol deviations.
-- [ ] Keep final test data untouched; invalidate a compromised run and obtain a new test set before further claims.
-- [ ] Report null or negative results and revise/narrow/stop the hypothesis as warranted.
+- [x] Freeze the protocol, data snapshot, split/eligibility rules, metrics, baseline/ablations, resource limits, and stopping rules; complete the cross-split leakage audit.
+- [x] Run and preserve the original 19-record public-even diagnostic plus one resumed record (index 38) with frozen settings; retain per-attempt outputs, hashes, and statuses.
+- [x] Run the frozen synthetic stress checks and report the software/resource limitations and null benchmark findings.
+- [x] Record the owner-directed scope decision to stop rather than spend about 65 hours on the remaining benchmark work.
+- [ ] Complete all 98 public-even and 95 eligible final-odd solver evaluations. **Deferred and non-gating for project progression; the frozen benchmark gate remains not passed.**
 
-**Phase 9 gate — NOT PASSED (2026-10-07).** The committed diagnostic has 19/98 public-even rows, no exact XAI completions, no final-odd solver scores, and three attempts beyond the 600-second wall budget. The independent oracle covered none of the 19 rows. This is a reduced diagnostic, not a completed evaluation; see [RESULT/Phase-9.md](RESULT/Phase-9.md) and its machine-readable status artifact.
+**Phase 9 project closeout — COMPLETE FOR PROJECT SEQUENCING, SCOPE-LIMITED (2026-10-07).** This closes the project stage only; it does not mark the preregistered benchmark complete or passed. The stopped 20-row diagnostic has zero exact XAI completions, no observed mismatch, and no final-odd solver scores. See [RESULT/Phase-9-closeout.md](RESULT/Phase-9-closeout.md) and [RESULT/Phase-9.md](RESULT/Phase-9.md).
 
 ## Phase 10 — Reproduction and research release
 
@@ -163,5 +161,5 @@ Record blockers here with owner/context, date, and the phase gate they affect. D
 - No open Phase 0 blockers. Two out-of-format public candidates are excluded under the exact-rational eligibility rule; Phase 9 corpus/baseline evaluation remains pending and does not block the Phase 0 scope-and-protocol gate.
 - No open Phase 1 blockers. Shared contracts are an in-process foundation only; storage, authentication, runtime integration, and Phase 3 partition enforcement remain later-phase work.
 - No open Phase 2 gate blockers. Phase 2 provides canonical in-process snapshots and checks model/evidence partition consistency, but not persistent storage, authentication, identity resolution, archive eligibility, or split selection.
-- Phase 7 and Phase 8 harness gates are complete for their stated software/fixture scope; no production verifier for an actual exact-WMC proof exists. Phase 9 remains incomplete: only 19/98 public-even formulas were scored, XAI had zero exact completions in that prefix, and no final-odd formula was solver-scored. The cross-split audit did decompress odd formulas for its frozen leakage checks; the final-odd solver set was not used for tuning. Phase 10's independent-reproduction gate is blocked because no independent researcher repeated the recorded solver experiment, and this run intentionally did not repeat those attempts.
-- **Recommendation — NARROW.** Keep the repository as a bounded research-software artifact and limit empirical statements to the recorded 19-case diagnostic and synthetic fixtures. Do not claim benchmark competence or practical XAI solver performance. Any further benchmark evaluation should follow the frozen options without tuning on observed outcomes, retain raw input hashes and complete run outputs, enforce the declared stop limits, and be independently reproduced before the research-release gate is reconsidered.
+- Phase 7 and Phase 8 harness gates are complete for their stated software/fixture scope; no production verifier for an actual exact-WMC proof exists. **Phase 9 no longer blocks project sequencing:** it is closed at the user's direction with an explicitly partial diagnostic. The frozen benchmark itself remains incomplete/not passed: 20/98 public-even records were evaluated, XAI had zero exact completions, and no final-odd formula was solver-scored. The cross-split audit did decompress odd formulas for its frozen leakage checks; the final-odd solver set was not used for tuning. The remaining full run is deferred at an estimated cost of about 65 hours. Phase 10's independent-reproduction gate is still blocked because no independent researcher has repeated the recorded solver experiment.
+- **Recommendation — NARROW.** Keep the repository as a bounded research-software artifact and limit empirical statements to the 20-case stopped diagnostic, the one-record same-environment repeat, and synthetic fixtures. Do not claim benchmark competence or practical XAI solver performance. Any future benchmark extension is optional for this project sequence and should follow a separately agreed budget, preserve the frozen options, retain hashes and outputs, enforce stop limits, and be independently reproduced before making broader empirical claims.

@@ -203,7 +203,9 @@ Phases 2–4 can be developed in parallel after Phase 1, but their integration m
 
 **Deliverables:** frozen protocol; run manifests; baseline/ablation/stress reports; reproducible result artifacts; claims supported by actual outcomes.
 
-**Exit gate:** Another researcher can reconstruct the experiment and see all exclusions/failures. The results answer the declared question and support only bounded task/data/implementation claims. Null or negative findings count as complete results.
+**Frozen benchmark exit gate:** Another researcher can reconstruct the full experiment and see all exclusions/failures. The results answer the declared question and support only bounded task/data/implementation claims. Null or negative findings count as complete results. The scope-limited closeout below does not satisfy or pass this benchmark gate.
+
+**Status (2026-10-07): CLOSED FOR PROJECT SEQUENCING, SCOPE-LIMITED.** At the user's direction, the remaining frozen benchmark run (estimated at about 65 hours) is deferred and is no longer required to proceed to Phase 10. This is a project-scope decision, not a benchmark pass: the frozen Phase 9 benchmark remains incomplete and its practical gate remains **NOT PASSED**. See [RESULT/Phase-9-closeout.md](RESULT/Phase-9-closeout.md).
 
 ## Phase 10 — Reproduction and research release
 

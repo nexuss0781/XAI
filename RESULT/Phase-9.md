@@ -1,8 +1,24 @@
-# Phase 9 — Reduced public-even diagnostic
+# Phase 9 — Public-even diagnostic and scope-limited closeout
 
-**Status: INCOMPLETE. Phase 9 gate: NOT PASSED.** At the user's direction, the frozen public-even run was stopped after the already-running index 36 finished, leaving **19 of 98** eligible public-even records (indices 0 through 36, even indices). No final-odd solver scoring was performed. This is a reduced diagnostic, not a completed Phase 9 evaluation; the original full-split exit and practical gates are not met.
+**Project Phase 9 status: CLOSED FOR PROJECT SEQUENCING, SCOPE-LIMITED (2026-10-07). Frozen benchmark gate: NOT PASSED.** The original 19-row diagnostic below remains a historical record. At the user's direction, a resumed frozen run added public-even index 38, then stopped; the preserved combined artifact contains **20 of 98** eligible public-even records. The remaining full benchmark was estimated to require about **65 hours** and is deferred. This closes the project stage for progression to Phase 10; it does not claim the original frozen benchmark was completed or passed. No final-odd formula was solver-scored.
 
 The frozen solver binaries, source revision, protocol, and solver options were not changed. The run was pinned to one logical CPU and used the frozen XAI and Ganak settings. No tuning was performed on the observed results.
+
+## Owner-directed scope closeout and stopped continuation
+
+The resumed record is public-even index **38**. Ganak and all four XAI configurations reached the frozen timeout; no exact count was returned by any system, no mismatch occurred, and this record adds no directly verified XAI result. Across the combined 20-record stream, Ganak solved 10 cases, XAI full and each ablation solved none, and the independent exhaustive oracle was eligible for 0 cases.
+
+| System | Exact counts | Other outcomes across 20 records |
+|---|---:|---|
+| Ganak | 10/20 | 6 memory limits; 4 timeouts |
+| XAI full | 0/20 | 11 resource limits; 7 timeouts; 2 memory limits |
+| XAI without unit propagation | 0/20 | 12 resource limits; 5 timeouts; 3 memory limits |
+| XAI without components | 0/20 | 13 resource limits; 5 timeouts; 2 memory limits |
+| XAI first-branch ablation | 0/20 | 11 resource limits; 8 timeouts; 1 memory limit |
+
+The combined 20-row record and derived summary are [`Phase-9-public-even-stopped.jsonl`](Phase-9-public-even-stopped.jsonl) and [`Phase-9-public-even-stopped-summary.json`](Phase-9-public-even-stopped-summary.json). All per-attempt stdout/stderr hashes validate. The summary correctly retains `evaluation_complete: false` and `phase9_practical_gate: false`. The 78 remaining public-even records and the 95 eligible final-odd records were not solver-scored. The user's decision makes this unfinished full benchmark non-gating for project progression; the frozen protocol's benchmark gate itself remains not passed.
+
+For the explicit project decision and future-work boundary, see [`Phase-9-closeout.md`](Phase-9-closeout.md).
 
 ## Results on the 19 evaluated records
 
@@ -42,15 +58,15 @@ The synthetic WMC stress suite passed **11/11** checks. The frozen-build CTest s
 
 ## Deviations and claim limits
 
-This run intentionally stopped after index 36 rather than completing the 98-item public split, and the 95-item audited final split was not scored. The reduced prefix was not a predeclared confirmatory sample; do not use it for population inference or broad workload claims. Calibration, predictive scores, conformal coverage, and selective-risk measures remain not applicable because this counting archive has no outcome labels or calibration split.
+The original run intentionally stopped after index 36 rather than completing the 98-item public split. A later one-row continuation added index 38 and was also stopped; the 95-item audited final split was not scored. The reduced set was not a predeclared confirmatory sample; do not use it for population inference or broad workload claims. Calibration, predictive scores, conformal coverage, and selective-risk measures remain not applicable because this counting archive has no outcome labels or calibration split.
 
 The frozen per-attempt limits were 600 seconds wall time, one logical CPU, and 4 GiB resident memory, with 601/602-second soft/hard CPU limits. **Three recorded attempts exceeded even 602 seconds of measured wall time:** index 0 XAI first-branch (766,131 ms), index 0 XAI full (624,606 ms), and index 4 Ganak (814,576 ms). The harness classified all three as timeouts and discarded their outputs; they are disclosed as a resource-control deviation, not valid results. Fourteen attempts were classified as memory limits; the 10-ms RSS monitor recorded transient samples above 4 GiB, consistent with the protocol's stated sampling-overshoot caveat. The largest sampled RSS was 4,318,244,864 bytes.
 
-Accordingly, **the Phase 9 gate is not passed**: the evaluation is incomplete, the XAI full configuration had no exact completion in the evaluated prefix, and resource-control overruns must be disclosed. This report does not convert the partial run into a full or positive benchmark result.
+Accordingly, **the frozen Phase 9 benchmark gate is not passed**: the evaluation is incomplete, the XAI full configuration had no exact completion in the 20 evaluated records, and resource-control overruns must be disclosed. This report does not convert the partial run into a full or positive benchmark result. The separate project-stage closeout is scope-limited and does not change that result.
 
 ## Reproduction and artifacts
 
-The 19 JSONL rows retain per-system command lines, output hashes, exact counts when present, statuses, wall/CPU/RSS measurements, and the frozen revision, freeze-manifest hash, and audit hash. The machine-readable partial summary records `evaluation_complete: false` and `phase9_practical_gate: false`.
+The original 19 JSONL rows retain per-system command lines, output hashes, exact counts when present, statuses, wall/CPU/RSS measurements, and the frozen revision, freeze-manifest hash, and audit hash. The separate stopped 20-row artifact retains the same fields for the continuation. Both machine-readable summaries record `evaluation_complete: false` and `phase9_practical_gate: false`.
 
 - Frozen code revision: `a1a65b5ffdeab261bcdeaf7151c03b0c66213403`.
 - Freeze manifest SHA-256: `b1b6dff0136f3e299a551d9074a862282347e2cb2aa8ecff161b543aaaaa1d12`.
@@ -62,4 +78,4 @@ The 19 JSONL rows retain per-system command lines, output hashes, exact counts w
 - Repeat selector wrapper SHA-256: `248d38683f973c1590b11c491fd6d97e4254aa4651224e2012d4e2599c47be19`.
 - Frozen stress results SHA-256: `a8f67f4e01483afca530345de58e994c0e4016bb46460c63c0f202e4653b5ee7`.
 
-The freeze manifest, locked protocol/code, and solver options remain unchanged. No Phase 9 completion claim is made beyond this reduced diagnostic.
+The freeze manifest, locked protocol/code, and solver options remain unchanged. Phase 9 is closed only for project sequencing at the user's direction; no completion claim is made for the full frozen benchmark.
