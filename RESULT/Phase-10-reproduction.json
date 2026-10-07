@@ -1,0 +1,203 @@
+{
+  "artifacts": {
+    "archive": {
+      "matches_freeze": true,
+      "path": "/workspace/XAI/data/raw/mc2024-track2-wmc_competition.tar",
+      "sha256": "314a698a56773f2e3dd1f529325d6a5e6876a33d3596c170754e2404ef27bc1c"
+    },
+    "artifacts": {
+      "RESULT/Phase-10-stress-rerun.json": {
+        "sha256": "98a79aa692baba702a832d228869d08c97eea218490971be4b7bc8f65a33d98f",
+        "size_bytes": 1881
+      },
+      "RESULT/Phase-9-cross-split-audit.json": {
+        "sha256": "542b242966f631e42d65d34a242aa62df1d9d95342cf1b5073343787f6060901",
+        "size_bytes": 245111
+      },
+      "RESULT/Phase-9-public-even-partial-summary-v2.json": {
+        "sha256": "85e6ac6385cb0a7ed0630d113942548e05c331f2c91ecad2a9d07a36822bf304",
+        "size_bytes": 3104
+      },
+      "RESULT/Phase-9-public-even.jsonl": {
+        "sha256": "7e83b7a28c8f6971db73593cf96e79f849aca70220e7b55bead25b303eef264e",
+        "size_bytes": 125252
+      },
+      "RESULT/Phase-9-reduced-status-v2.json": {
+        "sha256": "2827316efdac968c990da9b2eae13bf5b7b725ef1422e3658036a1ab6cd86922",
+        "size_bytes": 2439
+      },
+      "RESULT/Phase-9-stress-v2.json": {
+        "sha256": "a8f67f4e01483afca530345de58e994c0e4016bb46460c63c0f202e4653b5ee7",
+        "size_bytes": 26911
+      },
+      "TESTS/PHASE9_FREEZE.json": {
+        "sha256": "b1b6dff0136f3e299a551d9074a862282347e2cb2aa8ecff161b543aaaaa1d12",
+        "size_bytes": 9868
+      }
+    },
+    "frozen_binaries": {
+      "ganak": {
+        "matches_freeze": true,
+        "path": "/workspace/XAI/data/vendor/ganak-build/ganak",
+        "sha256": "e5e693720d1baf052acd2c1efa592412136abbeb2febf15b9f77ba1fc7bf08d4"
+      },
+      "xai": {
+        "matches_freeze": true,
+        "path": "/workspace/XAI-build-phase9-final/xai_wmc_solver",
+        "sha256": "bc889b0e92289c74148334bd0b015dd58bd59a64220cab12f404cb5631ce29ca"
+      }
+    },
+    "historical_freeze": {
+      "all_locked_hashes_match": true,
+      "locked_file_count": 39,
+      "locked_files": [
+        "CMakeLists.txt",
+        "Phase.md",
+        "RESULT/Phase-0.md",
+        "TESTS/EVALUATION_PLAN.md",
+        "TESTS/PHASE9_PROTOCOL.md",
+        "TESTS/cpp/adaptation_tests.cpp",
+        "TESTS/cpp/calibration_tests.cpp",
+        "TESTS/cpp/contracts_tests.cpp",
+        "TESTS/cpp/decision_tests.cpp",
+        "TESTS/cpp/ingestion_tests.cpp",
+        "TESTS/cpp/learning_tests.cpp",
+        "TESTS/cpp/orchestration_tests.cpp",
+        "TESTS/cpp/pillar_tests.cpp",
+        "TESTS/cpp/reasoning_tests.cpp",
+        "TESTS/cpp/wmc_tests.cpp",
+        "TESTS/python/test_phase9_eval.py",
+        "TODO.md",
+        "include/xai/adaptation.hpp",
+        "include/xai/calibration.hpp",
+        "include/xai/contracts.hpp",
+        "include/xai/decision.hpp",
+        "include/xai/ingestion.hpp",
+        "include/xai/learning.hpp",
+        "include/xai/orchestration.hpp",
+        "include/xai/reasoning.hpp",
+        "include/xai/wmc.hpp",
+        "src/adaptation.cpp",
+        "src/calibration.cpp",
+        "src/contracts.cpp",
+        "src/decision.cpp",
+        "src/ingestion.cpp",
+        "src/learning.cpp",
+        "src/main.cpp",
+        "src/orchestration.cpp",
+        "src/reasoning.cpp",
+        "src/wmc.cpp",
+        "tools/audit_wmc_archive.py",
+        "tools/create_version_manifest.py",
+        "tools/phase9_eval.py"
+      ],
+      "revision": "a1a65b5ffdeab261bcdeaf7151c03b0c66213403"
+    },
+    "row_audit": {
+      "evaluation_complete": false,
+      "indices": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30,
+        32,
+        34,
+        36
+      ],
+      "phase9_practical_gate": false,
+      "rows": 19,
+      "solver_attempts": 95,
+      "statuses": {
+        "ganak": {
+          "memory_limit": 6,
+          "solved_exact": 10,
+          "timeout": 3
+        },
+        "xai_first_branch": {
+          "memory_limit": 1,
+          "resource_limit": 11,
+          "solved_exact": 0,
+          "timeout": 7
+        },
+        "xai_full": {
+          "memory_limit": 2,
+          "resource_limit": 11,
+          "solved_exact": 0,
+          "timeout": 6
+        },
+        "xai_no_components": {
+          "memory_limit": 2,
+          "resource_limit": 13,
+          "solved_exact": 0,
+          "timeout": 4
+        },
+        "xai_no_unit_propagation": {
+          "memory_limit": 3,
+          "resource_limit": 12,
+          "solved_exact": 0,
+          "timeout": 4
+        }
+      },
+      "stdout_stderr_hashes_verified": true,
+      "wall_budget_deviations": [
+        {
+          "index": 0,
+          "status": "timeout",
+          "system": "xai_first_branch",
+          "wall_ms": 766131
+        },
+        {
+          "index": 0,
+          "status": "timeout",
+          "system": "xai_full",
+          "wall_ms": 624606
+        },
+        {
+          "index": 4,
+          "status": "timeout",
+          "system": "ganak",
+          "wall_ms": 814576
+        }
+      ]
+    },
+    "summary_regeneration": {
+      "byte_identical_to_committed_summary": true,
+      "command": [
+        "/opt/manus/python/bin/python3",
+        "/workspace/XAI/tools/phase9_eval.py",
+        "summarize",
+        "--input",
+        "/workspace/XAI/RESULT/Phase-9-public-even.jsonl",
+        "--output",
+        "/tmp/xai-phase10-summary-g6vi__2i/summary.json"
+      ],
+      "sha256": "85e6ac6385cb0a7ed0630d113942548e05c331f2c91ecad2a9d07a36822bf304",
+      "stdout": "{\n  \"schema\": \"xai.phase9.summary.v1\",\n  \"split\": \"public-even\",\n  \"records\": 19,\n  \"expected_records\": 98,\n  \"frozen_code_revision\": \"a1a65b5ffdeab261bcdeaf7151c03b0c66213403\",\n  \"direct_verification_only\": true,\n  \"systems\": {\n    \"ganak\": {\n      \"statuses\": {\n        \"memory_limit\": 6,\n        \"solved_exact\": 10,\n        \"timeout\": 3\n      },\n      \"solved_exact\": 10,\n      \"completion_rate_in_evaluated_rows\": \"10/19\",\n      \"median_wall_ms\": 200124,\n      \"max_wall_ms\": 814576,\n      \"max_sampled_rss_bytes\": 4302950400,\n      \"resource_sampled_runs\": 19\n    },\n    \"xai_full\": {\n      \"statuses\": {\n        \"memory_limit\": 2,\n        \"resource_limit\": 11,\n        \"timeout\": 6\n      },\n      \"solved_exact\": 0,\n      \"completion_rate_in_evaluated_rows\": \"0/19\",\n      \"median_wall_ms\": 50507,\n      \"max_wall_ms\": 624606,\n      \"max_sampled_rss_bytes\": 4318244864,\n      \"resource_sampled_runs\": 19,\n      \"directly_verified_against_ganak\": 0,\n      \"both_completed\": 0,\n      \"exact_match_fraction_among_both_completed\": \"not estimable\"\n    },\n    \"xai_no_unit_propagation\": {\n      \"statuses\": {\n        \"memory_limit\": 3,\n        \"resource_limit\": 12,\n        \"timeout\": 4\n      },\n      \"solved_exact\": 0,\n      \"completion_rate_in_evaluated_rows\": \"0/19\",\n      \"median_wall_ms\": 34451,\n      \"max_wall_ms\": 600078,\n      \"max_sampled_rss_bytes\": 4306272256,\n      \"resource_sampled_runs\": 19,\n      \"directly_verified_against_ganak\": 0,\n      \"both_completed\": 0,\n      \"exact_match_fraction_among_both_completed\": \"not estimable\"\n    },\n    \"xai_no_components\": {\n      \"statuses\": {\n        \"memory_limit\": 2,\n        \"resource_limit\": 13,\n        \"timeout\": 4\n      },\n      \"solved_exact\": 0,\n      \"completion_rate_in_evaluated_rows\": \"0/19\",\n      \"median_wall_ms\": 77912,\n      \"max_wall_ms\": 600090,\n      \"max_sampled_rss_bytes\": 4306952192,\n      \"resource_sampled_runs\": 19,\n      \"directly_verified_against_ganak\": 0,\n      \"both_completed\": 0,\n      \"exact_match_fraction_among_both_completed\": \"not estimable\"\n    },\n    \"xai_first_branch\": {\n      \"statuses\": {\n        \"memory_limit\": 1,\n        \"resource_limit\": 11,\n        \"timeout\": 7\n      },\n      \"solved_exact\": 0,\n      \"completion_rate_in_evaluated_rows\": \"0/19\",\n      \"median_wall_ms\": 54824,\n      \"max_wall_ms\": 766131,\n      \"max_sampled_rss_bytes\": 4299522048,\n      \"resource_sampled_runs\": 19,\n      \"directly_verified_against_ganak\": 0,\n      \"both_completed\": 0,\n      \"exact_match_fraction_among_both_completed\": \"not estimable\"\n    }\n  },\n  \"mismatch_indices\": [],\n  \"independent_oracle\": {\n    \"eligible_by_predeclared_cap\": 0,\n    \"statuses\": {\n      \"not_eligible_by_oracle_cap\": 19\n    },\n    \"solver_pairs_compared\": 0,\n    \"solver_pairs_matched\": 0,\n    \"mismatch_indices\": []\n  },\n  \"evaluation_complete\": false,\n  \"nontrivial_full_solver_matches\": 0,\n  \"phase9_practical_gate\": false,\n  \"claim_note\": \"Descriptive finite challenge-set counts only; no population confidence intervals. A verified result means successful directly compared exact rational outputs, not a Phase 8 certificate.\"\n}\n"
+    }
+  },
+  "benchmark_attempts_repeated": false,
+  "build": {
+    "build_directory": "/tmp/xai-phase10-clean-final",
+    "build_type": "Release",
+    "configure_build_ctest_passed": true,
+    "ctest_success_summary": "100% tests passed, 0 tests failed out of 11",
+    "direct_python_test_exit": 0
+  },
+  "claim_boundary": "Build/tests and committed diagnostic artifacts were reproduced; historical solver attempts were not rerun.",
+  "completed_utc": "2026-10-07T05:47:32+00:00",
+  "schema": "xai.phase10.reproduction.v1",
+  "tested_commit": "d0680df22157897e3c4a32161c729f26d5b63976",
+  "tested_worktree_clean": true
+}
