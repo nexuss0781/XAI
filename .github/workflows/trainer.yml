@@ -1,0 +1,204 @@
+name: KILT T-REx trainer (Hugging Face handoff)
+
+on:
+  workflow_dispatch:
+    inputs:
+      hf_repo_id:
+        description: Existing Hugging Face repo ID for XAI artifacts (namespace/repository)
+        required: true
+        type: string
+      hf_repo_type:
+        description: Existing Hugging Face repository type
+        required: true
+        type: choice
+        options:
+          - dataset
+          - model
+        default: dataset
+
+permissions:
+  contents: read
+
+concurrency:
+  group: xai-trainer-${{ inputs.hf_repo_id }}
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    name: Prepare and upload the 20-shard run plan
+    environment: HF_TOKEN
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_REPO_ID: ${{ inputs.hf_repo_id }}
+      HF_REPO_TYPE: ${{ inputs.hf_repo_type }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Hugging Face Hub client
+        run: python -m pip install --disable-pip-version-check "huggingface_hub==2.1.1"
+
+      - name: Validate Hub credentials and initial disk headroom
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${HF_TOKEN:-}" ]]; then
+            echo "Missing Actions secret HF_TOKEN (write access to the selected Hub repo is required)." >&2
+            exit 2
+          fi
+          python - <<'PY'
+          import os
+          import shutil
+          import sys
+          from huggingface_hub import HfApi
+
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          api.auth_check(
+              repo_id=os.environ["HF_REPO_ID"],
+              repo_type=os.environ["HF_REPO_TYPE"],
+              token=os.environ["HF_TOKEN"],
+              write=True,
+          )
+          free = shutil.disk_usage(os.environ["GITHUB_WORKSPACE"]).free
+          required = 6 * 1024**3
+          print(f"Verified write access. Initial workspace free bytes: {free:,}")
+          if free < required:
+              print(f"Need at least {required:,} free bytes before downloading and sharding.", file=sys.stderr)
+              sys.exit(2)
+          PY
+
+      - name: Prepare official KILT T-REx files
+        run: python tools/grounding_train.py prepare --data-dir data/kilt/trex
+
+      - name: Create the disjoint 20-shard plan
+        run: >-
+          python tools/trainer.py plan
+          --data-dir data/kilt/trex
+          --run-dir data/kilt/trex/trainer-run
+          --shards 20
+
+      - name: Show post-partition disk headroom
+        run: df -h "$GITHUB_WORKSPACE"
+
+      - name: Upload manifest and shard files to Hugging Face
+        run: >-
+          python tools/trainer_hub.py upload-plan
+          --repo-id "$HF_REPO_ID"
+          --repo-type "$HF_REPO_TYPE"
+          --run-id "$GITHUB_RUN_ID"
+          --run-dir data/kilt/trex/trainer-run
+
+      - name: Show post-upload disk headroom
+        run: df -h "$GITHUB_WORKSPACE"
+
+  train-shard:
+    name: Train shard ${{ matrix.shard_index }}
+    needs: plan
+    environment: HF_TOKEN
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        shard_index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_REPO_ID: ${{ inputs.hf_repo_id }}
+      HF_REPO_TYPE: ${{ inputs.hf_repo_type }}
+      SHARD_INDEX: ${{ matrix.shard_index }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Hugging Face Hub client
+        run: python -m pip install --disable-pip-version-check "huggingface_hub==2.1.1"
+
+      - name: Check credentials and worker disk headroom
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${HF_TOKEN:-}" ]]; then
+            echo "Missing Actions secret HF_TOKEN." >&2
+            exit 2
+          fi
+          python - <<'PY'
+          import os
+          import shutil
+          import sys
+
+          free = shutil.disk_usage(os.environ["RUNNER_TEMP"]).free
+          required = 4 * 1024**3
+          print(f"Worker workspace free bytes before shard download: {free:,}")
+          if free < required:
+              print(f"Need at least {required:,} free bytes before training.", file=sys.stderr)
+              sys.exit(2)
+          PY
+
+      - name: Download this shard, train, and upload its SQLite model
+        run: >-
+          python tools/trainer_hub.py train-shard
+          --repo-id "$HF_REPO_ID"
+          --repo-type "$HF_REPO_TYPE"
+          --run-id "$GITHUB_RUN_ID"
+          --shard-index "$SHARD_INDEX"
+          --work-dir "$RUNNER_TEMP/trainer-$GITHUB_RUN_ID-worker-$SHARD_INDEX"
+
+      - name: Show post-worker disk headroom
+        run: df -h "$RUNNER_TEMP"
+
+  synthesize:
+    name: Merge 20 worker models and upload the result
+    needs: train-shard
+    environment: HF_TOKEN
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_REPO_ID: ${{ inputs.hf_repo_id }}
+      HF_REPO_TYPE: ${{ inputs.hf_repo_type }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Hugging Face Hub client
+        run: python -m pip install --disable-pip-version-check "huggingface_hub==2.1.1"
+
+      - name: Check Hub credentials and show merge-runner disk
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${HF_TOKEN:-}" ]]; then
+            echo "Missing Actions secret HF_TOKEN." >&2
+            exit 2
+          fi
+          df -h "$RUNNER_TEMP"
+
+      - name: Download worker models one at a time, synthesize, and upload
+        run: >-
+          python tools/trainer_hub.py merge
+          --repo-id "$HF_REPO_ID"
+          --repo-type "$HF_REPO_TYPE"
+          --run-id "$GITHUB_RUN_ID"
+          --work-dir "$RUNNER_TEMP/trainer-$GITHUB_RUN_ID-merge"
+          --output-model "$RUNNER_TEMP/trainer-$GITHUB_RUN_ID-merge/kilt-trex-slot-filling-merged.sqlite"
+
+      - name: Show post-synthesis disk headroom
+        run: df -h "$RUNNER_TEMP"

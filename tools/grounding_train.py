@@ -367,6 +367,7 @@ def train_index(
     expected_records: Optional[int] = None,
     dataset_manifest_sha256: Optional[str] = None,
     force: bool = False,
+    trainer_metadata: Optional[Mapping[str, Any]] = None,
 ) -> Dict[str, Any]:
     """Build a SQLite count index. This function is only called by `train`."""
     if not train_path.is_file():
@@ -468,6 +469,8 @@ def train_index(
                 "They are not calibrated probabilities."
             ),
         }
+        if trainer_metadata is not None:
+            model_metadata["trainer_shard"] = dict(trainer_metadata)
         conn.executemany(
             "INSERT INTO metadata(key, value) VALUES (?, ?)",
             [(key, json.dumps(value, ensure_ascii=False, sort_keys=True))

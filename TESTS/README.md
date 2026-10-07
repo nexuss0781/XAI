@@ -25,15 +25,15 @@ python3 tools/create_version_manifest.py \
 
 Repeat `--data` and `--config` for each file that affects a run; omit either option when that category is not applicable. The script records the current Git revision, whether tracked files differ from that revision, SHA-256 and byte size for every Git-tracked source/document file, plus hashes and sizes for explicitly supplied data/config files. File contents are never copied into the manifest. Ignored or untracked files are not silently included in the tracked-source set; pass all run-relevant data and configuration explicitly. Keep the manifest with the run report or build artifact, not in a directory exposed to unauthorized readers if file names themselves are sensitive.
 
-## KILT T-REx training utility checks
+## KILT T-REx training utility and sharded-engine checks
 
-The offline KILT T-REx preparation and surface-form ranking utility uses only the Python standard library. Its unit tests exercise prompt parsing, answer-withheld test handling, alias-aware SQLite ranking, and development metrics on tiny synthetic fixtures; they do not download the dataset or train on it:
+The offline KILT T-REx preparation, surface-form ranking utility, and core sharded trainer use only the Python standard library. `tools/trainer_hub.py` uses `huggingface_hub` at workflow runtime; its unit-test coverage is offline and needs no Hub token or network. Unit tests exercise prompt parsing, answer-withheld test handling, alias-aware SQLite ranking, and development metrics on tiny synthetic fixtures. Trainer tests check balanced/disjoint partitioning, tamper detection, externally cached shard input, one-at-a-time model loading, Hub branch naming, and that additive merge reproduces the single-pass count index; they do not download, train, or evaluate on the real dataset:
 
 ```sh
 python3 -m unittest discover -s TESTS/python -p 'test_*.py' -v
 ```
 
-The production-size model is built only by the utility's explicit `train` subcommand; see [`../tools/README.md`](../tools/README.md).
+The production-size model is built only by an explicit `train`, `train-shard`, or manual GitHub Actions dispatch; see [`../tools/README.md`](../tools/README.md) and [`../TRAINING.md`](../TRAINING.md). The trainer's `merge` command synthesizes model state and does not run evaluation. No Hub write or workflow dispatch is performed by the tests.
 
 ## Phase 0 archive audit
 
