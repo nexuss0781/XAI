@@ -1,6 +1,6 @@
 # Text perception and candidate meanings
 
-**Status:** initial C++ v1 baseline implemented; see [implementation notes](LANGUAGE_PERCEPTION_IMPLEMENTATION.md). The backend remains a narrow English rules baseline, not a general language parser.
+**Status:** the current C++ baseline is implemented but uses hand-written English rules; it is not a trained language model and is not evidence of general language understanding. This document records its input/output contract and boundaries. The proposed learned replacement is specified in [the multilingual model proposal](LANGUAGE_PERCEPTION_MODEL_PROPOSAL.md). No trained model or training results are implemented yet; see [implementation notes](LANGUAGE_PERCEPTION_IMPLEMENTATION.md) for the legacy baseline.
 
 The next stage after the C++20 text-input adapter should be a **language-perception component that returns a bounded set of source-linked meaning hypotheses**. It should not select one interpretation as truth, resolve mentions to real-world entities, turn language into trusted facts, or invoke a solver. Its contract should connect the adapter’s exact UTF-8 observation to the architecture’s downstream semantic-grounding layer.
 
@@ -58,7 +58,7 @@ The component should perform these bounded steps:
 4. Validate candidate-local references, graph structure, byte-span bounds, output size, and resource limits. Validate that every asserted surface-grounded element has an appropriate source span or an explicit implicit-content marker.
 5. Emit a canonical versioned envelope with typed diagnostics and provenance. Diagnostics and ordinary logs must not echo raw text or sensitive candidate excerpts.
 
-The exact tokenization, neural model, parser, or model-serving location remains a backend decision. Keep a narrow C++20 facade in a new `xai::perception` namespace, with contract validation and serialization separated from backend inference. The public interface should accept an observation or compatible input record and return the shared typed envelope; it should not make model-vendor types, prompts, or transport formats part of the XAI schema. This fits the repository’s existing pattern of small libraries linked to `xai_contracts`.
+The model family and training objective are specified in [the multilingual model proposal](LANGUAGE_PERCEPTION_MODEL_PROPOSAL.md); its weights, corpus, supported languages, and serving runtime remain unselected and unimplemented. Keep a narrow C++20 facade in a new `xai::perception` namespace, with contract validation and serialization separated from backend inference. The public interface should accept an observation or compatible input record and return the shared typed envelope; it should not make model-vendor types, prompts, or transport formats part of the XAI schema. This fits the repository’s existing pattern of small libraries linked to `xai_contracts`.
 
 ## Status, uncertainty, and failure behavior
 
@@ -82,6 +82,6 @@ Do not claim calibrated probabilities in version 1. If calibration is added, rep
 
 ## Decisions to close before engineering
 
-The contract and stage boundary can be fixed now. The following are implementation choices that should be settled against an evaluation set rather than hidden in the schema: initial supported language(s), backend/model and its license, on-device versus authorized remote inference, content types beyond natural-language plain text, default candidate count, per-request compute/context budget, and the process for obtaining multi-reading annotations. The recommended first increment is one declared language/domain, a small bounded N-best set, no calibrated probability field, no cross-message context, and a backend adapter that can be replaced without changing the record schema.
+The contract and stage boundary can be fixed now. The mathematical model is proposed in [the multilingual model proposal](LANGUAGE_PERCEPTION_MODEL_PROPOSAL.md); unresolved implementation choices are the initial supported languages/domains, legally permitted training data and annotation process, model checkpoint/size, on-device versus explicitly authorized remote inference, compute budget, and release thresholds. Choose these against a frozen evaluation set rather than hiding them in the schema. Keep a bounded N-best set, no calibrated probability field without separate calibration, no cross-message context in v1, and a replaceable backend adapter.
 
 The initial C++ v1 baseline now implements the pipeline boundaries above. Its language and semantic coverage remain intentionally narrow; software contract tests do not establish general language understanding.
