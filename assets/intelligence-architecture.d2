@@ -1,0 +1,66 @@
+direction: down
+
+platform: "Cross-cutting platform controls\nTyped contracts · identity & permissions · privacy · provenance · audit · limits · recovery" {
+  shape: rectangle
+  style.fill: "#f1eefb"
+  style.stroke: "#7265a8"
+}
+
+input: "User, sensors, tools, environment"
+adapters: "Interaction adapters\nText · speech · images · video · records"
+perception: "Perception & representation\nMultimodal encoders; uncertainty retained"
+grounding: "Semantic grounding & task framing\nEntities · claims · events · constraints"
+
+state: "Shared cognitive state" {
+  direction: right
+  working: "Working memory & attention"
+  evidence: "Evidence ledger\nSource · time · provenance · dependence"
+  belief: "Belief state\nKnown · false · unknown · conflicting"
+  memory: "Memory services\nEpisodic · semantic · procedural"
+  world: "World model\nEntities · dynamics · predictions"
+  evidence -> belief
+  belief <-> world
+  working <-> memory
+}
+
+cognition: "Cognition & method selection"
+workbench: "Specialist reasoning workbench" {
+  direction: right
+  learned: "Learned model & retrieval"
+  formal: "Symbolic / probabilistic reasoning\nExact WMC for supported weighted-CNF"
+  tools: "Causal · search · math · code tools"
+}
+executive: "Executive control\nGoals · plans · progress · budgets"
+gate: "Decision & policy gate\nRisk · safety · permissions · verification"
+answer: "Answer\nResponse renderer"
+act: "Authorized action\nIsolated tool / environment"
+clarify: "Clarify · abstain · defer"
+outcome: "Observed outcome"
+evaluate: "Outcome evaluation\nShift monitoring · task checks"
+learning: "Versioned learning & bounded adaptation\nEligible feedback; tested release and rollback"
+
+input -> adapters -> perception -> grounding
+
+grounding -> state.working
+grounding -> state.evidence
+state.working -> cognition
+state.belief -> cognition
+state.world -> cognition
+state.memory -> cognition
+cognition -> workbench.learned
+cognition -> workbench.formal
+cognition -> workbench.tools
+workbench.learned -> executive
+workbench.formal -> executive
+workbench.tools -> executive
+executive -> gate
+gate -> answer: "answer"
+gate -> act: "authorized"
+gate -> clarify: "uncertain / disallowed"
+act -> outcome
+outcome -> state.evidence
+outcome -> evaluate
+evaluate -> learning: "eligible, validated feedback"
+learning -> state.memory: "validated release" {style.stroke-dash: 3}
+learning -> cognition: "validated release" {style.stroke-dash: 3}
+platform -> gate: "governs every layer" {style.stroke-dash: 3}

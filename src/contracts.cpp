@@ -11,7 +11,7 @@
 
 namespace xai::contracts {
 namespace {
-constexpr std::size_t kMaximumRecordBytes = 16U * 1024U * 1024U;
+constexpr std::size_t kMaximumRecordBytes = 32U * 1024U * 1024U;
 constexpr std::size_t kMaximumDepth = 64;
 constexpr std::size_t kMaximumNodes = 1'000'000;
 
@@ -108,7 +108,7 @@ void append_value(std::string& output, const CanonicalValue& value, std::size_t 
 class JsonParser {
 public:
     explicit JsonParser(std::string_view input) : input_(input) {
-        if (input.size() > kMaximumRecordBytes) fail("record exceeds the 16 MiB size limit");
+        if (input.size() > kMaximumRecordBytes) fail("record exceeds the 32 MiB size limit");
     }
     [[nodiscard]] CanonicalValue parse() {
         skip_space();
@@ -775,7 +775,7 @@ std::vector<std::string> validate_record(const RecordEnvelope& record) {
 std::string encode_canonical_value(const CanonicalValue& value) {
     const auto output = serialize_value(value);
     if (output.size() > kMaximumRecordBytes)
-        throw std::invalid_argument("canonical value exceeds the 16 MiB size limit");
+        throw std::invalid_argument("canonical value exceeds the 32 MiB size limit");
     return output;
 }
 
@@ -783,7 +783,7 @@ std::string encode_record(const RecordEnvelope& record) {
     const auto issues = validate_record(record);
     if (!issues.empty()) throw std::invalid_argument("invalid record: " + issues.front());
     const auto output = serialize_value(record_value(record));
-    if (output.size() > kMaximumRecordBytes) throw std::invalid_argument("record exceeds the 16 MiB size limit");
+    if (output.size() > kMaximumRecordBytes) throw std::invalid_argument("record exceeds the 32 MiB size limit");
     return output;
 }
 
