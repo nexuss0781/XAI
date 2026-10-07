@@ -27,15 +27,21 @@ class TrainingEstimateTests(unittest.TestCase):
         self.assertTrue(all(row["synchronized_graph_updates"] == 20000 for row in result["rank_estimates"]))
 
     def test_target_rate_and_reference_replay_count(self) -> None:
-        result = estimate(self.reference, self.dataset, target_hours=19)
-        self.assertAlmostEqual(result["required_average_global_updates_per_second_for_target"], 220000 / (19 * 3600))
+        result = estimate(self.reference, self.dataset, target_hours=24)
+        self.assertAlmostEqual(result["required_average_global_updates_per_second_for_target"], 220000 / (24 * 3600))
         self.assertAlmostEqual(result["reference_workload"]["candidate_corpus_passes_if_all_published_tokens_were_used_for_pretraining"],
                                200000 * 8192 / 3104299)
         self.assertFalse(result["data_candidate"]["approved_for_training"])
         self.assertEqual(result["status"], "estimate_only_no_training_started")
 
+    def test_worker_count_does_not_imply_a_wall_clock_target(self) -> None:
+        result = estimate(self.reference, self.dataset)
+        self.assertEqual(result["world_size"], 19)
+        self.assertIsNone(result["target_wall_hours"])
+        self.assertIsNone(result["required_average_global_updates_per_second_for_target"])
+
     def test_measured_stage_rates_produce_synchronized_cluster_eta(self) -> None:
-        result = estimate(self.reference, self.dataset,
+        result = estimate(self.reference, self.dataset, target_hours=24,
                           pretrain_updates_per_second=2,
                           graph_updates_per_second=1)
         times = result["time_estimates"]

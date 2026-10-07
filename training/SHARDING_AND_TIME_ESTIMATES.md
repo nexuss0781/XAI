@@ -1,6 +1,6 @@
 # 19-rank sharding and time estimates
 
-**Planning only.** This is an arithmetic estimate, not a training run, measured benchmark, approved data split, or claim that XAI is launch-ready. The user’s “19 hours” is treated here as a **19-hour total wall-clock target for both stages together**. The 19 workers are synchronized data-parallel ranks; the separate monitor is read-only and is not a twentieth training rank.
+**Planning only.** This is an arithmetic estimate, not a training run, measured benchmark, approved data split, or claim that XAI is launch-ready. **Nineteen means 19 synchronized data-parallel worker ranks, not 19 hours.** The separate monitor is read-only and is not a twentieth training rank. Worker count alone does not determine elapsed time; no measured throughput or defensible end-to-end ETA is available yet.
 
 ## How the 19 ranks divide the work
 
@@ -44,11 +44,11 @@ From [`reference.json`](reference.json), the full reference budget is:
 
 If the entire published 3,104,299-token UMR candidate were used, the pretraining budget would consume about **527.8 corpus passes**. If an illustrative 80% training partition were used, it would be about **659.7 passes**. This demonstrates that UMR alone is much too small for the proposed pretraining schedule; repeating it does not create new data or establish language coverage.
 
-For a 19-hour combined target, the no-overhead arithmetic requires an average of:
+If a wall-clock deadline is later chosen, the no-overhead required average rate is:
 
-`(200,000 + 20,000) / (19 × 3,600) = 3.2164 global synchronized updates/second`.
+`220,000 / (target_hours × 3,600) global synchronized updates/second`.
 
-That is an optimistic target if it excludes validation, checkpoint writing, startup, straggler time, network stalls, and recovery. If those consume a fraction `o` of the wall-clock budget, the required active rate is `220,000 / (19 × 3,600 × (1 − o))`. The estimator accepts an explicit `--overhead-fraction`; it defaults to zero rather than inventing an overhead value.
+This is only a required-rate calculation, not an ETA. It excludes validation, checkpoint writing, startup, straggler time, network stalls, and recovery unless represented by an explicit `--overhead-fraction`.
 
 Actual runtime must use the measured synchronized update rates of the chosen 19-rank hardware. For pretraining rate `r_p` and graph-training rate `r_g`, the projection is:
 
@@ -62,7 +62,7 @@ Rates must be **cluster-wide optimizer updates per second for all 19 ranks**, no
 | 2 updates/s | 1 update/s | 27 h 47 m | 5 h 33 m | 33 h 20 m |
 | 4 updates/s | 2 updates/s | 13 h 53 m | 2 h 47 m | 16 h 40 m |
 
-These examples are calculations, not benchmark results. Each of the 19 ranks has the same estimated elapsed time in each row; total accelerator consumption is 19 times wall time (for example, 19 hours of wall time uses 361 rank-hours, excluding the monitor).
+These examples are calculations, not benchmark results or predictions for the planned hardware. All 19 ranks share each row's wall-clock duration; total accelerator consumption is 19 times the wall time, excluding the monitor.
 
 ## Reproduce or update the estimates
 
@@ -71,15 +71,16 @@ Run from the repository root; these commands only read JSON configuration and pr
 ```sh
 python3 -m training.xai_train.estimate
 
-# Replace these example rates with measured rates from the intended 19-rank cluster.
+# Supply measured rates from the intended 19-rank cluster to get an ETA.
 python3 -m training.xai_train.estimate \
-  --target-hours 19 \
   --pretrain-updates-per-second 2 \
   --graph-updates-per-second 1 \
   --overhead-fraction 0.10
+
+# Add --target-hours <hours> only if checking a chosen deadline.
 ```
 
-Omit either measured rate when it is unknown. The tool then reports only the available stage estimate and will not present a partial calculation as an end-to-end ETA. Its `rank_estimates` show count-balanced shares of the published candidate totals; they must not be mistaken for a prepared-data manifest.
+Omit either measured rate when it is unknown. The tool then reports only the available stage estimate and will not present a partial calculation as an end-to-end ETA. No deadline is assumed by default. Its `rank_estimates` show count-balanced shares of the published candidate totals; they must not be mistaken for a prepared-data manifest.
 
 ## Remaining gates before any run
 

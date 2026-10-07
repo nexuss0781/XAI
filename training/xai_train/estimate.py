@@ -16,7 +16,6 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_REFERENCE = ROOT / "training/reference.json"
 DEFAULT_DATASET = ROOT / "training/datasets/umr-v2.json"
 WORLD_SIZE = 19
-DEFAULT_TARGET_HOURS = 19.0
 
 
 def _balanced_counts(total: int, parts: int) -> list[int]:
@@ -39,13 +38,13 @@ def _positive_rate(value: float | None, name: str) -> float | None:
 
 
 def estimate(reference: dict[str, Any], dataset: dict[str, Any], *,
-             target_hours: float = DEFAULT_TARGET_HOURS,
+             target_hours: float | None = None,
              pretrain_updates_per_second: float | None = None,
              graph_updates_per_second: float | None = None,
              overhead_fraction: float = 0.0,
              world_size: int = WORLD_SIZE) -> dict[str, Any]:
     """Return reproducible workload arithmetic and optional measured-rate ETAs."""
-    if target_hours <= 0:
+    if target_hours is not None and target_hours <= 0:
         raise ValueError("target_hours must be greater than zero")
     if world_size <= 0:
         raise ValueError("world_size must be positive")
@@ -65,9 +64,11 @@ def estimate(reference: dict[str, Any], dataset: dict[str, Any], *,
     graph_total_actions = graph_updates * graph_actions_per_update
     candidate_tokens = int(counts["tokens"])
     candidate_train_tokens = _nearest_fifth(candidate_tokens)
-    target_seconds = target_hours * 3600.0
     total_updates = pretrain_updates + graph_updates
-    required_rate = total_updates / (target_seconds * (1.0 - overhead_fraction))
+    required_rate = (
+        total_updates / (target_hours * 3600.0 * (1.0 - overhead_fraction))
+        if target_hours is not None else None
+    )
 
     rank_rows = []
     raw_per_rank = {
@@ -111,7 +112,10 @@ def estimate(reference: dict[str, Any], dataset: dict[str, Any], *,
             "estimated_wall_hours_including_overhead": compute_hours / (1.0 - overhead_fraction),
             "estimated_accelerator_hours_for_all_ranks": compute_hours / (1.0 - overhead_fraction) * world_size,
             "same_estimated_wall_hours_per_training_rank": compute_hours / (1.0 - overhead_fraction),
-            "meets_target_hours": compute_hours / (1.0 - overhead_fraction) <= target_hours,
+            "meets_target_hours": (
+                compute_hours / (1.0 - overhead_fraction) <= target_hours
+                if target_hours is not None else None
+            ),
         }
 
     return {
@@ -154,7 +158,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reference", type=Path, default=DEFAULT_REFERENCE)
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)
-    parser.add_argument("--target-hours", type=float, default=DEFAULT_TARGET_HOURS)
+    parser.add_argument("--target-hours", type=float,
+                        help="optional user-specified wall-clock deadline (hours)")
     parser.add_argument("--pretrain-updates-per-second", type=float,
                         help="measured cluster-wide synchronized optimizer updates/s")
     parser.add_argument("--graph-updates-per-second", type=float,

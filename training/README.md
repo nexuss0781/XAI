@@ -4,7 +4,7 @@ This directory implements the data-validation and split-preparation foundation f
 
 See the [execution plan](EXECUTION_PLAN.md) for the intended 19 synchronized training ranks plus one read-only monitor, the boundary between text perception and the rest of XAI, and the gates that must pass before any training dispatch.
 
-See [19-rank sharding and time estimates](SHARDING_AND_TIME_ESTIMATES.md) for the approximate per-rank shares, workload arithmetic, example runtimes, and the required update rate for a 19-hour total target. Reproduce the estimate with `python3 -m training.xai_train.estimate`; supply measured **cluster-wide** updates/second for both stages to get a runtime projection. This command is estimate-only and does not create shards or run training.
+See [19-rank sharding and time estimates](SHARDING_AND_TIME_ESTIMATES.md) for approximate per-rank shares, workload arithmetic, and illustrative runtimes. **Nineteen refers to synchronized worker ranks, not hours.** Reproduce the estimate with `python3 -m training.xai_train.estimate`; the calculator assumes no deadline and can project elapsed time only when measured **cluster-wide** updates/second are supplied for both stages. This command is estimate-only and does not create shards or run training.
 
 ## Dataset selection
 
