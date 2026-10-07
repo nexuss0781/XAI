@@ -1,142 +1,103 @@
-# Learned multilingual text-perception model proposal
+# Learned multilingual text-perception model specification
 
-**Status:** design proposal only. No model has been trained, no model weights or training corpus are present in this proposal, and no current runtime output should be described as learned language understanding. This proposal specifies the intended replacement for the hand-written English rules backend; it does not implement it.
+**Scope:** this is a specification for a model that must be trained; it is not a trained model or an inference artifact. The repository currently contains a hand-written English rules prototype, not this model. No model weights, training corpus, training run, or learned-language results are claimed here. No simulated output, canned graph, synthetic training example, or rules-based semantic fallback is part of the specified model.
 
-## Design decision
+## Model and learning target
 
-Replace language-dependent rules with a **shared multilingual Transformer encoder–decoder trained to map Unicode text to source-linked semantic-hypothesis graphs**. Language generalization must be an observed result of multilingual pretraining, graph-supervised training, and held-out evaluation—not a consequence of locale routing, a list of known words, or a hand-authored sentence template.
-
-The model estimates a distribution over interpretations. It does not establish that an interpretation is true, resolve real-world entities, or execute instructions. The existing versioned `CandidateGraph` output is a suitable first output boundary: interpretations remain hypotheses, candidate rank remains ordinal, and source spans refer to the original UTF-8 bytes.
-
-## What this replaces—and what may remain deterministic
-
-The current `EnglishRuleBackend` recognizes a short list of English verbs, searches locally for a subject and object, and has a special case for “saw … with …”. It has no trained parameters and cannot generalize beyond the patterns encoded by its author. Its generated graphs are hand-authored templates, not AI model predictions. It must be removed from the production inference path when the learned backend is engineered; it must not silently remain as a fallback when model loading or inference fails.
-
-Deterministic code remains appropriate for non-semantic duties: validating UTF-8 and record schemas, enforcing resource budgets, mapping model-tokenizer positions back to original byte spans, checking graph IDs and edge references, and serializing canonical records. These checks validate format and provenance; they must not decide that a phrase means a particular event or role. Synthetic fixtures may remain for contract and validator unit tests, but must never be presented as model training, inference, or language-capability evidence.
-
-## Mathematical model
-
-Let `x` be the original Unicode text, `m` the optional declared-locale metadata, `G` a candidate semantic graph, and `θ` the learned model parameters. The central inference target is
+The target is one shared multilingual graph transducer. Given original text `x`, it learns a distribution over source-grounded semantic-hypothesis graphs `G`:
 
 \[
-P_\theta(G\mid x,m),
+P_\theta(G\mid x).
 \]
 
-where `m` is weak metadata, not proof of language. The model is multilingual and shares its learned parameters across the languages in its training data. There is no separate English rules branch and no rule-based language-to-meaning mapping.
+The same trainable parameters `\theta` process every language. The declared locale is retained as input provenance but is not used to select a parser or alter semantic decoding. There are no language-specific meaning rules, language routes, prompt templates, imported pretrained checkpoint, retrieval source, or conversation context in version 1. A language can be claimed as supported only if it is represented by permitted training data and passes the held-out evaluation below. This does not promise competence in every language.
 
-### Shared encoder and graph decoder
+A graph is still a hypothesis about what the text expresses; it is not a verified fact, entity resolution, or an instruction to execute. The output remains the existing bounded candidate-graph record, with ordinal ranks and UTF-8 byte spans.
 
-A tokenizer with vocabulary learned from permitted multilingual training text maps `x` to subword units `z_1,\ldots,z_T`, retaining an exact alignment from each unit to its byte interval in the original input. A Transformer encoder computes contextual states
+## One concrete architecture
+
+### Input representation and shared network
+
+Train a 32,000-piece unigram subword tokenizer with byte fallback on the permitted multilingual training partition. Byte fallback ensures that every valid Unicode string can be represented; it does not itself supply semantic understanding. Each token retains an exact interval in the original UTF-8 byte string. The tokenizer is frozen before model training and hashed with the model artifact.
+
+Use one encoder-decoder Transformer initialized from a recorded random seed, not an external model checkpoint. The reference configuration is 8 encoder blocks and 8 decoder blocks, model width 512, 8 attention heads, feed-forward width 2,048, pre-layer normalization, GELU activations, dropout 0.1 during training, learned absolute position embeddings, standard scaled dot-product self/cross-attention, and a maximum of 1,024 input tokens. Initialize embeddings and linear weights independently from `Normal(0, 0.02²)`; initialize layer-normalization scale to 1 and bias to 0. The shared input embedding and all encoder/decoder weights are learned from the multilingual training data. Inputs longer than the configured limit fail explicitly in v1; they are not silently truncated or stitched together.
+
+The encoder computes contextual states
 
 \[
-H = \operatorname{Enc}_\theta(z_1,\ldots,z_T,m).
+H=\operatorname{Enc}_\theta(z_1,\ldots,z_T),
 \]
 
-The locale hint may be omitted, masked, or deliberately corrupted during training so the model learns not to rely on it as ground truth. The encoder is shared across supported languages; language-specific rule tables are not part of inference.
-
-A Transformer decoder emits a typed sequence of graph actions `a_1,\ldots,a_L`, for example: create node, choose a node type and concept label, point to a source span, assign polarity/modality/speech-act attributes, add a typed relation between existing nodes, or stop. The graph probability factors autoregressively:
+where `z_1,...,z_T` are tokenizer pieces for `x`. The decoder emits a typed sequence of graph actions `a_1,...,a_L`, with
 
 \[
-P_\theta(G\mid x,m)
-= \prod_{t=1}^{L} P_\theta(a_t\mid a_{<t},H).
+P_\theta(G\mid x)=P_\theta(a_{1:L}\mid x)
+=\prod_{t=1}^{L}P_\theta(a_t\mid a_{<t},H).
 \]
 
-For a source span, learned pointer heads select the start and end tokenizer positions from encoder states. The recorded byte interval is recovered through the tokenizer’s alignment map. If the model uses a normalized working representation, alignment must still map back exactly to the original text; otherwise that span is invalid. A node with no defensible source span is allowed only when the model explicitly marks it implicit.
-
-Graph action syntax and referential integrity may be constrained by the output schema (for example, an edge must refer to existing node IDs). These are structural constraints, not rules for interpreting language. The model predicts semantic labels from the versioned XAI vocabulary; labels it cannot support must be emitted as unresolved/unknown or cause abstention, not guessed into a familiar template.
-
-A small learned language-evidence head may estimate `q_θ(ℓ | x)` for supported language labels. It reports uncertainty and can mark language unresolved. It does not choose a hand-written parser. Mixed-language input is supported only if the training annotations and evaluation explicitly cover it.
-
-### Training objectives
-
-Training has two distinct stages. First, multilingual denoising pretraining teaches shared text representations from permitted unlabeled corpora. For a corruption operator that masks spans of token sequence `z`, one suitable objective is
+The action vocabulary includes graph/node start and end, node type and versioned concept label, edge relation, polarity/modality/speech-act attributes, source-span pointer, an explicit implicit-content marker, unresolved/unknown, and end-of-graph. A source pointer predicts token start `s` and end `e` with learned heads:
 
 \[
-\mathcal{L}_{\mathrm{pre}}(\theta)
-= -\sum_{t\in M}\log P_\theta(z_t\mid z_{\setminus M},z_{<t}),
+P_\theta(s\mid H),\qquad P_\theta(e\mid s,H),\quad 1\leq s\leq e\leq T.
 \]
 
-where `M` is the masked-token set. This stage supplies learned linguistic representations; it does not by itself establish semantic-graph accuracy.
+The tokenizer alignment map converts those token boundaries to zero-based, half-open byte offsets in the unnormalized original input. A span that cannot be mapped exactly is rejected; the model must instead emit the explicit implicit marker or abstain. The decoder learns semantic labels and relations. A fixed output grammar may mask structurally invalid actions (such as an edge to a nonexistent node), but may not choose meanings, roles, or language-specific parses.
 
-Second, supervised fine-tuning uses examples `(x_i, G_i, ℓ_i)`, where `G_i` is the set of human-accepted readings for input `x_i`, including multiple graphs when the text is genuinely ambiguous. The graph loss teaches every annotated reading rather than treating one arbitrary graph as uniquely correct:
+Before training, each annotated graph is serialized in a canonical order: nodes by first source-byte offset, then type and label; edges by source node, target node, and relation; attributes by their schema order. Candidate-local IDs are assigned from this order. Equivalent graphs therefore have one training serialization rather than an arbitrary permutation of node IDs.
+
+## Training algorithm
+
+There are exactly two learning stages, both using real, permissioned text. Initialize the model randomly before denoising pretraining; initialize graph training from those learned pretrained weights. Do not import an external checkpoint. The tokenizer and model see only the training partition. Documents and near-duplicates are grouped by source before partitioning, so development and final-test text cannot leak into tokenizer fitting or pretraining.
+
+### 1. Multilingual denoising pretraining
+
+Let `D_pre` be the licensed multilingual training text and `C_ρ(x)` a span-corruption operator that masks 15% of input tokens in contiguous spans with mean span length 3. The decoder reconstructs the masked token sequence `y` from the unmasked input. Optimize
 
 \[
-\mathcal{L}_{\mathrm{graph}}(\theta)
-= -\frac{1}{N}\sum_{i=1}^{N}\sum_{g\in G_i} w_{ig}\log P_\theta(g\mid x_i,m_i),
-\qquad \sum_{g\in G_i}w_{ig}=1.
+\mathcal L_{\mathrm{denoise}}(\theta)
+=-\mathbb E_{x\sim D_{\mathrm{pre}},\,C_\rho}
+\left[\frac{1}{|y|}\sum_{t=1}^{|y|}
+\log P_\theta(y_t\mid y_{<t},C_\rho(x))\right].
 \]
 
-Weights are fixed by the documented annotation protocol (equal weights by default); they are not invented from raw model scores. Since each graph target contains learned source pointers, the loss trains semantic structure and alignment together. A language-evidence loss is optional where reliable labels exist:
+For balanced multilingual learning, sample a training language uniformly, then a document uniformly within that language, then a corruption span. This stage learns representations from multilingual text; by itself it is not evidence of semantic understanding.
+
+### 2. Human-annotated graph training
+
+For each natural text `x_i`, annotators provide the set `A_i` of distinct, materially acceptable graph readings. The annotation protocol covers ambiguity, spans, unresolved content, and disagreement; it does not force one interpretation where several are acceptable. A graph is linearized to its canonical action sequence `a^{(g)}_{1:L_{ig}}`.
+
+Train against every accepted reading with equal target weight. The supervised objective is
 
 \[
-\mathcal{L}_{\mathrm{lang}}(\theta)
-= -\frac{1}{N_\ell}\sum_i\log q_\theta(\ell_i\mid x_i).
+\mathcal L_{\mathrm{graph}}(\theta)
+=-\frac{1}{|\mathcal L_{\mathrm{train}}|}
+\sum_{\ell\in\mathcal L_{\mathrm{train}}}\frac{1}{N_\ell}
+\sum_{i:\ell_i=\ell}\frac{1}{|A_i|}
+\sum_{g\in A_i}\frac{1}{L_{ig}}
+\sum_{t=1}^{L_{ig}}
+\log P_\theta(a^{(g)}_t\mid a^{(g)}_{<t},x_i).
 \]
 
-For human-verified parallel translations with equivalent meanings, a contrastive loss on pooled encoder representations can encourage cross-language alignment. For positive translation pairs `(x,x⁺)` and a batch of negatives `x⁻`, one form is
+Pointer decisions are actions in this sequence, so their start/end choices receive the same supervised log-loss as other graph actions. Equal weighting means “teach each accepted reading”; it is not an estimate of how often a reading is true. Decoder scores are never exposed as truth probabilities.
 
-\[
-\mathcal{L}_{\mathrm{align}}
-= -\log\frac{\exp(\operatorname{sim}(u_x,u_{x^+})/\tau)}
-{\exp(\operatorname{sim}(u_x,u_{x^+})/\tau)+\sum_{x^-}\exp(\operatorname{sim}(u_x,u_{x^-})/\tau)},
-\]
+The reference experiment uses AdamW with `β₁=0.9`, `β₂=0.98`, `ε=10⁻⁸`, weight decay `0.01`, and global gradient-norm clipping at `1.0`. Pretraining uses peak learning rate `3×10⁻⁴`, 8,192 input/target tokens per update, and at most 200,000 updates; graph training uses peak learning rate `1×10⁻⁴`, 4,096 graph actions per update, and at most 20,000 updates. Both schedules warm up linearly for 2% of their update budget and then decay cosine-wise to zero. The reference seed is `20261008`. Select the graph checkpoint using development-set macro graph recall at 3; break ties by lower false-resolution rate, then lower exact-span error. Freeze this selection before running the final test. Record the actual data manifests, tokenizer/model/code hashes, software versions, and any deviation from these defaults. This is a reproducible starting configuration, not a claim that the values are optimal or that training has occurred.
 
-where `u` is a pooled encoder representation, `sim` is cosine similarity, and `τ>0` is a tuned temperature. This term is optional and must only use verified semantic-equivalence pairs.
+## Inference without fabricated meanings
 
-The fine-tuning objective is
+At inference, use constrained beam search of width 12 over graph-action sequences, discard only structurally invalid sequences, canonicalize and deduplicate identical graphs, and return at most the caller's limit (at most 3 in the reference configuration). Rank is the sequence score order only. Search may miss valid readings; the result declares itself non-exhaustive. No graph is inserted to fill an empty candidate slot. If there is no defensible graph, return a typed abstention; if the checkpoint or tokenizer is missing or invalid, return `model_unavailable`; if a limit is exceeded, return the corresponding explicit failure. There is no rules backend, canned answer, generated placeholder, or synthetic example fallback.
 
-\[
-\mathcal{L}_{\mathrm{task}}
-= \mathcal{L}_{\mathrm{graph}}
-+\lambda_{\mathrm{lang}}\mathcal{L}_{\mathrm{lang}}
-+\lambda_{\mathrm{align}}\mathcal{L}_{\mathrm{align}}
-+\lambda_{\mathrm{reg}}\lVert\theta\rVert_2^2,
-\]
+Deterministic code is allowed only for UTF-8/schema validation, token-to-byte alignment, action-grammar constraints, graph-reference checks, resource limits, canonical serialization, and reproducibility metadata. These operations enforce structure and provenance; they do not infer meaning.
 
-with weights selected on the development set and then frozen before final testing. Parameters are learned by a declared optimizer, such as AdamW:
+## What would demonstrate learned language generalization
 
-\[
-\theta_{k+1}=\operatorname{AdamW}(\theta_k,\widehat{\nabla_\theta\mathcal{L}_{\mathrm{task}}},\eta,\beta_1,\beta_2,\epsilon,\lambda_{\mathrm{decay}}).
-\]
+“Multilingual” is a measured transfer claim, not a property implied by the architecture name. For a zero-shot graph-transfer test, choose a target language `ℓ*` before the run. Its text may appear in the multilingual **unlabeled pretraining** partition, but none of its graph annotations may appear in graph training or checkpoint selection. Independent human annotations on untouched target-language documents form the final test. A few-shot or fully supervised result is a separate condition and must be labeled separately. A language with neither relevant pretraining text nor supervised examples is outside the demonstrated scope.
 
-The exact checkpoint, tokenizer, optimizer settings, data manifest, random seeds, training code revision, and training logs are part of the model artifact. They must be fixed and reported; none are claimed to exist yet.
+The test set contains only natural text. Report, per language and domain, graph recall at 3, a declared node/edge graph-matching score, exact byte-span accuracy, polarity/modality/speech-act accuracy, abstention, malformed-output rate, and latency/memory. On the predeclared ambiguous subset, report the proportion of examples for which the returned set omits a materially plausible annotated reading while presenting a narrower interpretation (false-resolution rate). Report macro-averages as well as per-language values so high-resource languages cannot hide failures elsewhere.
 
-## Data required for real language generalization
+Run a paired ablation with the same architecture and graph labels but without multilingual denoising pretraining. The transfer difference is evidence about whether multilingual learning helped on this test; it is not proof of universal language competence. Do not train, select, or report semantic results on template-generated or synthetic examples. Simple hand-built fixtures may test only serialization and validator behavior, never model accuracy or language capability. Preserve the untouched final test and publish the data-use protocol, annotation agreement, split manifest, training configuration, checkpoint/tokenizer hashes, and failures with any capability claim. Do not emit calibrated probabilities in v1.
 
-The training record is not just a sentence paired with one convenient answer. Each labeled example needs the original text, language label when known, one or more accepted graph readings, source-span annotations, and annotation/source provenance. Ambiguity-focused examples must include all readings the annotators judge materially plausible, such as attachment, scope, negation, modality, coreference, quotation, and ellipsis. Annotation instructions must define the graph vocabulary and how annotators mark unresolved or implicit content; disagreement is measured, not silently erased.
+## Relationship to the current XAI code
 
-The corpus must include real, permissioned multilingual text for the target language set, graph annotations for each language being claimed, and verified aligned translations if the alignment loss is used. Unlabeled pretraining data can improve representations but cannot replace semantic graph labels for claiming semantic parsing. Fully synthetic or template-generated examples may be used only as explicitly labeled diagnostics and must not stand in for held-out natural-language evaluation.
+The existing `TextObservation` and candidate-graph boundary can remain if they fit the trained decoder. Locale metadata stays in provenance and does not route to a rules parser. Existing UTF-8 byte-span and lineage requirements remain. A C++ inference adapter may load a fixed exported artifact only after parity, span-alignment, licensing, and resource tests; the model itself is trained and evaluated separately. The old `EnglishRuleBackend` is a legacy rules prototype, not this model, not evidence of learning, and not an acceptable fallback for it.
 
-Partition by source, document, and near-duplicate group before training. Freeze separate training, development, calibration (if probabilities are later needed), and untouched final-test sets. To substantiate transfer, include a predeclared language- or domain-held-out evaluation; report zero-shot, few-shot, and fully supervised conditions separately. Balance sampling or report macro-averages so a large-language corpus does not hide poor performance in smaller languages. Data licenses, collection permissions, and any privacy constraints must be recorded.
-
-No model can honestly promise generalization to every language. The supported language/domain scope is the population actually represented in training and passed by held-out evaluation. A language absent from both pretraining and supervised data is not covered by the mere word “multilingual.”
-
-## Inference and output behavior
-
-At inference, encode the validated original observation and use deterministic beam search over valid graph-action sequences. The search returns at most the caller’s candidate limit; structurally identical graphs are deduplicated, and materially distinct candidates are retained when found. Each returned candidate is an approximate hypothesis. The model’s token-sequence log-likelihood is a search score, **not** a calibrated probability of truth or a guarantee that all readings were found. Candidate `rank` therefore remains ordinal in schema v1.
-
-After decoding, deterministic validation checks the graph contract, candidate/node/edge limits, source-span boundaries, output size, and deadline. If model weights or tokenizer files are missing, their hashes do not match the manifest, inference exceeds budget, or the model cannot produce a defensible graph, return a typed `model_unavailable`, `resource_limit`, `timeout`, `unsupported_input`, or abstention result as appropriate. Never call the old rules, return a canned graph, or transform a failure into a successful-looking empty result.
-
-Do not calibrate confidence from decoder likelihood. If probabilities are needed later, reserve independent calibration data and evaluate calibration and selective-risk behavior by language and domain. Otherwise emit no probability field.
-
-## Fit with the current XAI contract
-
-Keep the `TextObservation` input and candidate-graph output boundary where they remain sufficient. Reproducibility metadata should identify the model architecture/version, weights and tokenizer digests, training-data manifest, inference runtime, decoding configuration, and code build. Locale evidence should come from the learned language-evidence head (or remain unresolved), while the original declared locale remains separately preserved. The exact UTF-8 byte-span and provenance requirements in `LANGUAGE_PERCEPTION_DESIGN.md` continue to apply.
-
-The current default limits (including 16 MiB estimated memory and a 1,000 ms wall-time budget) were set for a small rules backend. They are not evidence that a neural model can meet those budgets. Measure the actual model’s peak resident memory, latency, token throughput, and output size on the intended hardware; then set explicit serving budgets and return resource failures honestly. Do not shrink the model or fabricate outputs merely to preserve the old numbers.
-
-A practical training/serving split is to train and evaluate the model in a reproducible ML training environment, export a fixed inference artifact, and load that artifact behind the existing C++ `InferenceBackend` boundary. The runtime choice (for example, an ONNX-exported model with a C++ runtime) must be selected by a numerical-parity, span-alignment, licensing, platform, and resource test before implementation. Model-vendor types and transport formats remain outside the XAI record schema.
-
-## Evaluation gates before calling it learned language perception
-
-A release candidate must be evaluated on untouched natural-language data, not only C++ unit tests. At minimum, report by language and domain: candidate graph recall at `K`, graph precision/recall or a declared graph-matching score, byte-span alignment, node/edge label quality, polarity/modality/speech-act accuracy, unresolved-ambiguity recall, and **false-resolution rate** (material alternatives hidden by the model). Report abstentions, malformed generations, unsupported inputs, latency, memory, and failures separately. Include challenge sets for ambiguity, multilingual/code-switch behavior if claimed, Unicode alignment, paraphrase, and distribution shift.
-
-Compare against a relevant trained multilingual baseline and run ablations (for example, without multilingual pretraining, without parallel alignment, and with locale metadata removed). These comparisons establish whether the proposed training signals help. A surviving rules baseline may be run as a clearly labeled comparison, never as the target model or fallback. Pre-register target populations and release thresholds on development data, then report the locked final test without tuning against it.
-
-A passing schema test means the record is well-formed. A successful training run means the optimizer completed. Neither establishes semantic competence. Capability claims require the held-out results, artifact hashes, data protocol, and failure rates. No broad or all-language claim follows from this design alone.
-
-## Engineering consequence and non-goals
-
-When implementation is authorized, replace the default `EnglishRuleBackend` with a trained-model backend and remove `perception_english_rules.cpp` from the production target. Reduce `SurfaceAnalyzer` to validation/alignment duties or replace its language-dependent tokenization with the learned tokenizer; it must no longer supply semantic evidence through hand-coded English cues. Add a separately reproducible training pipeline, corpus manifests, multi-reading annotation format, model artifact manifest, inference parity tests, and real held-out evaluation. Keep the public C++ facade and versioned result contract if they still fit the model.
-
-This proposal does **not** train weights, select a legally cleared corpus, pick exact supported languages, claim achieved accuracy, promise unseen-language understanding, or alter source code. Until those items are completed and evaluated, the current rules backend remains only a legacy implementation and must not be represented as the requested learned model.
+This document changes the design only. It does not install or train weights, supply a training corpus, change runtime behavior, or claim achieved accuracy. Until the specified training and held-out evaluation are actually run, there is no learned multilingual text-perception system to report as working.
