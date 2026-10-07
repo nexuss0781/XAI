@@ -4,7 +4,7 @@
 
 The initial predictive target is whether an eligible, parser-valid WMC instance produces an exact solver result within the predeclared project limits. `completed_exact` is a positive outcome; `explicit_noncompletion` is an observed explicit solver status without an exact count. Malformed or ineligible formulas, external process kills, and other runs with no trustworthy explicit solver outcome are `non_result` records and cannot be used as negative labels. This auxiliary prediction target does not change Phase 0's primary correctness and bounded-utility evaluation protocol.
 
-The Phase 3 component is a reusable C++20 in-process harness. It has only been exercised on deterministic fixtures; it has not read the MCC archive, fit to benchmark outcomes, or produced a performance result. The Phase 0 even-indexed candidates remain development-only, and the odd-indexed holdout remains locked. Corpus training or scoring is not part of this phase.
+The Phase 3 component is a reusable C++20 in-process harness. It has only been exercised on deterministic fixtures; it has not read the MCC archive, fit to benchmark outcomes, or produced a performance result. The Phase 0 even-indexed candidates remain development-only, and the odd-indexed holdout was not used for Phase 3 training or scoring. In the later Phase 9 protocol, odd-indexed formula bodies were decompressed for leakage checks only; no final-odd formula was solver-scored or used for tuning. Corpus training is not part of this phase.
 
 ## Versioned model library
 

@@ -2,7 +2,7 @@
 
 ## Purpose and status
 
-This roadmap turns the candidate architecture into a staged, testable research program. The repository contains mathematical specifications, deterministic C++ component checks, and a narrow exact-WMC reference solver for the selected Phase 0 task; it still has no end-to-end architecture runtime, corpus training, benchmark-performance result, or deployment.
+This roadmap turns the candidate architecture into a staged, testable research program. The repository contains mathematical specifications, deterministic C++ component checks, a synthetic in-process orchestration harness, and a narrow exact-WMC reference solver for the selected Phase 0 task. It has no production end-to-end runtime, corpus training, complete benchmark evaluation, or deployment. The committed Phase 9 diagnostic is limited to 19 of 98 eligible public-even records, reports zero exact XAI completions in that prefix, and includes no final-odd solver scores; its gate is not passed.
 
 The objective is a bounded research demonstrator that takes a task in a declared input format, preserves evidence and assumptions, computes supported beliefs and predictions, answers only questions its formal modules can handle, calibrates uncertainty on correctly partitioned data, and either chooses an admissible action or abstains. The initial demonstrator should prefer explicit, typed inputs and narrow task scopes over a claim of unrestricted language understanding.
 

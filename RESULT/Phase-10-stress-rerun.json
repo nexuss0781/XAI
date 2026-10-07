@@ -1,0 +1,28 @@
+{
+  "schema": "xai.phase10.synthetic-stress-rerun.v1",
+  "completed_utc": "2026-10-07T05:38:30+00:00",
+  "frozen_code_revision": "a1a65b5ffdeab261bcdeaf7151c03b0c66213403",
+  "freeze_manifest_sha256": "b1b6dff0136f3e299a551d9074a862282347e2cb2aa8ecff161b543aaaaa1d12",
+  "xai_binary_sha256": "bc889b0e92289c74148334bd0b015dd58bd59a64220cab12f404cb5631ce29ca",
+  "ganak_binary_sha256": "e5e693720d1baf052acd2c1efa592412136abbeb2febf15b9f77ba1fc7bf08d4",
+  "benchmark_records_scored": 0,
+  "passed": true,
+  "check_count": 11,
+  "checks": [
+    {"name": "weighted_or", "expected_exact_count": "5/6", "passed": true},
+    {"name": "duplicate_clause_invariance", "expected_exact_count": "5/6", "passed": true},
+    {"name": "free_variable_default_weight", "expected_exact_count": "2/3", "passed": true},
+    {"name": "variable_renaming_invariance", "expected_exact_count": "2/3", "passed": true},
+    {"name": "omitted_weights_default_to_unweighted_count", "expected_exact_count": "2/1", "passed": true},
+    {"name": "contradictory_units_unsat", "expected_exact_count": "0/1", "passed": true},
+    {"name": "satisfiable_zero_wmc", "expected_exact_count": "0/1", "passed": true},
+    {"name": "malformed_weight_sum", "expected_xai_status": "unsupported", "passed": true},
+    {"name": "corrupted_clause_count", "expected_xai_status": "parse_error", "passed": true},
+    {"name": "unsupported_projected_query", "expected_xai_status": "unsupported", "passed": true},
+    {"name": "node_limit_exhaustion", "expected_xai_status": "resource_limit", "passed": true}
+  ],
+  "invariance_checks": [
+    {"group": "variable_renaming", "count": "2/3", "members": ["free_variable_default_weight", "variable_renaming_invariance"], "passed": true}
+  ],
+  "note": "Re-execution of the frozen synthetic stress suite only; not a repetition or validation of the historical benchmark solver attempts."
+}

@@ -143,18 +143,18 @@ This checklist tracks implementation and research work against [ROADMAP.md](ROAD
 - [ ] Keep final test data untouched; invalidate a compromised run and obtain a new test set before further claims.
 - [ ] Report null or negative results and revise/narrow/stop the hypothesis as warranted.
 
-**Phase 9 gate:** Results are reconstructable, answer the predeclared task question, and support only the bounded claims warranted by the protocol.
+**Phase 9 gate — NOT PASSED (2026-10-07).** The committed diagnostic has 19/98 public-even rows, no exact XAI completions, no final-odd solver scores, and three attempts beyond the 600-second wall budget. The independent oracle covered none of the 19 rows. This is a reduced diagnostic, not a completed evaluation; see [RESULT/Phase-9.md](RESULT/Phase-9.md) and its machine-readable status artifact.
 
 ## Phase 10 — Reproduction and research release
 
-- [ ] Rebuild and rerun from a clean environment/build directory using documented commands.
-- [ ] Verify reported tables/plots/summaries regenerate from committed scripts and match run manifests/hashes.
-- [ ] Audit README, specifications, roadmap, test notes, and reports for claims beyond the evidence.
-- [ ] Publish protocol, limitations, failures, data access constraints, and null/negative findings without exposing restricted data or secrets.
-- [ ] Record unresolved issues and a continue/narrow/stop decision.
-- [ ] Treat any production or high-impact deployment as a separate proposal and review.
+- [x] Rebuild and rerun the clean Release build and tests from a new build directory using the documented Phase 10 harness.
+- [x] Regenerate the committed partial Phase 9 summary byte-for-byte from the committed JSONL; verify artifact/output hashes, run metadata, and the 39-file historical freeze against its frozen Git commit.
+- [x] Audit public README, project overview, roadmap, test notes, specifications, and phase reports for claims beyond the evidence; correct stale inventories and the statement that no odd formula body had been opened.
+- [x] Publish the frozen protocol, implementation limits, data access constraints, failures, null/negative diagnostic outcomes, and scope boundaries without including raw formula bodies.
+- [x] Record unresolved issues and a narrow recommendation below.
+- [x] State that any production or high-impact deployment requires a separate proposal and review; no deployment is proposed.
 
-**Phase 10 gate:** Independent reproduction meets stated tolerance and all public claims match the evidence.
+**Phase 10 gate — BLOCKED / NOT PASSED (2026-10-07).** The clean build and tests passed, and the derived partial summary reproduced byte-for-byte from committed results. However, this was not an independent reproduction: the original solver attempts were deliberately not rerun, the raw decompressed formula bodies were not retained with the run, and no independent researcher repeated the benchmark. The artifacts support reproduction of the *reported summary from recorded rows*, not reproduction of the historical solver outcomes. See [RESULT/Phase-10.md](RESULT/Phase-10.md), [the machine-readable reproduction record](RESULT/Phase-10-reproduction.json), and [the validation transcript](RESULT/Phase-10-validation.log).
 
 ## Blockers and decisions
 
@@ -163,4 +163,5 @@ Record blockers here with owner/context, date, and the phase gate they affect. D
 - No open Phase 0 blockers. Two out-of-format public candidates are excluded under the exact-rational eligibility rule; Phase 9 corpus/baseline evaluation remains pending and does not block the Phase 0 scope-and-protocol gate.
 - No open Phase 1 blockers. Shared contracts are an in-process foundation only; storage, authentication, runtime integration, and Phase 3 partition enforcement remain later-phase work.
 - No open Phase 2 gate blockers. Phase 2 provides canonical in-process snapshots and checks model/evidence partition consistency, but not persistent storage, authentication, identity resolution, archive eligibility, or split selection.
-- Phase 7 and Phase 8 harness gates are complete; a production verifier for an actual exact-WMC proof and task-specific benchmark evaluation remain unimplemented. The eligible Phase 0 public subset is reserved for the frozen Phase 9 evaluation; the odd-indexed holdout remains locked.
+- Phase 7 and Phase 8 harness gates are complete for their stated software/fixture scope; no production verifier for an actual exact-WMC proof exists. Phase 9 remains incomplete: only 19/98 public-even formulas were scored, XAI had zero exact completions in that prefix, and no final-odd formula was solver-scored. The cross-split audit did decompress odd formulas for its frozen leakage checks; the final-odd solver set was not used for tuning. Phase 10's independent-reproduction gate is blocked because no independent researcher repeated the recorded solver experiment, and this run intentionally did not repeat those attempts.
+- **Recommendation — NARROW.** Keep the repository as a bounded research-software artifact and limit empirical statements to the recorded 19-case diagnostic and synthetic fixtures. Do not claim benchmark competence or practical XAI solver performance. Any further benchmark evaluation should follow the frozen options without tuning on observed outcomes, retain raw input hashes and complete run outputs, enforce the declared stop limits, and be independently reproduced before the research-release gate is reconsidered.
