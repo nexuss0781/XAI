@@ -1,0 +1,88 @@
+name: Admin monitor 20-worker smoke test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  smoke-workers:
+    name: Smoke worker ${{ matrix.worker_id }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      max-parallel: 19
+      matrix:
+        include:
+          - worker_id: 0
+            seconds: 20
+          - worker_id: 1
+            seconds: 21
+          - worker_id: 2
+            seconds: 22
+          - worker_id: 3
+            seconds: 23
+          - worker_id: 4
+            seconds: 24
+          - worker_id: 5
+            seconds: 25
+          - worker_id: 6
+            seconds: 26
+          - worker_id: 7
+            seconds: 27
+          - worker_id: 8
+            seconds: 28
+          - worker_id: 9
+            seconds: 29
+          - worker_id: 10
+            seconds: 30
+          - worker_id: 11
+            seconds: 31
+          - worker_id: 12
+            seconds: 32
+          - worker_id: 13
+            seconds: 33
+          - worker_id: 14
+            seconds: 34
+          - worker_id: 15
+            seconds: 35
+          - worker_id: 16
+            seconds: 36
+          - worker_id: 17
+            seconds: 37
+          - worker_id: 18
+            seconds: 38
+          - worker_id: 19
+            seconds: 39
+    steps:
+      - name: Simulate worker activity without training or external credentials
+        run: |
+          echo "Smoke worker ${{ matrix.worker_id }} running for ${{ matrix.seconds }} seconds"
+          sleep "${{ matrix.seconds }}"
+          echo "Smoke worker ${{ matrix.worker_id }} completed"
+
+  admin-monitor:
+    name: Admin - live monitor for 20 smoke workers
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Check out monitor
+        uses: actions/checkout@v4
+
+      - name: Track all 20 workers live
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python3 tools/monitor_github_run.py
+          --repository "${{ github.repository }}"
+          --run-id "${{ github.run_id }}"
+          --job-prefix "Smoke worker "
+          --expected-jobs 20
+          --poll-seconds 10
+          --timeout-seconds 600

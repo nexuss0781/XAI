@@ -17,6 +17,7 @@ on:
         default: dataset
 
 permissions:
+  actions: read
   contents: read
 
 concurrency:
@@ -106,7 +107,7 @@ jobs:
     timeout-minutes: 360
     strategy:
       fail-fast: false
-      max-parallel: 20
+      max-parallel: 19
       matrix:
         shard_index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     env:
@@ -158,6 +159,90 @@ jobs:
 
       - name: Show post-worker disk headroom
         run: df -h "$RUNNER_TEMP"
+
+  admin-monitor:
+    name: Admin - live monitor for 20 training workers
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      actions: read
+      contents: read
+    outputs:
+      complete: ${{ steps.monitor.outputs.complete }}
+    steps:
+      - name: Check out monitor
+        uses: actions/checkout@v4
+
+      - name: Track all 20 training workers live
+        id: monitor
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python3 tools/monitor_github_run.py
+          --repository "${{ github.repository }}"
+          --run-id "${{ github.run_id }}"
+          --job-prefix "Train shard "
+          --expected-jobs 20
+          --poll-seconds 20
+          --timeout-seconds 21500
+          --github-output "$GITHUB_OUTPUT"
+          --continue-on-timeout
+
+  admin-monitor-continuation:
+    name: Admin - monitor continuation (if needed)
+    needs: admin-monitor
+    if: needs.admin-monitor.outputs.complete == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      actions: read
+      contents: read
+    outputs:
+      complete: ${{ steps.monitor.outputs.complete }}
+    steps:
+      - name: Check out monitor
+        uses: actions/checkout@v4
+
+      - name: Continue tracking all 20 training workers
+        id: monitor
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python3 tools/monitor_github_run.py
+          --repository "${{ github.repository }}"
+          --run-id "${{ github.run_id }}"
+          --job-prefix "Train shard "
+          --expected-jobs 20
+          --poll-seconds 20
+          --timeout-seconds 21500
+          --github-output "$GITHUB_OUTPUT"
+          --continue-on-timeout
+
+  admin-monitor-final:
+    name: Admin - final monitor window (if needed)
+    needs: admin-monitor-continuation
+    if: needs.admin-monitor-continuation.outputs.complete == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Check out monitor
+        uses: actions/checkout@v4
+
+      - name: Finish tracking all 20 training workers
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python3 tools/monitor_github_run.py
+          --repository "${{ github.repository }}"
+          --run-id "${{ github.run_id }}"
+          --job-prefix "Train shard "
+          --expected-jobs 20
+          --poll-seconds 20
+          --timeout-seconds 21500
 
   synthesize:
     name: Merge 20 worker models and upload the result
