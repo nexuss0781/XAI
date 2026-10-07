@@ -4,6 +4,8 @@ This directory implements the data-validation and split-preparation foundation f
 
 See the [execution plan](EXECUTION_PLAN.md) for the intended 19 synchronized training ranks plus one read-only monitor, the boundary between text perception and the rest of XAI, and the gates that must pass before any training dispatch.
 
+See [19-rank sharding and time estimates](SHARDING_AND_TIME_ESTIMATES.md) for the approximate per-rank shares, workload arithmetic, example runtimes, and the required update rate for a 19-hour total target. Reproduce the estimate with `python3 -m training.xai_train.estimate`; supply measured **cluster-wide** updates/second for both stages to get a runtime projection. This command is estimate-only and does not create shards or run training.
+
 ## Dataset selection
 
 The selected initial graph-supervision candidate is **Uniform Meaning Representation (UMR) 2.0**, distributed by [LINDAT/CLARIAH-CZ](https://lindat.mff.cuni.cz/repository/items/239427de-bcaa-401d-a0ae-2c69602daa67). Its record reports 7,711 files, 210,237 sentences, 3,104,299 tokens, and 2,333,830 concepts across Arapaho, Chinese, Czech, English, Kukama, Latin, Navajo, and Sanapaná. The release and per-graphbank terms are summarized in [`datasets/umr-v2.json`](datasets/umr-v2.json).
