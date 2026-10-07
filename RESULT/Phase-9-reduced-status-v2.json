@@ -1,0 +1,53 @@
+{
+  "schema": "xai.phase9.reduced-diagnostic-status.v1",
+  "status": "incomplete_diagnostic",
+  "phase9_gate": "not_passed",
+  "reduction_reason": "User-directed stop after the already-running public-even index 36 case was recorded.",
+  "scope": {
+    "public_even_completed_records": 19,
+    "public_even_eligible_denominator": 98,
+    "public_even_indices": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36],
+    "final_odd_solver_scoring": "not performed",
+    "audited_final_odd_eligible_claim_set": 95,
+    "audited_final_odd_excluded_indices": [173, 177]
+  },
+  "frozen_protocol": {
+    "changed": false,
+    "code_revision": "a1a65b5ffdeab261bcdeaf7151c03b0c66213403",
+    "freeze_manifest_sha256": "b1b6dff0136f3e299a551d9074a862282347e2cb2aa8ecff161b543aaaaa1d12",
+    "cross_split_audit_sha256": "542b242966f631e42d65d34a242aa62df1d9d95342cf1b5073343787f6060901",
+    "options_changed": false
+  },
+  "outcomes": {
+    "solver_attempts": 95,
+    "exact_completions": 10,
+    "count_mismatches": 0,
+    "xai_full_exact_completions": 0,
+    "directly_verified_xai_counts": 0,
+    "independent_oracle_eligible_records": 0,
+    "system_status_counts": {
+      "ganak": {"solved_exact": 10, "memory_limit": 6, "timeout": 3},
+      "xai_full": {"solved_exact": 0, "resource_limit": 11, "timeout": 6, "memory_limit": 2},
+      "xai_no_unit_propagation": {"solved_exact": 0, "resource_limit": 12, "timeout": 4, "memory_limit": 3},
+      "xai_no_components": {"solved_exact": 0, "resource_limit": 13, "timeout": 4, "memory_limit": 2},
+      "xai_first_branch": {"solved_exact": 0, "resource_limit": 11, "timeout": 7, "memory_limit": 1}
+    }
+  },
+  "resource_control_deviations": [
+    {"index": 0, "system": "xai_first_branch", "wall_ms": 766131, "status": "timeout"},
+    {"index": 0, "system": "xai_full", "wall_ms": 624606, "status": "timeout"},
+    {"index": 4, "system": "ganak", "wall_ms": 814576, "status": "timeout"}
+  ],
+  "validation": {
+    "release_ctest_targets_passed": "11/11",
+    "phase9_python_harness_tests_passed": "13/13",
+    "frozen_stress_checks_passed": "11/11"
+  },
+  "artifacts": {
+    "partial_public_even_jsonl": "RESULT/Phase-9-public-even.jsonl",
+    "partial_summary": "RESULT/Phase-9-public-even-partial-summary-v2.json",
+    "cross_split_audit": "RESULT/Phase-9-cross-split-audit.json",
+    "stress_results": "RESULT/Phase-9-stress-v2.json",
+    "report": "RESULT/Phase-9.md"
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "claim_note": "Descriptive finite challenge-set counts only; no population confidence intervals. A verified result means successful directly compared exact rational outputs, not a Phase 8 certificate.",
+  "direct_verification_only": true,
+  "evaluation_complete": false,
+  "expected_records": 98,
+  "frozen_code_revision": "a1a65b5ffdeab261bcdeaf7151c03b0c66213403",
+  "independent_oracle": {
+    "eligible_by_predeclared_cap": 0,
+    "mismatch_indices": [],
+    "solver_pairs_compared": 0,
+    "solver_pairs_matched": 0,
+    "statuses": {
+      "not_eligible_by_oracle_cap": 19
+    }
+  },
+  "mismatch_indices": [],
+  "nontrivial_full_solver_matches": 0,
+  "phase9_practical_gate": false,
+  "records": 19,
+  "schema": "xai.phase9.summary.v1",
+  "split": "public-even",
+  "systems": {
+    "ganak": {
+      "completion_rate_in_evaluated_rows": "10/19",
+      "max_sampled_rss_bytes": 4302950400,
+      "max_wall_ms": 814576,
+      "median_wall_ms": 200124,
+      "resource_sampled_runs": 19,
+      "solved_exact": 10,
+      "statuses": {
+        "memory_limit": 6,
+        "solved_exact": 10,
+        "timeout": 3
+      }
+    },
+    "xai_first_branch": {
+      "both_completed": 0,
+      "completion_rate_in_evaluated_rows": "0/19",
+      "directly_verified_against_ganak": 0,
+      "exact_match_fraction_among_both_completed": "not estimable",
+      "max_sampled_rss_bytes": 4299522048,
+      "max_wall_ms": 766131,
+      "median_wall_ms": 54824,
+      "resource_sampled_runs": 19,
+      "solved_exact": 0,
+      "statuses": {
+        "memory_limit": 1,
+        "resource_limit": 11,
+        "timeout": 7
+      }
+    },
+    "xai_full": {
+      "both_completed": 0,
+      "completion_rate_in_evaluated_rows": "0/19",
+      "directly_verified_against_ganak": 0,
+      "exact_match_fraction_among_both_completed": "not estimable",
+      "max_sampled_rss_bytes": 4318244864,
+      "max_wall_ms": 624606,
+      "median_wall_ms": 50507,
+      "resource_sampled_runs": 19,
+      "solved_exact": 0,
+      "statuses": {
+        "memory_limit": 2,
+        "resource_limit": 11,
+        "timeout": 6
+      }
+    },
+    "xai_no_components": {
+      "both_completed": 0,
+      "completion_rate_in_evaluated_rows": "0/19",
+      "directly_verified_against_ganak": 0,
+      "exact_match_fraction_among_both_completed": "not estimable",
+      "max_sampled_rss_bytes": 4306952192,
+      "max_wall_ms": 600090,
+      "median_wall_ms": 77912,
+      "resource_sampled_runs": 19,
+      "solved_exact": 0,
+      "statuses": {
+        "memory_limit": 2,
+        "resource_limit": 13,
+        "timeout": 4
+      }
+    },
+    "xai_no_unit_propagation": {
+      "both_completed": 0,
+      "completion_rate_in_evaluated_rows": "0/19",
+      "directly_verified_against_ganak": 0,
+      "exact_match_fraction_among_both_completed": "not estimable",
+      "max_sampled_rss_bytes": 4306272256,
+      "max_wall_ms": 600078,
+      "median_wall_ms": 34451,
+      "resource_sampled_runs": 19,
+      "solved_exact": 0,
+      "statuses": {
+        "memory_limit": 3,
+        "resource_limit": 12,
+        "timeout": 4
+      }
+    }
+  }
+}
