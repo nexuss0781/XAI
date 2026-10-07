@@ -1,14 +1,16 @@
-# XAI text-to-meaning: real CLI run
+# Text perception CLI: a real run
 
-This walkthrough documents an actual run of the C++ text adapter followed by the C++ text-perception executable. The [raw terminal log](/workspace/xai-text-perception-real-run.log) contains the exact commands and complete, unedited JSON output.
+This walkthrough follows an actual run of the C++ text adapter and text-perception executable. The [complete terminal transcript](TEXT_PERCEPTION_REAL_RUN.log) includes the commands and unedited JSON output.
 
-## Input sentence
+> **At a glance:** The local English rules backend returns two readings of an ambiguous sentence. The attachment remains unresolved, and candidate ranks are not probabilities.
+
+## Input
 
 > I saw the man with a telescope.
 
-The sentence has an attachment ambiguity: either the speaker used a telescope to see the man, or the man had a telescope.
+**Why it is ambiguous:** The speaker may have used a telescope to see the man, or the man may have had a telescope.
 
-## Commands run
+## Reproduce the run
 
 ```sh
 printf '%s' 'I saw the man with a telescope.' > /tmp/xai-example-replay.txt
@@ -25,34 +27,35 @@ printf '%s' 'I saw the man with a telescope.' > /tmp/xai-example-replay.txt
   > /tmp/xai-meaning-record-replay.json
 ```
 
-The adapter emitted a successful `xai.interaction.text-input` v1 record. It recorded the sentence as 31 UTF-8 bytes, with locale `en-US` and `normalization: "none"`. The perception executable consumed that record and emitted `xai.perception.text-meaning-candidates` v1.
+> **Note:** This run used the existing local executables in `./build`. The adapter emitted a successful `xai.interaction.text-input` v1 record; the perception executable consumed it and emitted `xai.perception.text-meaning-candidates` v1.
 
-## What each of the five layers did
+The input record preserves the sentence as 31 UTF-8 bytes, with locale `en-US` and `normalization: "none"`.
+
+## What happened in each layer
 
 1. **Input validation** accepted the adapter record, UTF-8 content, locale, identifiers, and provenance without changing the text.
-2. **Surface analysis** identified pieces of the sentence and anchored them to half-open byte ranges in the original UTF-8 text: `I` [0,1), `saw` [2,5), `the man` [6,13), and `with a telescope` [14,30). These are byte offsets, not character indexes.
-3. **Inference backend** used the local `xai.perception.english-rules-v1` rules. It proposed two readings of the prepositional attachment and did not consult memory, retrieval, or external knowledge.
+2. **Surface analysis** identified parts of the sentence and anchored them to half-open byte ranges in the original text: `I` `[0,1)`, `saw` `[2,5)`, `the man` `[6,13)`, and `with a telescope` `[14,30)`. These are byte offsets, not character indexes.
+3. **Inference** used the local `xai.perception.english-rules-v1` rules to propose two readings. It did not consult memory, retrieval, or external knowledge.
 4. **Candidate-graph validation** checked candidate-local nodes and edges, namespaced relations, source spans, and graph limits.
-5. **Serialization** emitted a versioned, provenance-linked result with status `approximate` and exactness `approximate`.
+5. **Serialization** emitted a versioned, provenance-linked result with status and exactness both marked `approximate`.
 
-## Meaning candidates returned
+## Meaning candidates
 
-**Rank 1** connects the “see” event to “with a telescope” using `xai:instrument`. In plain language, this means “I used a telescope to see the man.”
+1. **Rank 1 — telescope as the instrument:** The `xai:instrument` relation connects “with a telescope” to the “see” event. In plain language: “I used a telescope to see the man.”
+2. **Rank 2 — telescope as a modifier of the man:** The `xai:has-associated-modifier` relation connects “with a telescope” to “the man.” In plain language: “I saw a man who had a telescope.”
 
-**Rank 2** connects “the man” to “with a telescope” using `xai:has-associated-modifier`. In plain language, this means “I saw a man who had a telescope.”
+> **How to read the ranking:** The run requested up to three candidates and returned two. The set is non-exhaustive but not truncated, and the attachment is explicitly unresolved. Rank is ordinal only—not a probability—and neither reading is asserted as a fact about the world.
 
-The record requested up to three candidates and returned two. The set was marked non-exhaustive, but not truncated; it also marked the attachment as unresolved. Candidate rank is ordinal only, not a probability, and neither reading is asserted as a fact about the world.
+## Output notes
 
-## Other important output notes
-
-The output schema is `xai.perception.text-meaning-candidates` v1, and its algorithm field is `xai.perception.english-rules-v1`. The candidate record refers back to the source observation through its identifiers and lineage rather than copying the full text; its `source_content_included` value is false.
-
-Language identification is also unresolved. `en-US` is the declared locale hint; this backend does not independently detect language. The record uses zero-based, half-open UTF-8 byte offsets into the original, unnormalized content.
+- **Source linkage:** The candidate record refers to the source observation through its identifiers and lineage instead of copying the full text; `source_content_included` is `false`.
+- **Language:** `en-US` is a declared locale hint. Language identification remains unresolved because this backend does not independently detect language.
+- **Text offsets:** Spans use zero-based, half-open UTF-8 byte offsets into the original, unnormalized content.
 
 ## What the next layer can do
 
-Semantic grounding can use additional context or evidence to resolve the attachment if possible. If the available context still does not decide between the readings, it should preserve both or ask a clarification instead of choosing arbitrarily.
+Semantic grounding can use additional context or evidence to resolve the attachment. If the available context still does not decide between the readings, it should preserve both or ask for clarification rather than choosing arbitrarily.
 
-## Limits of this demonstration
+## Scope and limits
 
 This is a real execution of the current local English rules backend on a pattern it recognizes. It demonstrates the record flow and ambiguity representation; it does not establish broad English coverage, general language understanding, or calibrated probabilities.
